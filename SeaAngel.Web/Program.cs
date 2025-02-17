@@ -40,7 +40,7 @@ builder.Services.AddDbContext<SeanAngelContext>(options =>
         options.EnableSensitiveDataLogging();
 });
 
-//*************
+//***************
 
 
 //Configuración Serilog 
