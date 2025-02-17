@@ -1,0 +1,43 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace SeaAngel.Infraestructure.Models;
+
+public partial class EncReserva
+{
+    public int Id { get; set; }
+
+    public int? Idusuario { get; set; }
+
+    public int? Idcrucero { get; set; }
+
+    public DateTime? FechaCreacion { get; set; }
+
+    public DateTime? FechaPago { get; set; }
+
+    public string Estado { get; set; } = null!;
+
+    public string? CantidadDePasajeros { get; set; }
+
+    public string? CantidadDeCamarotes { get; set; }
+
+    public string? PrecioTotalCamorotes { get; set; }
+
+    public string? Subtotal { get; set; }
+
+    public string? Impuesto { get; set; }
+
+    public string? PrecioTotal { get; set; }
+
+    public virtual ICollection<DetPasajero> DetPasajero { get; set; } = new List<DetPasajero>();
+
+    public virtual Crucero? IdcruceroNavigation { get; set; }
+
+    public virtual Usuario? IdusuarioNavigation { get; set; }
+
+    public virtual ICollection<Pago> Pago { get; set; } = new List<Pago>();
+
+    public virtual ICollection<ReservaComplementos> ReservaComplementos { get; set; } = new List<ReservaComplementos>();
+
+    public virtual ICollection<Habitacion> Idhabitacion { get; set; } = new List<Habitacion>();
+}
