@@ -22,8 +22,14 @@ body {
     font-family: "Montserrat", sans-serif;
 }
 
+@media (min-width: 1400px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+        max-width: unset !important; /* Elimina cualquier valor establecido */
+    }
+}
 
-/* Navbar - Navegación */
+
+/* ---------  Navbar - Navegación ---------- */  
 .navbar {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra ligera */
     background-color: #F1F0F0; /* Color de fondo gris claro */
@@ -79,4 +85,32 @@ body {
 .itemPag:hover::after {
     width: 100%;
 }
+
+/* ---------- Estilo del carrusel ---------- */
+
+#carouselE {
+    width: 100vw !important; /* 100% del ancho de la pantalla */
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.carousel-inner img {
+    width: 100% !important; /* Hace que la imagen cubra todo el ancho */
+    height: 53vh !important; /* Ajusta la altura */
+    object-fit: cover !important; /* Evita deformaciones */
+    filter: brightness(30%) !important; /* Hace la imagen más oscura */
+}
+
+/* Ajusta la posición de los textos dentro del carrusel */
+.carousel-caption {
+    bottom: 15% !important; /* Baja la posición del texto */
+}
+
+.btn {
+    background: #B88A46 !important; /* Dorado oscuro */
+    color: white;
+    font-size: 16px;
+}
+
 

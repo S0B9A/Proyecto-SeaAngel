@@ -84,7 +84,7 @@ if (!app.Environment.IsDevelopment())
 }
 else
 {
-    // Error control Middleware 
+    // Error control del Middleware 
     app.UseMiddleware<ErrorHandlingMiddleware>();
 }
 
