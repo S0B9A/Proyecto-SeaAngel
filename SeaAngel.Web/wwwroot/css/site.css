@@ -97,7 +97,7 @@ body {
 
 .carousel-inner img {
     width: 100% !important; /* Hace que la imagen cubra todo el ancho */
-    height: 53vh !important; /* Ajusta la altura */
+    height: 70vh !important; /* Ajusta la altura */
     object-fit: cover !important; /* Evita deformaciones */
     filter: brightness(30%) !important; /* Hace la imagen más oscura */
 }
@@ -112,5 +112,10 @@ body {
     color: white;
     font-size: 16px;
 }
+
+.carousel-caption {
+    margin-bottom: 127px;
+}
+
 
 
