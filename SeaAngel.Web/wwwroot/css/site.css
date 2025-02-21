@@ -1,20 +1,20 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
@@ -29,7 +29,8 @@ body {
 }
 
 
-/* ---------  Navbar - Navegación ---------- */  
+
+/* ---------  Navbar - Navegación ---------- */
 .navbar {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra ligera */
     background-color: #F1F0F0; /* Color de fondo gris claro */
@@ -97,7 +98,7 @@ body {
 
 .carousel-inner img {
     width: 100% !important; /* Hace que la imagen cubra todo el ancho */
-    height: 70vh !important; /* Ajusta la altura */
+    height: 60vh !important; /* Ajusta la altura */
     object-fit: cover !important; /* Evita deformaciones */
     filter: brightness(30%) !important; /* Hace la imagen más oscura */
 }
@@ -108,14 +109,111 @@ body {
 }
 
 .btn {
-    background: #B88A46 !important; /* Dorado oscuro */
     color: white;
     font-size: 16px;
+    background-color: #003366; /* Azul rey oscuro */
+    color: white;
+    border: none;
+}
+
+.btn:hover {
+    background-color: #B88A46; /* Azul más oscuro para hover */
+    box-shadow: 0 0 10px rgba(0, 51, 102, 0.6); /* Sombra azul */
 }
 
 .carousel-caption {
-    margin-bottom: 127px;
+    margin-bottom: 70px;
+}
+
+/* ---------- Estilo de la pagina de barcos ---------- */
+
+.services {
+    padding: 80px 0;
+}
+
+    .services .card {
+        max-height: 175px; /* Asegura que todas tengan una altura mínima */
+        min-height: 175px; /* Asegura que todas tengan una altura mínima */
+    }
+
+.bg-barco1 {
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(../Images/bg-barco1.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bg-barco2 {
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(../Images/bg-barco2.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bg-barco3 {
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(../Images/bg-barco3.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.barcos {
+    padding: 2px 0;
+    position: relative;
+}
+    .barcos .row {
+        margin-top: 30px;
+    }
+
+.barco .card {
+    max-height: 90%; /* Asegura que todas tengan una altura mínima */
+    min-height: 90%; /* Asegura que todas tengan una altura mínima */
 }
 
 
+/* Colores azul rey oscuro */
+.text-blue-dark {
+    color: #003366; /* Azul rey oscuro */
+}
+
+.btn-blue-dark {
+    background-color: #003366; /* Azul rey oscuro */
+    color: white;
+    border: none;
+}
+
+    .btn-blue-dark:hover {
+        background-color: #B88A46; /* Azul más oscuro para hover */
+        box-shadow: 0 0 10px rgba(0, 51, 102, 0.6); /* Sombra azul */
+    }
+
+/* Animaciones con hover */
+.hover-animate {
+    transition: transform 0.3s ease-in-out;
+}
+
+    .hover-animate:hover {
+        transform: translateY(-10px);
+    }
+
+/* Bordes redondeados en las imágenes */
+.card img {
+    width: 250px;
+    height: 150px;
+    border-radius: 15px;
+}
+
+/* Línea decorativa azul rey oscuro */
+.linea-decorativa {
+    width: 400px; /* Ajusta el ancho según prefieras */
+    height: 2px;
+    background: #003366; /* Azul rey oscuro */
+    border-radius: 2px;
+    margin-top: 10px; /* Espaciado debajo del título */
+}
+
+/* Añadir borde azul rey oscuro en las tarjetas al hacer hover */
+.card:hover {
+    border: 2px solid #B88A46; /* Azul rey oscuro */
+}
 
