@@ -28,11 +28,18 @@ namespace SeaAngel.Application.Services.Implementations
         }
         public async Task<ICollection<BarcoDTO>> ListAsync()
         {
-            //Obtener datos del repositorio
+            // Obtener datos del repositorio
             var list = await _repository.ListAsync();
-            // Map List<Autor> a ICollection<BodegaDTO>
-            var collection = _mapper.Map<ICollection<BarcoDTO>>(list);
-            // Return lista
+
+            // Mapear la lista de Barco a BarcoDTO, incluyendo la columna CantidadHabitaciones
+            var collection = list.Select(b => new BarcoDTO
+            {
+                ID = b.Id,
+                Nombre = b.Nombre,
+                Descripcion = b.Descripcion,
+                CantidadHabitaciones = b.BarcoHabitacion.Count() // Calculamos la cantidad de habitaciones directamente en el mapeo
+            }).ToList();
+
             return collection;
         }
 

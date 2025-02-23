@@ -26,8 +26,11 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
 
         public async Task<ICollection<Barco>> ListAsync()
         {
-            //Select * from autor
-            var collection = await _context.Set<Barco>().ToListAsync();
+            // Obtener los barcos e incluir la relación BarcoHabitacion
+            var collection = await _context.Set<Barco>()
+                .Include(b => b.BarcoHabitacion)  // Asegúrate de incluir la relación BarcoHabitacion
+                .ToListAsync();
+
             return collection;
         }
     }

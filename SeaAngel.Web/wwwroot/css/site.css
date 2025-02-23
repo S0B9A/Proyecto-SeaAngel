@@ -170,6 +170,9 @@ body {
     min-height: 90%; /* Asegura que todas tengan una altura mínima */
 }
 
+.parrafo-barco {
+    font-size: 15px;
+}
 
 /* Colores azul rey oscuro */
 .text-blue-dark {
