@@ -15,6 +15,8 @@ namespace SeaAngel.Application.DTOs
 
         public string Descripcion { get; set; } = null!;
 
+        public byte[]? Imagen { get; set; } = null;
+
         public int CantidadHabitaciones { get; set; } // Nueva propiedad calculada
 
     }

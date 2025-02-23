@@ -37,6 +37,7 @@ namespace SeaAngel.Application.Services.Implementations
                 ID = b.Id,
                 Nombre = b.Nombre,
                 Descripcion = b.Descripcion,
+                Imagen = b.Imagen,
                 CantidadHabitaciones = b.BarcoHabitacion.Count() // Calculamos la cantidad de habitaciones directamente en el mapeo
             }).ToList();
 

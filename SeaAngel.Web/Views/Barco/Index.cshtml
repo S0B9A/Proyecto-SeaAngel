@@ -136,7 +136,7 @@
 					<div class="barco col-12 col-md-6 col-lg-3">
 						<div class="card bg-light shadow-lg border-0 px-2 py-3 mb-4 hover-animate">
 							<div class="text-center">
-								<img src="@Url.Content("~/Images/cruceroPrueba2.png")" alt="@barco.Nombre" class="img-fluid rounded" />
+								<img src="data:image/jpeg;charset=utf-8;base64,@Convert.ToBase64String(@barco.Imagen)" alt="@barco.Nombre" class="img-fluid rounded" />
 							</div>
 							<div class="card-body">
 								<h5 class="card-title text-blue-dark">@barco.Nombre</h5>

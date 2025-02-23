@@ -13,6 +13,8 @@ public partial class Barco
 
     public int Capacidad { get; set; }
 
+    public byte[]? Imagen { get; set; }
+
     public virtual ICollection<BarcoHabitacion> BarcoHabitacion { get; set; } = new List<BarcoHabitacion>();
 
     public virtual ICollection<Crucero> Crucero { get; set; } = new List<Crucero>();
