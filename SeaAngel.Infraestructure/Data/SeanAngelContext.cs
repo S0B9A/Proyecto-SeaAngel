@@ -24,6 +24,8 @@ public partial class SeanAngelContext : DbContext
 
     public virtual DbSet<DetPasajero> DetPasajero { get; set; }
 
+    public virtual DbSet<DetReserva> DetReserva { get; set; }
+
     public virtual DbSet<EncReserva> EncReserva { get; set; }
 
     public virtual DbSet<FechasPrecios> FechasPrecios { get; set; }
@@ -77,7 +79,7 @@ public partial class SeanAngelContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__Compleme__3214EC27E85C599B");
 
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Aplicacion).HasMaxLength(20);
+            entity.Property(e => e.Aplicacion).HasMaxLength(100);
             entity.Property(e => e.Descripcion).HasMaxLength(255);
             entity.Property(e => e.Nombre).HasMaxLength(100);
             entity.Property(e => e.Precio).HasColumnType("decimal(10, 2)");
@@ -88,7 +90,6 @@ public partial class SeanAngelContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__Crucero__3214EC27A32FCDF4");
 
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Foto).HasMaxLength(255);
             entity.Property(e => e.Idbarco).HasColumnName("IDBarco");
             entity.Property(e => e.Nombre).HasMaxLength(100);
 
@@ -128,6 +129,22 @@ public partial class SeanAngelContext : DbContext
                 .HasForeignKey(d => d.IdencReserva)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Huespedes__Reser__4F7CD00D");
+        });
+
+        modelBuilder.Entity<DetReserva>(entity =>
+        {
+            entity.HasKey(e => new { e.IdencReserva, e.Idhabitacion }).HasName("PK__Detalles__9B4CBCC0F4424C55");
+
+            entity.Property(e => e.IdencReserva).HasColumnName("IDEncReserva");
+            entity.Property(e => e.Idhabitacion).HasColumnName("IDHabitacion");
+
+            entity.HasOne(d => d.IdencReservaNavigation).WithMany(p => p.DetReserva)
+                .HasForeignKey(d => d.IdencReserva)
+                .HasConstraintName("FK__DetallesR__Reser__4BAC3F29");
+
+            entity.HasOne(d => d.IdhabitacionNavigation).WithMany(p => p.DetReserva)
+                .HasForeignKey(d => d.Idhabitacion)
+                .HasConstraintName("FK__DetallesR__Habit__4CA06362");
         });
 
         modelBuilder.Entity<EncReserva>(entity =>
@@ -170,22 +187,6 @@ public partial class SeanAngelContext : DbContext
                 .HasForeignKey(d => d.Idusuario)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Reservas__Usuari__44FF419A");
-
-            entity.HasMany(d => d.Idhabitacion).WithMany(p => p.IdencReserva)
-                .UsingEntity<Dictionary<string, object>>(
-                    "DetReserva",
-                    r => r.HasOne<Habitacion>().WithMany()
-                        .HasForeignKey("Idhabitacion")
-                        .HasConstraintName("FK__DetallesR__Habit__4CA06362"),
-                    l => l.HasOne<EncReserva>().WithMany()
-                        .HasForeignKey("IdencReserva")
-                        .HasConstraintName("FK__DetallesR__Reser__4BAC3F29"),
-                    j =>
-                    {
-                        j.HasKey("IdencReserva", "Idhabitacion").HasName("PK__Detalles__9B4CBCC0F4424C55");
-                        j.IndexerProperty<int>("IdencReserva").HasColumnName("IDEncReserva");
-                        j.IndexerProperty<int>("Idhabitacion").HasColumnName("IDHabitacion");
-                    });
         });
 
         modelBuilder.Entity<FechasPrecios>(entity =>

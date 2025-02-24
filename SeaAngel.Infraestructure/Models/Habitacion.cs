@@ -19,7 +19,7 @@ public partial class Habitacion
 
     public virtual ICollection<BarcoHabitacion> BarcoHabitacion { get; set; } = new List<BarcoHabitacion>();
 
-    public virtual ICollection<FechasPrecios> FechasPrecios { get; set; } = new List<FechasPrecios>();
+    public virtual ICollection<DetReserva> DetReserva { get; set; } = new List<DetReserva>();
 
-    public virtual ICollection<EncReserva> IdencReserva { get; set; } = new List<EncReserva>();
+    public virtual ICollection<FechasPrecios> FechasPrecios { get; set; } = new List<FechasPrecios>();
 }

@@ -1,0 +1,105 @@
+﻿@model IEnumerable<SeaAngel.Application.DTOs.EncReservaDTO>
+
+@{
+    ViewData["Title"] = "Reservas de Cruceros";
+}
+
+<h1 class="text-center text-white my-5 animate__animated animate__fadeIn">Reservas de Cruceros</h1>
+
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-light table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#Reserva</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Cantidad de Pasajeros</th>
+                    <th scope="col">Fecha Creación</th>
+                    <th scope="col">Fecha Pago</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="animate__animated animate__fadeIn">
+                        <td>@item.Id</td>
+                        <td>@item.Estado</td>
+                        <td>@item.CantidadDePasajeros</td>
+                        <td>@(item.FechaCreacion.HasValue ? item.FechaCreacion.Value.ToString("dd/MM/yyyy") : "N/A")</td>
+                        <td>@(item.FechaPago.HasValue ? item.FechaPago.Value.ToString("dd/MM/yyyy") : "N/A")</td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-lg px-4 py-2" style="background-color: #B88A46 ; color: white; border-radius: 50px; font-size: 1rem;">Ver Detalles</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </>
+    </div>
+</div>
+
+<style>
+   
+    /* Estilo para la tabla */
+    .table {
+        background-color: rgba(255, 255, 255, 0.85); /* Fondo blanco */
+        backdrop-filter: blur(8px); /* Fondo desenfocado */
+        border-radius: 15px;
+        color: black; /* Texto en negro para asegurar visibilidad */
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+        /* Estilo de las celdas y cabeceras */
+        .table th,
+        .table td {
+            font-size: 1.1rem;
+            padding: 15px;
+            text-align: center;
+            color: black; /* Asegurar que el texto sea negro */
+        }
+
+    /* Efecto hover para filas */
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 169, 209, 0.2); /* Celeste claro al hacer hover */
+        transform: scale(1.02); /* Aumento sutil al hacer hover */
+        color: black; /* Mantener el texto negro en hover */
+    }
+
+    /* Estilo de las cabeceras de la tabla */
+    .table th {
+        background-color: rgba(255, 255, 255, 0.85); /* Fondo blanco */
+        color: black; /* Texto en negro */
+        font-weight: bold;
+    }
+
+    /* Asegurar que los enlaces dentro de la tabla sean visibles */
+    .table a {
+        color: black !important;
+    }
+
+        .table a:hover {
+            color: white !important;
+        }
+
+    /* Efecto hover para el botón */
+    .btn {
+        transition: background-color 0.3s ease;
+        color: white;
+    }
+
+        .btn:hover {
+            background-color: #9C6F3C; /* Un tono más oscuro para diferenciar */
+            color: white !important;
+            box-shadow: 0 5px 15px rgba(0, 145, 179, 0.4);
+        }
+
+    /* Animación al cargar */
+    .animate__fadeIn {
+        animation-duration: 1s;
+    }
+
+
+</style>
+
+<!-- Enlace para animaciones -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">

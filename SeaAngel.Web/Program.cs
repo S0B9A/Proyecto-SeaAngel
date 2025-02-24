@@ -21,10 +21,12 @@ builder.Services.AddControllersWithViews();
 //Repository
 builder.Services.AddTransient<IRepositoryBarco, RepositoryBarco>();
 builder.Services.AddTransient<IRepositoryHabitacion, RepositoryHabitacion>();
+builder.Services.AddTransient<IRepositoryEncReserva, RepositoryEncReserva>();
 
 //Services
 builder.Services.AddTransient<IServiceBarco, ServiceBarco>();
 builder.Services.AddTransient<IServiceHabitacion, ServiceHabitacion>();
+builder.Services.AddTransient<IServiceEncReserva, ServiceEncReserva>();
 
 
 //Configurar Automapper
@@ -33,6 +35,12 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<BarcoProfile>();
     config.AddProfile<HabitacionProfile>();
     config.AddProfile<BarcoHabitacionProfile>();
+    config.AddProfile<EncReservaProfile>();
+    config.AddProfile<UsuarioProfile>();
+    config.AddProfile<DestinoProfile>();
+    config.AddProfile<PuertoProfile>();
+    config.AddProfile<ItinerarioProfile>();
+    config.AddProfile<CruceroProfile>();
 
 });
 

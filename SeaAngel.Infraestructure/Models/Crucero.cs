@@ -9,11 +9,13 @@ public partial class Crucero
 
     public string Nombre { get; set; } = null!;
 
-    public string? Foto { get; set; }
+    public byte[]? Foto { get; set; }
 
     public int CantDias { get; set; }
 
     public int? Idbarco { get; set; }
+
+    public DateOnly? FechaInicio { get; set; }
 
     public virtual ICollection<EncReserva> EncReserva { get; set; } = new List<EncReserva>();
 

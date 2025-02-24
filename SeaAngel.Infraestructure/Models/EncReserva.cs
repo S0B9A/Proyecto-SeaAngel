@@ -31,6 +31,8 @@ public partial class EncReserva
 
     public virtual ICollection<DetPasajero> DetPasajero { get; set; } = new List<DetPasajero>();
 
+    public virtual ICollection<DetReserva> DetReserva { get; set; } = new List<DetReserva>();
+
     public virtual Crucero? IdcruceroNavigation { get; set; }
 
     public virtual Usuario? IdusuarioNavigation { get; set; }
@@ -38,6 +40,4 @@ public partial class EncReserva
     public virtual ICollection<Pago> Pago { get; set; } = new List<Pago>();
 
     public virtual ICollection<ReservaComplementos> ReservaComplementos { get; set; } = new List<ReservaComplementos>();
-
-    public virtual ICollection<Habitacion> Idhabitacion { get; set; } = new List<Habitacion>();
 }
