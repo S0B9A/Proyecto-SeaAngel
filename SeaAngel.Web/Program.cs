@@ -20,14 +20,19 @@ builder.Services.AddControllersWithViews();
 //Configurar D.I.
 //Repository
 builder.Services.AddTransient<IRepositoryBarco, RepositoryBarco>();
+builder.Services.AddTransient<IRepositoryHabitacion, RepositoryHabitacion>();
 
 //Services
 builder.Services.AddTransient<IServiceBarco, ServiceBarco>();
+builder.Services.AddTransient<IServiceHabitacion, ServiceHabitacion>();
+
 
 //Configurar Automapper
 builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile<BarcoProfile>();
+    config.AddProfile<HabitacionProfile>();
+    config.AddProfile<BarcoHabitacionProfile>();
 
 });
 

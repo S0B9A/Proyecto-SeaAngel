@@ -15,17 +15,20 @@ namespace SeaAngel.Application.Services.Implementations
 
         private readonly IRepositoryBarco _repository;
         private readonly IMapper _mapper;
+
         public ServiceBarco(IRepositoryBarco repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
+
         public async Task<BarcoDTO> FindByIdAsync(int id)
         {
             var @object = await _repository.FindByIdAsync(id);
             var objectMapped = _mapper.Map<BarcoDTO>(@object);
             return objectMapped;
         }
+
         public async Task<ICollection<BarcoDTO>> ListAsync()
         {
             // Obtener datos del repositorio
@@ -34,7 +37,7 @@ namespace SeaAngel.Application.Services.Implementations
             // Mapear la lista de Barco a BarcoDTO, incluyendo la columna CantidadHabitaciones
             var collection = list.Select(b => new BarcoDTO
             {
-                ID = b.Id,
+                Id = b.Id,
                 Nombre = b.Nombre,
                 Descripcion = b.Descripcion,
                 Imagen = b.Imagen,

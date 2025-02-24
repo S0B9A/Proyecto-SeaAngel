@@ -63,11 +63,13 @@ public partial class SeanAngelContext : DbContext
 
             entity.HasOne(d => d.IdbarcoNavigation).WithMany(p => p.BarcoHabitacion)
                 .HasForeignKey(d => d.Idbarco)
-                .HasConstraintName("FK__BarcoHabi__Barco__33D4B598");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_BarcoHabitacion_Barco");
 
             entity.HasOne(d => d.IdhabitacionNavigation).WithMany(p => p.BarcoHabitacion)
                 .HasForeignKey(d => d.Idhabitacion)
-                .HasConstraintName("FK__BarcoHabi__Habit__34C8D9D1");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_BarcoHabitacion_Habitacion");
         });
 
         modelBuilder.Entity<Complementos>(entity =>

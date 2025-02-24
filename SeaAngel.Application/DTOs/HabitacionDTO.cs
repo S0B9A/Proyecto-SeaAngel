@@ -7,7 +7,7 @@ using SeaAngel.Infraestructure.Models;
 
 namespace SeaAngel.Application.DTOs
 {
-    public class BarcoDTO
+    public class HabitacionDTO
     {
         public int Id { get; set; }
 
@@ -15,12 +15,12 @@ namespace SeaAngel.Application.DTOs
 
         public string? Descripcion { get; set; }
 
-        public int Capacidad { get; set; }
+        public int CapacidadMin { get; set; }
 
-        public byte[]? Imagen { get; set; }
+        public int CapacidadMax { get; set; }
 
-        public int CantidadHabitaciones { get; set; }
+        public decimal TamanoM2 { get; set; }
 
-        public virtual ICollection<BarcoHabitacionDTO> BarcoHabitacion { get; set; } = null!;
+        public virtual List<BarcoHabitacion> BarcoHabitacion { get; set; } = null!;
     }
 }

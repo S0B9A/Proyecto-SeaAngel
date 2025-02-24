@@ -19,9 +19,14 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
             _context = context;
         }
 
-        public Task<Barco> FindByIdAsync(int id)
+        public async Task<Barco> FindByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var @object = await _context.Set<Barco>()
+                .Include(Barco => Barco.BarcoHabitacion)
+                    .ThenInclude(Habitacion => Habitacion.IdhabitacionNavigation)
+                .Where(x => x.Id == id).FirstOrDefaultAsync();
+
+            return @object!;
         }
 
         public async Task<ICollection<Barco>> ListAsync()

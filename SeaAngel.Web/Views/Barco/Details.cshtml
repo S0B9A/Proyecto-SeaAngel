@@ -1,0 +1,46 @@
+﻿@model SeaAngel.Application.DTOs.BarcoDTO
+
+@{
+    ViewData["Title"] = "Detalles del Barco";
+}
+
+<div class="container detalleBarco-container">
+    <div class="card shadow-lg border-0 rounded-3">
+        <div class="card-header bg-white border-bottom">
+            <h2 class="text-center mb-0" style="color: #1E3A8A;">Detalles del Barco</h2>
+        </div>
+        <div class="card-body p-4">
+            <div class="row">
+                <div class="col-md-6 d-flex flex-column align-items-center">
+                    @if (Model.Imagen != null && Model.Imagen.Length > 0)
+                    {
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Imagen)" class="img-fluid rounded shadow" alt="Imagen del barco" style="max-width: 100%; max-height: 300px;">
+                    }
+                    else
+                    {
+                        <img src="https://via.placeholder.com/300x200?text=Sin+Imagen" class="img-fluid rounded shadow" alt="Imagen no disponible">
+                    }
+                </div>
+                <div class="col-md-6">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong style="color: #1E3A8A;">Nombre:</strong> @Model.Nombre</li>
+                        <li class="list-group-item"><strong style="color: #1E3A8A;">Descripción:</strong> @Model.Descripcion</li>
+                        <li class="list-group-item"><strong style="color: #1E3A8A;">Capacidad:</strong> @Model.Capacidad personas</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-4">
+                <h4 class="text-center p-2" style="color: #1E3A8A; border-radius: 8px;">Habitaciones</h4>
+                <ul class="list-group">
+                    @foreach (var habitacion in Model.BarcoHabitacion)
+                    {
+                        <li class="list-group-item">
+                            Tipo de Habitación: @habitacion.IdhabitacionNavigation.Nombre
+                            - Descripción: @habitacion.IdhabitacionNavigation.Descripcion
+                            - Tamaño: @habitacion.IdhabitacionNavigation.TamanoM2 </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
