@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using SeaAngel.Infraestructure.Data;
+using SeaAngel.Infraestructure.Models;
+using SeaAngel.Infraestructure.Repository.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

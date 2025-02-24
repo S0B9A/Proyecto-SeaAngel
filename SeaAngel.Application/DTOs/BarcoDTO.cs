@@ -7,7 +7,7 @@ using SeaAngel.Infraestructure.Models;
 
 namespace SeaAngel.Application.DTOs
 {
-    public class BarcoDTO
+    public record BarcoDTO
     {
         public int Id { get; set; }
 
