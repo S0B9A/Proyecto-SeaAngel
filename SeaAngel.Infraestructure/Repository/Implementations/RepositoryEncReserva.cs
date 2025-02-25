@@ -25,9 +25,12 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
             //Obtener un Libro con su autor y las lista de categorías
             var @object = await _context.Set<EncReserva>()
                                 .Where(x => x.Id == id)
+                                .Include(Reserva => Reserva.ReservaComplementos)
+                                .ThenInclude(Complementos => Complementos.IdcomplementoNavigation)
                                 .Include(x => x.IdusuarioNavigation)
                                 .Include(x => x.IdcruceroNavigation)
-                                .ThenInclude(Itinerario => Itinerario.Itinerario).ThenInclude(puerto => puerto.IdpuertoNavigation)
+                                .ThenInclude(Itinerario => Itinerario.Itinerario)
+                                .ThenInclude(puerto => puerto.IdpuertoNavigation)
                                 .FirstAsync();
             return @object!;
         }

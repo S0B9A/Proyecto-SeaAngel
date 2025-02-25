@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using AutoMapper;
+using SeaAngel.Application.DTOs;
+using SeaAngel.Infraestructure.Models;
+
+namespace SeaAngel.Application.Profiles
+{
+    public class ComplementosProfile : Profile
+    {
+        public ComplementosProfile()
+        {
+            CreateMap<ComplementosDTO, Complementos>().ReverseMap();
+        }
+    }
+}
