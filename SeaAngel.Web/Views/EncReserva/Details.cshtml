@@ -53,19 +53,6 @@
 					<strong>Fecha Fin:</strong> @(Model.IdcruceroNavigation.FechaInicio.HasValue ?
 					Model.IdcruceroNavigation.FechaInicio.Value.AddDays(Model.IdcruceroNavigation.CantDias).ToString("dd/MM/yyyy") : "N/A")
 				</p>
-
-				<div class="col-md-6 mt-5">
-					<h5 class="fw-bold text-secondary">Complementos</h5>
-
-					@foreach (var complemento in Model.ReservaComplementos)
-					{
-						<p><strong>Nombre:</strong> @complemento.IdcomplementoNavigation.Nombre</p>
-						<p><strong>Precio:</strong> @complemento.IdcomplementoNavigation.Precio</p>
-						<hr class="my-1">
-					}
-
-				</div>
-
 			</div>
 
 
@@ -81,8 +68,34 @@
 			</div>
 		</div>
 
+
+		<!-- Detalles de lod compelmetos -->
+		<table class="table table-bordered text-center">
+			<h5 class="fw-bold text-secondary">Complementos</h5>
+			@foreach (var complemento in Model.ReservaComplementos)
+			{
+				<thead class="bg-dark text-white">
+					<tr>
+						<th>Nombre</th>
+						<th>Precio</th>
+						<th>Cantidad</th>
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>@complemento.IdcomplementoNavigation.Nombre</td>
+						<td>$@complemento.Precio</td>
+						<td>@complemento.Cantidad</td>
+						<td>$@(complemento.Precio * complemento.Cantidad)</td>
+				</tr>
+			</tbody>
+			}
+		</table>
+
 		<!-- Detalles de la reserva -->
 		<table class="table table-bordered text-center">
+			<h5 class="fw-bold text-secondary">Detalles del Pago</h5>
 			<thead class="bg-dark text-white">
 				<tr>
 					<th>Pasajeros</th>
