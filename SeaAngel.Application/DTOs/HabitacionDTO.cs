@@ -21,6 +21,8 @@ namespace SeaAngel.Application.DTOs
 
         public decimal TamanoM2 { get; set; }
 
+        public byte[]? Foto { get; set; }
+
         public virtual List<BarcoHabitacion> BarcoHabitacion { get; set; } = null!;
     }
 }
