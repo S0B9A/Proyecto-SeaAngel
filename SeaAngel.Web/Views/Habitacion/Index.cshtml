@@ -9,6 +9,9 @@
 <style>
     .card-hover {
         transition: box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out;
+        cursor: pointer;
+        border: none;
+        overflow: hidden;
     }
 
         .card-hover:hover {
@@ -16,42 +19,86 @@
             transform: translateY(-5px);
         }
 
-    .btn-custom {
+    .linea-decorativa {
         background-color: #E96C12;
-        color: white;
-        border: none;
+        height: 3px;
+    }
+    .card{
+        border-bottom: 3px solid #E96C12;
+    }
+    .card-body {
+        padding: 20px;
     }
 
-        .btn-custom:hover {
-            background-color: #d35c0f;
-            color: white;
-        }
+    .card-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .habitacion-img img {
+        height: 100%;
+        object-fit: cover ;
+        border-radius: 1px !important;
+    }
+
+    .banner-img img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
 </style>
 
 <div class="container">
+
     <div class="row">
-        @foreach (var item in Model)
-        {
-            <div class="col-md-6 mb-4 d-flex align-items-stretch">
-                <div class="card card-hover shadow-lg rounded-3 w-100" style="border-left: 5px solid #E96C12; min-height: 200px;">
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <div>
-                            <h5 class="card-title text-primary">@item.Nombre</h5>
-                            <p class="card-text text-muted">@item.Descripcion</p>
-                            <ul class="list-unstyled">
-                                <li><strong>Capacidad Mínima:</strong> @item.CapacidadMin personas</li>
-                                <li><strong>Capacidad Máxima:</strong> @item.CapacidadMax personas</li>
-                                <li><strong>Tamaño:</strong> @item.TamanoM2 m²</li>
-                            </ul>
+        <div class="col-12 banner-img text-center">
+
+            <img src="@Url.Content("~/Images/banner-habitacion.png")">
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="section-header text-center pb-5 pt-5">
+                <h2 class="text-primary">Habitaciones</h2>
+                <div class="linea-decorativa mx-auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mx-2 mx-md-4 mx-lg-5">
+        <div class="row pt-5">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-6 mb-4">
+                    <div class="card card-hover shadow-lg rounded-3 w-100 h-100 d-flex flex-row"
+                         onclick="window.location.href='@Url.Action("Details", "Habitacion", new { id = item.ID })'">
+
+                        <!-- Columna de la imagen -->
+                        <div class="habitacion-img col-md-5">
+                            <img src="data:image/jpeg;charset=utf-8;base64,@Convert.ToBase64String(@item.Foto)"
+                                 alt="@item.Nombre" class="card-img w-100 h-100">
                         </div>
-                        <div class="d-flex justify-content-between mt-3">
-                            <a href="@Url.Action("Edit", new { id = item.ID })" class="btn btn-custom">Editar</a>
-                            <a href="@Url.Action("Details", new { id = item.ID })" class="btn btn-custom">Detalles</a>
-                            <a href="@Url.Action("Delete", new { id = item.ID })" class="btn btn-custom">Eliminar</a>
+
+                        <!-- Columna de información -->
+                        <div class="col-md-7 d-flex flex-column">
+                            <div class="card-body d-flex flex-column justify-content-between">
+                                <div>
+                                    <h5 class="card-title text-primary">@item.Nombre</h5>
+                                    <p class="card-text text-muted">@item.Descripcion</p>
+                                    <ul class="list-unstyled">
+                                        <li><strong>Capacidad Mínima:</strong> @item.CapacidadMin personas</li>
+                                        <li><strong>Capacidad Máxima:</strong> @item.CapacidadMax personas</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
 </div>

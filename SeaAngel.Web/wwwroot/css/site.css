@@ -215,11 +215,6 @@ body {
     margin-top: 10px; /* Espaciado debajo del título */
 }
 
-/* Añadir borde azul rey oscuro en las tarjetas al hacer hover */
-.card:hover {
-    border: 2px solid #B88A46; /* Azul rey oscuro */
-}
-
 /* ---------- Estilo de la pagina de barcos Detalle ---------- */
 
 .detalleBarco-container{

@@ -1,0 +1,103 @@
+﻿@model SeaAngel.Application.DTOs.HabitacionDTO
+
+@{
+    ViewData["Title"] = "Detalle de Habitación";
+}
+
+<style>
+    /* Asegura que el body ocupe toda la pantalla y use flexbox */
+    body, html {
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f8f9fa; /* Color de fondo ligero */
+    }
+
+    /* Contenedor que centra la tarjeta en la pantalla */
+    .contenedor-detalle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    .detalle-habitacion {
+        max-width: 1400px; /* Aumenta el ancho del contenedor */
+        width: 100%;
+        min-height: 500px; /* Asegura más altura */
+        background-color: #fff;
+        border-bottom: 3px solid #E96C12;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        padding: 30px;
+    }
+
+    .habitacion-img img {
+        max-width: 400px; /* Aumenta el tamaño de la imagen */
+        max-height: 450px;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .linea-decorativa {
+        background-color: #E96C12;
+        height: 3px;
+        width: 50px;
+        margin: 10px 0;
+    }
+
+    .btn-orange {
+        background-color: #E96C12;
+        color: white;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+        .btn-orange:hover {
+            background-color: #d85c10;
+        }
+
+    .info-habitacion {
+        padding-right: 20px;
+    }
+</style>
+
+<!-- Contenedor para centrar todo -->
+<div class="contenedor-detalle">
+    <div class="detalle-habitacion">
+        <div class="row align-items-center">
+            <!-- Información de la habitación -->
+            <div class="col-md-6 info-habitacion">
+                <h2 class="text-primary fw-bold">@Model.Nombre</h2>
+                <div class="linea-decorativa"></div>
+                <p class="text-muted">@Model.Descripcion</p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Capacidad Mínima:</strong> @Model.CapacidadMin personas</li>
+                    <li class="list-group-item"><strong>Capacidad Máxima:</strong> @Model.CapacidadMax personas</li>
+                    <li class="list-group-item"><strong>Tamaño total:</strong> @Model.TamanoM2 m²</li>
+                </ul>
+                <div class="mt-4">
+                    <a href="@Url.Action("Reservar", "Habitacion", new { id = Model.ID })" class="btn btn-orange px-4 py-2">Reservar Ahora</a>
+                </div>
+            </div>
+
+            <!-- Imagen de la habitación -->
+            <div class="col-md-6 habitacion-img text-center">
+                @if (Model.Foto != null && Model.Foto.Length > 0)
+                {
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Foto)" class="img-fluid rounded-3">
+                }
+                else
+                {
+                    <img src="https://via.placeholder.com/350x400?text=Sin+Imagen" class="img-fluid rounded-3" alt="Imagen no disponible">
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -23,9 +23,29 @@ namespace SeaAngel.Web.Controllers
         }
 
         // GET: HabitacionController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int? id)
         {
-            return View();
+            try
+            {
+                if (id == null)
+                {
+                    return RedirectToAction("IndexAdmin");
+                }
+
+                var @object = await _serviceHabitacion.FindByIdAsync(id.Value);
+                if (@object == null)
+                {
+                    throw new Exception("Barco no existente");
+
+                }
+
+                return View(@object);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         // GET: HabitacionController/Create

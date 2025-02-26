@@ -17,6 +17,8 @@ public partial class Habitacion
 
     public decimal TamanoM2 { get; set; }
 
+    public byte[]? Foto { get; set; }
+
     public virtual ICollection<BarcoHabitacion> BarcoHabitacion { get; set; } = new List<BarcoHabitacion>();
 
     public virtual ICollection<DetReserva> DetReserva { get; set; } = new List<DetReserva>();
