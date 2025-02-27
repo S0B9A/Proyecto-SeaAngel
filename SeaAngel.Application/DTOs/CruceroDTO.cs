@@ -23,10 +23,10 @@ namespace SeaAngel.Application.DTOs
 
         public virtual ICollection<EncReservaDTO> EncReserva { get; set; }
 
-        public virtual ICollection<FechasPrecios> FechasPrecios { get; set; }
+        public virtual ICollection<FechasPreciosDTO> FechasPrecios { get; set; } = null!;
 
         public virtual BarcoDTO? IdbarcoNavigation { get; set; }
 
-        public virtual ICollection<ItinerarioDTO> Itinerario { get; set; }
+        public virtual ICollection<ItinerarioDTO> Itinerario { get; set; } = null!;
     }
 }
