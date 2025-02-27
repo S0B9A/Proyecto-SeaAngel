@@ -2,7 +2,7 @@
     <div class="container">
         <a class="navbar-brand" href="@Url.Action("Index", "Home")">
             <!-- Logo a la izquierda -->
-            <img src="./images/Logo2.png" alt="Logo SeaAngel" class="logo-img d-none d-lg-inline-block">
+            <img src="@Url.Content("~/Images/Logo2.png")" alt="Logo SeaAngel" class="logo-img d-none d-lg-inline-block">
             <!-- Texto más grande para SeaAngel -->
             <span class="text-navy display-3">SeaAngel</span>
             <!-- Texto dorado oscuro para Company Cruises -->
@@ -21,7 +21,7 @@
                     <a href="@Url.Action("Index", "Home")" class="nav-link itemPag">Inicio</a>
                 </li>
                 <li class="nav-item">
-                    <a href="@Url.Action("Index", "Home")" class="nav-link itemPag">Cruceros</a>
+                    <a href="@Url.Action("Index", "Crucero")" class="nav-link itemPag">Cruceros</a>
                 </li>
                 <li class="nav-item">
                     <a href="@Url.Action("Index", "Barco")" class="nav-link itemPag">Barcos</a>

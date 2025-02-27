@@ -1,0 +1,106 @@
+﻿<style>
+    .card-hover {
+        transition: box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out;
+        cursor: pointer;
+        border: none;
+        overflow: hidden;
+        position: relative;
+    }
+
+        .card-hover:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px);
+        }
+
+    .crucero-img {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        border-radius: 5px;
+    }
+
+        .crucero-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    /* Sombra negra en toda la imagen */
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Sombra negra */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .crucero-nombre {
+        color: white;
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .crucero-fecha {
+        color: white;
+        font-size: 1rem;
+        font-weight: bold;
+        text-align: center;
+    }
+    /* --- Banner con efecto Parallax solo con CSS --- */
+    .banner-img {
+        width: 100%;
+        height: 400px; /* Altura fija */
+        background-image: url("@Url.Content("~/Images/banner-cruceros.png")");
+        background-size: cover;
+        background-position: center 80%;
+        background-attachment: fixed; /* Efecto parallax */
+    }
+</style>
+
+<div class="container">
+    <!-- Banner -->
+    <div class="row">
+        <div class="col-12 banner-img text-center"></div>
+    </div>
+
+    <!-- Sección de Cruceros -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="section-header text-center pb-5 pt-5">
+                <h2 class="text-primary">Nuestros Cruceros</h2>
+                <div class="linea-decorativa mx-auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mx-2 mx-md-4 mx-lg-5">
+        <div class="row pt-5">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card card-hover shadow-lg rounded-3 w-100 h-100"
+                         onclick="window.location.href='@Url.Action("Details", "Crucero", new { id = item.Id })'">
+
+                        <!-- Imagen del crucero con sombra y nombre centrado -->
+                        <div class="crucero-img">
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.Foto)" alt="@item.Nombre">
+                            <div class="overlay">
+                                <div class="d-flex flex-column text-center">
+                                    <h5 class="crucero-nombre">@item.Nombre</h5>
+                                    <h6 class="crucero-fecha">Comienza el @item.FechaInicio.ToString("dd/MM/yyyy")</h6>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

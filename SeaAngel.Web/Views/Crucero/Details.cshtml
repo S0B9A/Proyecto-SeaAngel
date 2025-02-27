@@ -1,0 +1,145 @@
+﻿@model SeaAngel.Application.DTOs.CruceroDTO
+
+@{
+    ViewData["Title"] = "Detalle del Crucero";
+}
+
+<style>
+
+    /* Contenedor principal */
+    .contenedor-detalle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin-top:100px;
+    }
+
+    .detalle-crucero {
+        max-width: 1400px;
+        width: 100%;
+        min-height: 600px;
+        background-color: #FFFFFF;
+        border-bottom: 4px solid #005f8a; /* Azul marino profundo */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        border-radius: 12px;
+        padding: 30px;
+    }
+
+    .crucero-img img {
+        max-width: 400px;
+        max-height: 450px;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .linea-decorativa {
+        background-color: #0077B6;
+        height: 4px;
+        width: 60px;
+        margin: 10px 0;
+    }
+
+    .btn-marine {
+        background-color: #0077B6;
+        color: white;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-weight: bold;
+        text-transform: uppercase;
+        transition: 0.3s;
+    }
+
+        .btn-marine:hover {
+            background-color: #005f8a;
+        }
+
+    .info-crucero h2, .info-crucero h4 {
+        color: #005f8a;
+    }
+
+    .list-group-item {
+        background-color: #f1f9fc; /* Azul claro suave */
+        border: none;
+        border-left: 4px solid #0077B6;
+        border-radius: 8px;
+        padding: 10px 15px;
+        margin-bottom: 8px;
+    }
+
+        .list-group-item strong {
+            color: #005f8a;
+        }
+
+    .seccion-titulo {
+        background: linear-gradient(to right, #0077B6, #00a8e8);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+</style>
+
+<div class="contenedor-detalle">
+    <div class="detalle-crucero">
+        <!-- Primera fila: Información general e imagen -->
+        <div class="row align-items-center mb-4">
+            <div class="col-md-6 info-crucero">
+                <h2 class="fw-bold">@Model.Nombre</h2>
+                <div class="linea-decorativa"></div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Cantidad de Días:</strong> @Model.CantDias días</li>
+                    <li class="list-group-item"><strong>Barco:</strong> @(Model.IdbarcoNavigation?.Nombre ?? "No disponible")</li>
+                </ul>
+                <div class="mt-4">
+                    <a href="@Url.Action("Reservar", "Crucero", new { id = Model.Id })" class="btn btn-marine">Reservar Ahora</a>
+                </div>
+            </div>
+
+            <div class="col-md-6 crucero-img text-center">
+                @if (Model.Foto != null && Model.Foto.Length > 0)
+                {
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Foto)" class="img-fluid rounded-3">
+                }
+                else
+                {
+                    <img src="https://via.placeholder.com/400x450?text=Sin+Imagen" class="img-fluid rounded-3" alt="Imagen no disponible">
+                }
+            </div>
+        </div>
+
+        <!-- Segunda fila: Itinerario y Fechas/Precios -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="seccion-titulo">Itinerario</div>
+                <ul class="list-group mt-2">
+                    @foreach (var item in Model.Itinerario)
+                    {
+                        <li class="list-group-item">
+                            <strong>Puerto:</strong> @item.IdpuertoNavigation.Nombre <br>
+                            <small class="text-muted">@item.Descripcion</small>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <div class="col-md-6">
+                <div class="seccion-titulo">Fechas y Precios</div>
+                <ul class="list-group mt-2">
+                    @foreach (var fechaPrecio in Model.FechasPrecios)
+                    {
+                        <li class="list-group-item">
+                            <strong>Fecha de Inicio:</strong> @fechaPrecio.FechaInicio <br>
+                            <small class="text-muted">@fechaPrecio.IdhabitacionNavigation.Nombre - </small>
+                            <small class="text-muted">₡@fechaPrecio.Precio</small>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
