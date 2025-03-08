@@ -141,7 +141,18 @@
 							<div class="card-body">
 								<h5 class="card-title text-blue-dark">@barco.Nombre</h5>
 								<p class="parrafo-barco">@barco.Descripcion</p>
-								<p class="parrafo-barco">Cantidad de habitaciones: @barco.CantidadHabitaciones</p>
+
+								@if (barco.BarcoHabitacion != null && barco.BarcoHabitacion.Any())
+								{
+									<p class="parrafo-barco">
+										<strong>Cantidad total de habitaciones disponibles:</strong> @barco.BarcoHabitacion.Sum(h => h.CantDisponible) <br>
+									</p>
+								}
+								else
+								{
+									<p>No hay habitaciones disponibles.</p>
+								}
+
 								<a href="@Url.Action("Details", "Barco", new { id = barco.Id })" class="btn btn-blue-dark">Detalle</a>
 							</div>
 						</div>

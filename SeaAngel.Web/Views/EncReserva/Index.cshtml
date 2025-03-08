@@ -11,7 +11,7 @@
         <table class="table table-light table-striped table-hover">
             <thead>
                 <tr>
-                    <th scope="col">#Reserva</th>
+                    <th scope="col">Cliente</th>
                     <th scope="col">Estado</th>
                     <th scope="col">Cantidad de Pasajeros</th>
                     <th scope="col">Fecha Creación</th>
@@ -23,7 +23,7 @@
                 @foreach (var item in Model)
                 {
                     <tr class="animate__animated animate__fadeIn">
-                        <td>@item.Id</td>
+                        <td>@item.IdusuarioNavigation.Nombre</td>
                         <td>@item.Estado</td>
                         <td>@item.CantidadDePasajeros</td>
                         <td>@(item.FechaCreacion.HasValue ? item.FechaCreacion.Value.ToString("dd/MM/yyyy") : "N/A")</td>

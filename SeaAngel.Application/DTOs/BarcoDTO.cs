@@ -19,8 +19,6 @@ namespace SeaAngel.Application.DTOs
 
         public byte[]? Imagen { get; set; }
 
-        public int CantidadHabitaciones { get; set; }
-
         public virtual ICollection<BarcoHabitacionDTO> BarcoHabitacion { get; set; } = null!;
     }
 }

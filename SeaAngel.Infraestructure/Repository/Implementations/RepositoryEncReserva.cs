@@ -37,7 +37,15 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
 
         public async Task<ICollection<EncReserva>> ListAsync()
         {
-            var collection = await _context.Set<EncReserva>().AsNoTracking().ToListAsync();
+            var collection = await _context.Set<EncReserva>()
+                .Include(Reserva => Reserva.ReservaComplementos)
+                                .ThenInclude(Complementos => Complementos.IdcomplementoNavigation)
+                                .Include(x => x.IdusuarioNavigation)
+                                .Include(x => x.IdcruceroNavigation)
+                                .ThenInclude(Itinerario => Itinerario.Itinerario)
+                                .ThenInclude(puerto => puerto.IdpuertoNavigation)
+                                .AsNoTracking()
+                                .ToListAsync();
             return collection;
         }
     }

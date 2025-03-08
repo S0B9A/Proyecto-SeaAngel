@@ -33,7 +33,8 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
         {
             // Obtener los barcos e incluir la relación BarcoHabitacion
             var collection = await _context.Set<Barco>()
-                .Include(b => b.BarcoHabitacion)  // Asegúrate de incluir la relación BarcoHabitacion
+                .Include(b => b.BarcoHabitacion)
+                 .ThenInclude(Habitacion => Habitacion.IdhabitacionNavigation)
                 .ToListAsync();
 
             return collection;

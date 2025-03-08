@@ -1,76 +1,156 @@
 ﻿@model SeaAngel.Application.DTOs.BarcoDTO
 
 @{
-    ViewData["Title"] = "Detalles del Barco";
+    ViewData["Title"] = "Detalle del Barco";
 }
 
-<div class="container barco my-5">
-    <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
-        <!-- Encabezado -->
-        <div class="card-header text-white text-center py-4">
-            <h2 class="mb-0 fw-bold" style="color:#1E3A8A;">Detalles del Barco</h2>
-            <div class="linea-decorativa mx-auto"></div>
-        </div>
+<style>
+    /* Contenedor principal */
+    .contenedor-detalle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin-top: 80px;
+        padding: 20px;
+    }
 
-        <div class="card-body p-5">
-            <div class="row g-5 align-items-center">
-                <!-- Imagen del barco -->
-                <div class="col-lg-6 d-flex justify-content-center">
-                    <div class="image-container rounded-4 shadow-lg overflow-hidden" style="width: 100%; max-width: 500px;">
-                        @if (Model.Imagen != null && Model.Imagen.Length > 0)
-                        {
-                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Imagen)" class="img-fluid w-100 rounded-4" alt="Imagen del barco" style="height: 400px; object-fit: cover;">
-                        }
-                        else
-                        {
-                            <img src="https://via.placeholder.com/500x400?text=Sin+Imagen" class="img-fluid w-100 rounded-4" alt="Imagen no disponible" style="height: 400px; object-fit: cover;">
-                        }
-                    </div>
-                </div>
+    .detalle-barco {
+        max-width: 1200px;
+        width: 100%;
+        background-color: #ffffff;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        border-radius: 12px;
+        padding: 40px;
+        border-top: 4px solid #0077B6;
+        transition: all 0.3s ease;
+    }
 
-                <!-- Información del barco -->
-                <div class="col-lg-6">
-                    <ul class="list-group list-group-flush fs-5">
-                        <li class="list-group-item">
-                            <strong class="text-primary"><i class="bi bi-ship"></i> Nombre:</strong> @Model.Nombre
-                        </li>
-                        <li class="list-group-item">
-                            <strong class="text-primary"><i class="bi bi-card-text"></i> Descripción:</strong> @Model.Descripcion
-                        </li>
-                        <li class="list-group-item">
-                            <strong class="text-primary"><i class="bi bi-people"></i> Capacidad:</strong> @Model.Capacidad personas
-                        </li>
-                    </ul>
-                </div>
+        .detalle-barco:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+    .barco-img img {
+        max-width: 100%;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .linea-decorativa {
+        background: linear-gradient(to right, #0077B6, #00a8e8);
+        height: 3px;
+        width: 80px;
+        margin: 12px 0;
+        border-radius: 4px;
+    }
+
+    .btn-marine {
+        background: linear-gradient(135deg, #0077B6, #005f8a);
+        color: white;
+        border-radius: 8px;
+        padding: 14px 26px;
+        font-weight: bold;
+        text-transform: uppercase;
+        border: none;
+        transition: 0.3s;
+        display: inline-block;
+        text-decoration: none;
+    }
+
+        .btn-marine:hover {
+            background: linear-gradient(135deg, #005f8a, #004b6b);
+            transform: translateY(-2px);
+        }
+
+    .info-barco h2 {
+        color: #005f8a;
+        font-weight: 700;
+    }
+
+    .list-group-item {
+        background-color: #f1f9fc;
+        border: none;
+        border-left: 5px solid #0077B6;
+        border-radius: 6px;
+        padding: 12px 18px;
+        margin-bottom: 10px;
+        transition: 0.3s;
+    }
+
+        .list-group-item:hover {
+            background-color: #e3f2fd;
+        }
+
+        .list-group-item strong {
+            color: #005f8a;
+            font-weight: 600;
+        }
+
+    .seccion-titulo {
+        background: linear-gradient(to right, #0077B6, #00a8e8);
+        color: white;
+        padding: 10px 18px;
+        border-radius: 6px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        text-align: center;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<div class="contenedor-detalle">
+    <div class="detalle-barco">
+        <!-- Primera fila: Información general e imagen -->
+        <div class="row align-items-center mb-4">
+            <div class="col-md-6 info-barco">
+                <h2>@Model.Nombre</h2>
+                <div class="linea-decorativa"></div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Descripción:</strong> @Model.Descripcion</li>
+                    <li class="list-group-item"><strong>Capacidad:</strong> @Model.Capacidad personas</li>
+
+
+                    @if (Model.BarcoHabitacion != null && Model.BarcoHabitacion.Any())
+                    {
+                        <li class="list-group-item"><strong>Cantidad total de habitaciones disponibles:</strong> @Model.BarcoHabitacion.Sum(h => h.CantDisponible)</li>
+                    }
+                    else
+                    {
+                        <p>No hay habitaciones disponibles.</p>
+                    }
+
+                </ul>
             </div>
 
-            <!-- Habitaciones -->
-            <div class="mt-5">
-                <h4 class="p-3 text-white fw-bold rounded-3" style="background: #1E3A8A;">Habitaciones</h4>
-                <div class="row">
+            <div class="col-md-6 barco-img text-center">
+                @if (Model.Imagen != null && Model.Imagen.Length > 0)
+                {
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Imagen)" class="img-fluid rounded-3">
+                }
+                else
+                {
+                    <img src="https://via.placeholder.com/400x450?text=Sin+Imagen" class="img-fluid rounded-3" alt="Imagen no disponible">
+                }
+            </div>
+        </div>
+
+        <!-- Segunda fila: Habitaciones -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="seccion-titulo">Habitaciones</div>
+                <ul class="list-group mt-2">
                     @foreach (var habitacion in Model.BarcoHabitacion)
                     {
-                        <div class="col-md-6 mb-3">
-                            <div class="card border-0 shadow-sm rounded-3">
-                                <div class="card-body">
-                                    <h5 class="text-dark">@habitacion.IdhabitacionNavigation.Nombre</h5>
-                                    <p class="mb-1"><strong>Descripción:</strong> @habitacion.IdhabitacionNavigation.Descripcion</p>
-                                    <p class="mb-0"><strong>Tamaño:</strong> @habitacion.IdhabitacionNavigation.TamanoM2 m²</p>
-                                </div>
-                            </div>
-                        </div>
+                        <li class="list-group-item">
+                            <strong>Nombre:</strong> @habitacion.IdhabitacionNavigation.Nombre <br>
+                            <small class="text-muted">@habitacion.IdhabitacionNavigation.Descripcion</small> <br>
+                            <small class="text-muted">Tamaño: @habitacion.IdhabitacionNavigation.TamanoM2 m²</small>
+                            <small class="text-muted">Cantidad de habitaciones: @habitacion.CantDisponible</small>
+                        </li>
                     }
-                </div>
+                </ul>
+
             </div>
         </div>
     </div>
 </div>
-
-<style>
- 
-    .barco {
-        margin-top: 90px !important;
-    }
-
- 
-</style>
