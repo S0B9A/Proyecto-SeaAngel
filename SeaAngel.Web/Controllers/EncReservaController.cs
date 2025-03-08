@@ -29,7 +29,7 @@ namespace SeaAngel.Web.Controllers
             {
                 if (id == null)
                 {
-                    return RedirectToAction("IndexAdmin");
+                    return RedirectToAction("Index");
                 }
                 var @object = await _serviceEncReserva.FindByIdAsync(id.Value);
                 if (@object == null)

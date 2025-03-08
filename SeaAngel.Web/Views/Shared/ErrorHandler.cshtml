@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Error";
+}
+@{
+    if (@ViewBag.ErrorMessages != null)
+    {
+        <div class="container mt-5" style="margin-top: 100px !important;">
+            <div class="card shadow border-primary rounded-3">
+                <div class="card-header bg-primary text-primary">
+                    <h4 class="mb-0">Se ha presentado un Error</h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-primary">Event Id: @ViewBag.ErrorMessages.IdEvent</h5>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var item in @ViewBag.ErrorMessages.ListMessages)
+                        {
+                            <li class="list-group-item text-primary">@item</li>
+                        }
+                    </ul>
+                    <div class="mt-4">
+                        <button onclick="window.history.back()" class="btn btn-outline-primary btn-sm">Regresar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
