@@ -39,5 +39,12 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
 
             return collection;
         }
+
+        public async Task<int> AddAsync(Barco entity)
+        {
+            await _context.Set<Barco>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id;
+        }
     }
 }

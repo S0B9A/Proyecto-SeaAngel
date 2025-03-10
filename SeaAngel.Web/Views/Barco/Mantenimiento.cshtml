@@ -1,0 +1,89 @@
+﻿@model IEnumerable<SeaAngel.Application.DTOs.BarcoDTO>
+
+@{
+    ViewData["Title"] = "Mantenimiento de Barcos";
+}
+
+<h1 class="text-center text-white my-5 animate__animated animate__fadeIn">Mantenimiento de Barcos</h1>
+
+<div class="container">
+    <div class="mb-4 text-center">
+        <a asp-action="Create" class="btn btn-lg px-4 py-2" style="background-color: #002366; color: white; border-radius: 50px; font-size: 1rem;">Crear Barco</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-light table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Capacidad</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="animate__animated animate__fadeIn">
+                        <td>@item.Nombre</td>
+                        <td>@item.Descripcion</td>
+                        <td>@item.Capacidad</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-lg px-4 py-2" style="background-color: #002366; color: white; border-radius: 50px; font-size: 1rem;">Actualizar</a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-lg px-4 py-2" style="background-color: #002366; color: white; border-radius: 50px; font-size: 1rem;">Ver Detalles</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .table {
+        background-color: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(8px);
+        border-radius: 15px;
+        color: black;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+        .table th, .table td {
+            font-size: 1.1rem;
+            padding: 15px;
+            text-align: center;
+            color: black;
+        }
+
+    .table-hover tbody tr {
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 169, 209, 0.15);
+            transform: scale(1.01);
+            color: black;
+        }
+
+    .table th {
+        background-color: rgba(255, 255, 255, 0.85);
+        color: black;
+        font-weight: bold;
+    }
+
+    .btn {
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        color: white;
+    }
+
+        .btn:hover {
+            background-color: #001A4D;
+            box-shadow: 0 5px 15px rgba(0, 35, 102, 0.5);
+        }
+
+    .animate__fadeIn {
+        animation-duration: 1s;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">

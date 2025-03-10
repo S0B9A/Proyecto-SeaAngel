@@ -1,0 +1,81 @@
+﻿@model SeaAngel.Application.DTOs.BarcoDTO
+
+@{
+    ViewData["Title"] = "Crear";
+}
+
+
+<div class="container d-flex justify-content-center align-items-center" style="margin-top: 250px;">
+
+    <div class="card shadow-lg p-4" style="border-radius: 15px; border: 2px solid #003366; background-color: #f8f9fa; width: 60%;">
+        <form asp-action="Create" asp-antiforgery="true" enctype="multipart/form-data">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Nombre" class="form-label fw-bold">Nombre del Barco</label>
+                        <input asp-for="Nombre" class="form-control" placeholder="Ingrese el nombre del barco" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Descripcion" class="form-label fw-bold">Descripción</label>
+                        <input asp-for="Descripcion" class="form-control" placeholder="Descripción del barco" />
+                        <span asp-validation-for="Descripcion" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Capacidad" class="form-label fw-bold">Capacidad</label>
+                        <input asp-for="Capacidad" class="form-control" placeholder="Capacidad máxima" />
+                        <span asp-validation-for="Capacidad" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Imagen" class="form-label fw-bold">Imagen del Barco</label>
+                        <input type="file" class="form-control" id="ImageFile" name="ImageFile" required onchange="previewImage()" />
+                        <span asp-validation-for="Imagen" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <label class="fw-bold">Vista previa</label>
+                        <div class="d-flex justify-content-center">
+                            <img id="imagePreview" src="#" alt="Imagen seleccionada" class="img-fluid border rounded" style="display:none; width: 50%; max-width: 50%; height: auto; border: 2px solid #003366;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a asp-action="Index" class="btn btn-outline-dark">Regresar al listado</a>
+                <input type="submit" value="Crear" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function previewImage() {
+            var file = document.getElementById('ImageFile').files[0];
+            var reader = new FileReader();
+            reader.onloadend = function () {
+                var imagePreview = document.getElementById('imagePreview');
+                imagePreview.src = reader.result;
+                imagePreview.style.display = 'block';
+            }
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('imagePreview').style.display = 'none';
+            }
+        }
+    </script>
+}
