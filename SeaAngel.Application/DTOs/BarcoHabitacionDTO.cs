@@ -13,9 +13,10 @@ namespace SeaAngel.Application.DTOs
     {
         public int Idbarco { get; set; }
 
+        [Display(Name = "Codigo Habitación")]
         public int Idhabitacion { get; set; }
 
-        [Display(Name = "Habitacion")]
+        [Display(Name = "Habitación")]
         public string NombreHabitacion { get; set; } = default!;
 
         [Display(Name = "Cantidad")]
