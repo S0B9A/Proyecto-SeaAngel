@@ -12,5 +12,6 @@ namespace SeaAngel.Infraestructure.Repository.Interfaces
     {
         Task<ICollection<Habitacion>> ListAsync();
         Task<Habitacion> FindByIdAsync(int id);
+        Task<ICollection<Habitacion>> FindByNameAsync(string nombre);
     }
 }

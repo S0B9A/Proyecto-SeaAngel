@@ -11,7 +11,7 @@ namespace SeaAngel.Application.DTOs
 {
     public record BarcoDTO
     {
-        [ValidateNever]
+        
         public int Id { get; set; }
 
         [Required(ErrorMessage = "{0} es un dato requerido")]
@@ -27,7 +27,6 @@ namespace SeaAngel.Application.DTOs
         [Display(Name = "Imagen Barco")]
         public byte[]? Imagen { get; set; }
 
-        [ValidateNever]
-        public virtual ICollection<BarcoHabitacionDTO> BarcoHabitacion { get; set; } = null!;
+        public virtual List<BarcoHabitacionDTO> BarcoHabitacion { get; set; } = null!;
     }
 }

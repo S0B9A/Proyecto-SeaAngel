@@ -38,5 +38,14 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
             var collection = await _context.Set<Habitacion>().AsNoTracking().ToListAsync();
             return collection;
         }
+
+        public async Task<ICollection<Habitacion>> FindByNameAsync(string nombre)
+        {
+            var collection = await _context
+                                         .Set<Habitacion>()
+                                         .Where(p => p.Nombre.Contains(nombre))
+                                         .ToListAsync();
+            return collection;
+        }
     }
 }

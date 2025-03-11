@@ -12,5 +12,6 @@ namespace SeaAngel.Application.Services.Interfaces
         Task<ICollection<BarcoDTO>> ListAsync();
         Task<BarcoDTO> FindByIdAsync(int id);
         Task<int> AddAsync(BarcoDTO dto);
+        Task<int> GetNextNumberBarco();
     }
 }

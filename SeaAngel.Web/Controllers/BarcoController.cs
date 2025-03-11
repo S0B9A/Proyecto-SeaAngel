@@ -1,30 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using SeaAngel.Application.DTOs;
 using SeaAngel.Application.Services.Interfaces;
+using System.Text.Json;
 
 namespace SeaAngel.Web.Controllers
 {
     public class BarcoController : Controller
     {
         private readonly IServiceBarco _serviceBarco;
+        private readonly IServiceHabitacion _serviceHabitacion;
 
-        public BarcoController(IServiceBarco serviceBarco)
+        public BarcoController(IServiceBarco serviceBarco, IServiceHabitacion serviceHabitacion)
         {
             _serviceBarco = serviceBarco;
+            _serviceHabitacion = serviceHabitacion;
         }
 
         // GET: AutorController
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            //Recibir el mensaje de TempData
-            if (TempData.ContainsKey("Mensaje"))
-            {
-                ViewBag.NotificationMessage = TempData["Mensaje"];
-
-            }
-
             var collection = await _serviceBarco.ListAsync();
             return View(collection);
         }
@@ -67,6 +64,13 @@ namespace SeaAngel.Web.Controllers
         // GET: BarcoController/Create
         public async Task<IActionResult> Create()
         {
+            var nextReceiptNumber = await _serviceBarco.GetNextNumberBarco();
+            ViewBag.CurrentReceipt = nextReceiptNumber;
+
+            // Clear CarShopping
+            TempData["CartShopping"] = null;
+            TempData.Keep();
+
             return View();
         }
 
@@ -76,37 +80,139 @@ namespace SeaAngel.Web.Controllers
         public async Task<IActionResult> Create(BarcoDTO dto, IFormFile imageFile)
         {
             MemoryStream target = new MemoryStream();
+            string json;
 
-            // Cuando es Insert Image viene en null porque se pasa diferente
-            if (dto.Imagen == null)
+            try
             {
-                if (imageFile != null)
-                {
-                    imageFile.OpenReadStream().CopyTo(target);
+                json = (string)TempData["CartShopping"]!;
 
-                    dto.Imagen = target.ToArray();
-                    ModelState.Remove("Imagen");
+                if (string.IsNullOrEmpty(json))
+                {
+                    return BadRequest("No hay datos por facturar");
+                }
+
+                // Cuando es Insert Image viene en null porque se pasa diferente
+                if (dto.Imagen == null)
+                {
+                    if (imageFile != null)
+                    {
+                        imageFile.OpenReadStream().CopyTo(target);
+
+                        dto.Imagen = target.ToArray();
+                        ModelState.Remove("Imagen");
+                    }
+                }
+
+
+                var lista = JsonSerializer.Deserialize<List<BarcoHabitacionDTO>>(json!)!;
+
+                //Agregar datos faltantes al barco
+                dto.Id = 0;
+                dto.BarcoHabitacion = lista;
+
+                await _serviceBarco.AddAsync(dto);
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                // Keep Cache data
+                TempData.Keep();
+                return BadRequest(ex.Message);
+            }
+        }
+
+        public async Task<IActionResult> AddHabitacion(int id, int cantidad)
+        {
+            BarcoHabitacionDTO barcoHabitacionDTO = new BarcoHabitacionDTO();
+            var lista = new List<BarcoHabitacionDTO>();
+            string json = "";
+
+            var Habitacion = await _serviceHabitacion.FindByIdAsync(id);
+
+            BarcoHabitacionDTO item = new BarcoHabitacionDTO();
+
+            //Cantidad de item a guardar
+            barcoHabitacionDTO.CantDisponible = cantidad;
+
+            if (TempData["CartShopping"] != null)
+            {
+                json = (string)TempData["CartShopping"]!;
+                lista = JsonSerializer.Deserialize<List<BarcoHabitacionDTO>>(json!)!;
+
+                //Buscar si existe en la lista de habitaciones
+                item = lista.FirstOrDefault(o => o.Idhabitacion == id);
+                if (item != null)
+                {
+                    barcoHabitacionDTO.CantDisponible += cantidad;
+
                 }
             }
 
-            if (!ModelState.IsValid)
+            if (item != null && item.CantDisponible != 0)
             {
-                // Lee del ModelState todos los errores que
-                // vienen para el lado del servidor
-                string errors = string.Join("; ", ModelState.Values
-                                   .SelectMany(x => x.Errors)
-                                   .Select(x => x.ErrorMessage));
-                // Respuesta con errores
-                return BadRequest(errors);
+                //Actualizar cantidad de habitaciones existente
+                item.CantDisponible += cantidad;
+            }
+            else
+            {
+                barcoHabitacionDTO.Idhabitacion = Habitacion.ID;
+                barcoHabitacionDTO.CantDisponible = cantidad;
+                barcoHabitacionDTO.NombreHabitacion = Habitacion.Nombre;
+
+                //Agregar al carrito de compras
+                lista.Add(barcoHabitacionDTO);
+
             }
 
-            await _serviceBarco.AddAsync(dto);
+            json = JsonSerializer.Serialize(lista);
+            TempData["CartShopping"] = json;
 
-            TempData["Mensaje"] = Util.SweetAlertHelper.Mensaje(
-                "Crear Barco",
-                "Barco creado", Util.SweetAlertMessageType.success);
 
-            return RedirectToAction("Index");
+            TempData.Keep();
+            return PartialView("_DetailBarcoHabitacion", lista);
+        }
+
+        public IActionResult GetBarcoHabitacion()
+        {
+            List<BarcoHabitacionDTO> lista = new List<BarcoHabitacionDTO>();
+
+            string json = "";
+
+            json = (string)TempData["CartShopping"]!;
+            lista = JsonSerializer.Deserialize<List<BarcoHabitacionDTO>>(json!)!;
+
+            json = JsonSerializer.Serialize(lista);
+            TempData["CartShopping"] = json;
+            TempData.Keep();
+
+            return PartialView("_DetailBarcoHabitacion", lista);
+        }
+
+        public IActionResult DeleteHabitacion(int idHabitacion)
+        {
+            BarcoHabitacionDTO barcoHabitacionDTO = new BarcoHabitacionDTO();
+            List<BarcoHabitacionDTO> lista = new List<BarcoHabitacionDTO>();
+            string json = "";
+
+            if (TempData["CartShopping"] != null)
+            {
+                json = (string)TempData["CartShopping"]!;
+                lista = JsonSerializer.Deserialize<List<BarcoHabitacionDTO>>(json!)!;
+
+                //Eliminar de la lista segun el indice
+                int idx = lista.FindIndex(p => p.Idhabitacion == idHabitacion);
+                lista.RemoveAt(idx);
+
+                json = JsonSerializer.Serialize(lista);
+                TempData["CartShopping"] = json;
+            }
+
+            TempData.Keep();
+
+            // return Content("Ok");
+            return PartialView("_DetailBarcoHabitacion", lista);
+
         }
     }
 }

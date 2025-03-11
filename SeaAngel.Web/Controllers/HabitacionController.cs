@@ -14,6 +14,14 @@ namespace SeaAngel.Web.Controllers
             _serviceHabitacion = serviceHabitacion;
         }
 
+        public async Task<IActionResult> GetHabitacionByName(string filtro)
+        {
+
+            var collection = await _serviceHabitacion.FindByNameAsync(filtro);
+            return Json(collection);
+
+        }
+
         // GET: HabitacionController
         [HttpGet]
         public async Task<ActionResult> Index()

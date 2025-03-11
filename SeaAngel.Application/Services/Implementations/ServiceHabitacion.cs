@@ -44,5 +44,15 @@ namespace SeaAngel.Application.Services.Implementations
             return collection;
         }
 
+        public async Task<ICollection<HabitacionDTO>> FindByNameAsync(string nombre)
+        {
+            var list = await _repository.FindByNameAsync(nombre);
+
+            var collection = _mapper.Map<ICollection<HabitacionDTO>>(list);
+
+            return collection;
+
+        }
+
     }
 }

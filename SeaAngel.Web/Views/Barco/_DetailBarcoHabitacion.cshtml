@@ -1,0 +1,53 @@
+﻿@model IEnumerable<SeaAngel.Application.DTOs.BarcoHabitacionDTO>
+
+<div id="myCard">
+    <div class="card">
+        <div class="card-header">
+            Detalle
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-bordered text-center" id="detalleFactura">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Idhabitacion)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.NombreHabitacion)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CantDisponible)
+                            </th>
+                            <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            if (Model != null)
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td align="center">
+                                            @Html.DisplayFor(modelItem => item.Idhabitacion)
+                                        </td>
+                                        <td align="left">
+                                            @Html.DisplayFor(modelItem => item.NombreHabitacion)
+                                        </td>
+                                        <td align="right">
+                                            @Html.DisplayFor(modelItem => item.CantDisponible)
+                                        </td>
+                                        <td align="right">
+                                            <button type="button" class="btn btn-danger" onclick="deleteHabitacion(@item.Idhabitacion)">Eliminar</button>
+                                        </td>
+                                    </tr>
+                                }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

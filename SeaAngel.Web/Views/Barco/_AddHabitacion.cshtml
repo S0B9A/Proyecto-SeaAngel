@@ -1,0 +1,47 @@
+﻿@model SeaAngel.Web.ViewModels.ViewModelInput
+
+<div class="row" id="MyAddHabitacion">
+    <div class="col-md-4">
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+
+            <label asp-for="Idhabitacion" name="Idhabitacion" class="control-label"></label>
+            <input asp-for="Idhabitacion" id="IdhabitacionModal" type="text" autocomplete="off" class="form-control  form-control-sm" />
+            <span asp-validation-for="Idhabitacion" class="text-danger"></span>
+
+        </div>
+
+        <div class="form-group">
+            <label asp-for="CantDisponible" class="control-label"></label>
+            <input asp-for="CantDisponible" id="CantDisponibleModal" type="number" class="form-control form-control-sm" />
+            <span asp-validation-for="CantDisponible" class="text-danger"></span>
+        </div>
+
+        <br />
+
+        <!--Call JavaScript addLibro -->
+        <button type="button" class="btn btn-success" onclick="addHabitacion()">Agregar Habitacion</button>
+    </div>
+
+    <div class="col-md-4 text-center">
+        <img src="/Images/Logo2.png" class="img-responsive" style="height:80%;width:80%" id="ImgHabitacion">
+    </div>
+
+    <div class="col-md-4 text-left">
+        <p id="HabitacionSelect" name="HabitacionSelect" class="form-label fw-bold">Habitacion: -</p>
+        <p id="DescripcionSelect" name="DescripcionSelect" class="form-label fw-bold">Descripcion: -</p>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Create">Regresar a la creacion Barco</a>
+</div>
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

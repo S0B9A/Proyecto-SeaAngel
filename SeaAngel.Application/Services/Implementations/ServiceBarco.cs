@@ -39,8 +39,23 @@ namespace SeaAngel.Application.Services.Implementations
 
         public async Task<int> AddAsync(BarcoDTO dto)
         {
-            var objectMapped = _mapper.Map<Barco>(dto); // Map BarcoDTO to Barco
-            return await _repository.AddAsync(objectMapped);  // Return
+            try
+            {
+                var objectMapped = _mapper.Map<Barco>(dto); // Map BarcoDTO to Barco
+                return await _repository.AddAsync(objectMapped);  // Return
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
+
+        public async Task<int> GetNextNumberBarco()
+        {
+            int nextReceipt = await _repository.GetNextNumberBarco();
+            return nextReceipt + 1;
         }
 
     }

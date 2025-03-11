@@ -12,5 +12,6 @@ namespace SeaAngel.Infraestructure.Repository.Interfaces
         Task<ICollection<Barco>> ListAsync();
         Task<Barco> FindByIdAsync(int id);
         Task<int> AddAsync(Barco entity);
+        Task<int> GetNextNumberBarco();
     }
 }
