@@ -1,0 +1,189 @@
+﻿@using System.Text.Json
+@using SeaAngel.Application.DTOs
+@model SeaAngel.Application.DTOs.BarcoDTO
+
+@{
+    ViewData["Title"] = "Editar Barco";
+}
+
+<style>
+    ul.ui-autocomplete {
+        z-index: 1100;
+    }
+</style>
+
+<div class="container d-flex justify-content-center align-items-center" style="margin-top: 100px;">
+    <div class="card shadow-lg p-4 rounded-3" style="border: 3px solid #FFA500; background-color: #fff; width: 70%;">
+        <h2 class="text-center" style="color: #333;">Editar Barco</h2>
+        <hr />
+        <form asp-action="Edit" id="myForm" data-ajax="true" data-ajax-method="POST" data-ajax-begin="onBegin" data-ajax-failure="onFailure" data-ajax-success="onSuccess"
+              data-ajax-complete="onComplete" asp-antiforgery="true" enctype="multipart/form-data">
+            <div class="row">
+                <!-- Columna Izquierda (Datos del barco) -->
+                <div class="col-md-6">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Id" class="form-label fw-bold">ID</label>
+                        <input asp-for="Id" class="form-control" readonly />
+                        <span asp-validation-for="Id" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Nombre" class="form-label fw-bold">Nombre del Barco</label>
+                        <input asp-for="Nombre" class="form-control" id="Nombre" placeholder="Ingrese el nombre del barco" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Descripcion" class="form-label fw-bold">Descripción</label>
+                        <input asp-for="Descripcion" class="form-control" placeholder="Descripción del barco" />
+                        <span asp-validation-for="Descripcion" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Capacidad" class="form-label fw-bold">Capacidad</label>
+                        <input asp-for="Capacidad" class="form-control" placeholder="Capacidad máxima" />
+                        <span asp-validation-for="Capacidad" class="text-danger"></span>
+                    </div>
+
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal">Agregar Habitación</button>
+
+                    <div class="mt-4" id="barcoHabitacionView">
+                        @await Html.PartialAsync("_DetailBarcoHabitacion", Model.BarcoHabitacion)
+                    </div> 
+
+                    
+                </div>
+
+                <!-- Columna Derecha (Imagen del barco) -->
+                <div class="col-md-6 d-flex flex-column align-items-center">
+                    <label class="form-label fw-bold">Imagen del Barco</label>
+                    <input type="hidden" asp-for="Imagen" />
+                    <img src="data:image/jpeg;charset=utf-8;base64,@Convert.ToBase64String(Model.Imagen)"
+                         alt="Imagen del barco"
+                         class="img-fluid border rounded"
+                         style="max-width: 100%; max-height: 300px; border: 3px solid #FFA500;" />
+                    <span asp-validation-for="Imagen" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a asp-action="Index" class="btn btn-outline-dark">Regresar</a>
+                <input type="submit" value="Guardar" class="btn btn-primary" style="background-color: #FFA500; border-color: #FFA500;" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Habitaciones -->
+
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Habitaciones</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="mostrar"></div>
+                @await Html.PartialAsync("_AddHabitacion", new SeaAngel.Web.ViewModels.ViewModelInput())
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div> 
+
+@section Scripts {
+    <script>
+
+          $("#IdhabitacionModal").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("GetHabitacionByName", "Habitacion")',
+                    dataType: "json",
+                    data: { filtro: $("#IdhabitacionModal").val() },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.nombre, value: item.Id, data: item };
+                        }));
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    },
+                });
+            },
+            select: function (event, ui) {
+                $("#IdhabitacionModal").val(ui.item.data.id);
+                $("#HabitacionSelect").html("Habitación: " + ui.item.data.nombre);
+                $("#DescripcionSelect").html("Descripcion: " + ui.item.data.descripcion);
+                $("#ImgHabitacion").attr("src", "data:image/jpeg;base64," + ui.item.data.foto);
+                return false;
+            }
+        });
+
+
+            function addHabitacion() {
+                let IdhabitacionModal = $("#IdhabitacionModal").val();
+                let CantDisponibleModal = $("#CantDisponibleModal").val();
+                let divBarco = $("#barcoHabitacionView");
+
+                if (!$.isNumeric(IdhabitacionModal) || !$.isNumeric(CantDisponibleModal) || parseInt(CantDisponibleModal) <= 0) {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Ingrese un código y una cantidad válida.",
+                        icon: "error"
+                    });
+                    return;
+                }
+
+                const myRequest = '@Url.Action("AddHabitacion", "Barco")';
+                fetch(myRequest + "?id=" + IdhabitacionModal + "&cantidad=" + CantDisponibleModal)
+                    .then(response => response.text())
+                    .then(text => divBarco.html(text))
+                    .catch(error => Swal.fire({ title: "Error", text: error, icon: "error" }));
+
+                $("#IdhabitacionModal").val("");
+                $("#CantDisponibleModal").val("");
+                $("#HabitacionSelect").html("");
+                $("#DescripcionSelect").html("");
+                $("#ImgHabitacion").attr("src", "/Images/Logo2.png");
+            }
+
+            function deleteHabitacion(id) {
+                const divBarco = $("#barcoHabitacionView");
+                const myRequest = '@Url.Action("DeleteHabitacion", "Barco")';
+                fetch(myRequest + "?idHabitacion=" + id)
+                    .then(response => response.text())
+                    .then(text => divBarco.html(text))
+                    .catch(error => Swal.fire({ title: "Error", text: error, icon: "error" }));
+            }
+
+            function onBegin() { console.log("onBegin"); }
+            function onFailure(response) { Swal.fire({ title: "Error!", text: response.responseText, icon: "error" }); }
+            function onSuccess(response) {
+                $("#myForm")[0].reset();
+                $("#barcoHabitacionView").html("");
+                Swal.fire({
+                    icon: "success",
+                    title: "Barco Editado",
+                    showConfirmButton: true
+                }).then(() => {
+                    setTimeout(() => {
+                        window.location.href = '@Url.Action("Index", "Barco")';
+                }, 2000); // Espera 2000 ms (2 segundos) antes de redirigir
+            });
+        }
+        function onComplete() { console.log("Fin del proceso"); }
+
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="~/js/barco.js" asp-append-version="true"></script>
+}

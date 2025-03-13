@@ -72,6 +72,31 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
             //return entity.Id;
         }
 
+
+        public async Task UpdateAsync(Barco entity)
+        {
+            try
+            {
+                // Iniciar la transacción
+                await _context.Database.BeginTransactionAsync();
+
+                // Actualizar el barco en la base de datos
+                _context.Set<Barco>().Update(entity);
+
+                // Guardar cambios en la base de datos
+                await _context.SaveChangesAsync();
+
+                // Confirmar la transacción
+                await _context.Database.CommitTransactionAsync();
+            }
+            catch (Exception ex)
+            {
+                // Si hay un error, hacer rollback de la transacción
+                await _context.Database.RollbackTransactionAsync();
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<int> GetNextNumberBarco()
         {
             int current = 0;

@@ -52,6 +52,23 @@ namespace SeaAngel.Application.Services.Implementations
 
         }
 
+        public async Task UpdateAsync(int id, BarcoDTO dto)
+        {
+
+            try
+            {
+                var @object = await _repository.FindByIdAsync(id);    //Obtenga el modelo original a actualizar
+
+                var entity = _mapper.Map(dto, @object!);  //source, destination
+
+                await _repository.UpdateAsync(entity);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<int> GetNextNumberBarco()
         {
             int nextReceipt = await _repository.GetNextNumberBarco();

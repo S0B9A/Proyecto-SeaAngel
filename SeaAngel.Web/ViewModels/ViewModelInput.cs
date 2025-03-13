@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SeaAngel.Web.ViewModels
 {
@@ -11,5 +12,7 @@ namespace SeaAngel.Web.ViewModels
         [Display(Name = "Cantidad")]
         [Range(0, 999999999, ErrorMessage = "Cantidad mínimo es {0}")]
         public int CantDisponible { get; set; }
+
+       
     }
 }

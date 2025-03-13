@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using SeaAngel.Infraestructure.Models;
@@ -25,8 +26,10 @@ namespace SeaAngel.Application.DTOs
         [ValidateNever]
         public decimal? PrecioHabitacion { get; set; }
 
+        [JsonIgnore]
         public virtual BarcoDTO IdbarcoNavigation { get; set; } = null!;
 
+        [JsonIgnore]
         public virtual HabitacionDTO IdhabitacionNavigation { get; set; } = null!;
     }
 }

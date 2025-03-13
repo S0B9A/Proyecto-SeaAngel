@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using SeaAngel.Application.DTOs;
 using SeaAngel.Application.Services.Interfaces;
+using SeaAngel.Infraestructure.Models;
 using System.Text.Json;
 
 namespace SeaAngel.Web.Controllers
@@ -122,6 +123,81 @@ namespace SeaAngel.Web.Controllers
             }
         }
 
+
+        // GET: BarcoController/Edit/5
+        public async Task<IActionResult> Edit(int id)
+        {
+            var lista = new List<BarcoHabitacionDTO>();
+            string json = "";
+            var @object = await _serviceBarco.FindByIdAsync(id);
+
+            // Clear CarShopping
+            TempData["CartShopping"] = null;
+            json = (string)TempData["CartShopping"]!;
+
+
+
+            if (@object.BarcoHabitacion != null)
+            {
+                foreach (BarcoHabitacionDTO barcoHabitacion in @object.BarcoHabitacion )
+                {
+                    var habitacion = await _serviceHabitacion.FindByIdAsync(barcoHabitacion.Idhabitacion);
+                    barcoHabitacion.NombreHabitacion = habitacion.Nombre;
+                    //Agregar al carrito de compras
+                    lista.Add(barcoHabitacion);
+                }
+            }
+
+
+            if (lista != null)
+            {
+                json = JsonSerializer.Serialize(lista);
+                TempData["CartShopping"] = json;
+            }
+
+            TempData.Keep();
+
+
+            return View(@object);
+        }
+
+        // POST: BarcoController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, BarcoDTO dto)
+        {
+
+            string json;
+
+            try
+            {
+                json = (string)TempData["CartShopping"]!;
+
+                if (string.IsNullOrEmpty(json))
+                {
+                    return BadRequest("No hay datos por facturar");
+                }
+
+                var lista = JsonSerializer.Deserialize<List<BarcoHabitacionDTO>>(json!)!;
+
+               // Agregar datos faltantes al barco
+
+
+                dto.BarcoHabitacion = lista;
+
+                await _serviceBarco.UpdateAsync(id, dto);
+                return RedirectToAction("Index");
+
+            }
+            catch (Exception ex)
+            {
+                // Keep Cache data
+                TempData.Keep();
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         public async Task<IActionResult> AddHabitacion(int id, int cantidad)
         {
             BarcoHabitacionDTO barcoHabitacionDTO = new BarcoHabitacionDTO();
@@ -167,9 +243,8 @@ namespace SeaAngel.Web.Controllers
 
             json = JsonSerializer.Serialize(lista);
             TempData["CartShopping"] = json;
-
-
             TempData.Keep();
+
             return PartialView("_DetailBarcoHabitacion", lista);
         }
 
