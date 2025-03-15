@@ -67,6 +67,7 @@ namespace SeaAngel.Web.Controllers
         {
             var nextReceiptNumber = await _serviceBarco.GetNextNumberBarco();
             ViewBag.CurrentReceipt = nextReceiptNumber;
+            ViewBag.ListHabitacion = await _serviceHabitacion.ListAsync();
 
             // Clear CarShopping
             TempData["CartShopping"] = null;
@@ -130,6 +131,7 @@ namespace SeaAngel.Web.Controllers
             var lista = new List<BarcoHabitacionDTO>();
             string json = "";
             var @object = await _serviceBarco.FindByIdAsync(id);
+            ViewBag.ListHabitacion = await _serviceHabitacion.ListAsync();
 
             // Clear CarShopping
             TempData["CartShopping"] = null;
