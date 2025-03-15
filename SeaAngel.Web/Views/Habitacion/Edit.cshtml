@@ -1,0 +1,105 @@
+﻿@model SeaAngel.Application.DTOs.HabitacionDTO
+
+@{
+    ViewData["Title"] = "Editar Habitación";
+}
+
+<div class="container d-flex justify-content-center align-items-center" style="margin-top: 100px;">
+    <div class="card shadow-lg p-4 rounded-3" style="border: 3px solid #FFA500; background-color: #fff; width: 70%;">
+        <h2 class="text-center" style="color: #333;">Editar Habitación</h2>
+        <hr />
+        <form asp-action="Edit" id="habitacionForm" data-ajax="true" data-ajax-method="POST" data-ajax-begin="onBegin"
+              data-ajax-failure="onFailure" data-ajax-success="onSuccess" data-ajax-complete="onComplete" asp-antiforgery="true">
+
+            <div class="row">
+                <!-- Columna de Inputs -->
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="ID" class="form-label fw-bold">ID</label>
+                        <input asp-for="ID" class="form-control" readonly />
+                        <span asp-validation-for="ID" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Nombre" class="form-label fw-bold">Nombre</label>
+                        <input asp-for="Nombre" class="form-control" placeholder="Ingrese el nombre de la habitación" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Descripcion" class="form-label fw-bold">Descripción</label>
+                        <textarea asp-for="Descripcion" class="form-control" placeholder="Ingrese una descripción"></textarea>
+                        <span asp-validation-for="Descripcion" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="CapacidadMin" class="form-label fw-bold">Capacidad Mínima</label>
+                        <input asp-for="CapacidadMin" class="form-control" type="number" />
+                        <span asp-validation-for="CapacidadMin" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="CapacidadMax" class="form-label fw-bold">Capacidad Máxima</label>
+                        <input asp-for="CapacidadMax" class="form-control" type="number" />
+                        <span asp-validation-for="CapacidadMax" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <!-- Columna de Imagen -->
+                <div class="col-md-6 d-flex flex-column align-items-center">
+                    <!-- Tamaño M² alineado a la izquierda -->
+                    <div class="form-group mb-3 w-100 mb-5">
+                        <label asp-for="TamanoM2" class="form-label fw-bold">Tamaño M²</label>
+                        <input asp-for="TamanoM2" class="form-control" type="number" />
+                        <span asp-validation-for="TamanoM2" class="text-danger"></span>
+                    </div>
+
+                    <!-- Imagen centrada -->
+                    <div class="text-center w-100 mt-2
+
+
+
+">
+                        <input type="hidden" asp-for="Foto" />
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Foto)" alt="Imagen de la habitación"
+                             class="img-fluid border rounded shadow-lg"
+                             style="max-width: 80%; height: auto; border: 4px solid black;" />
+                        <span asp-validation-for="Foto" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Botones -->
+            <div class="d-flex justify-content-between mt-4">
+                <a asp-action="Index" class="btn btn-outline-dark">Regresar</a>
+                <input type="submit" value="Guardar" class="btn btn-primary" style="background-color: #FFA500; border-color: #FFA500;" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        function onBegin() { console.log("Inicio de edición"); }
+        function onFailure(response) { Swal.fire({ title: "Error!", text: response.responseText, icon: "error" }); }
+        function onSuccess(response) {
+            Swal.fire({
+                icon: "success",
+                title: "Habitación Editada",
+                showConfirmButton: true
+            }).then(() => {
+                setTimeout(() => {
+                    window.location.href = '@Url.Action("Index", "Habitacion")';
+                }, 2000);
+            });
+        }
+        function onComplete() { console.log("Edición completada"); }
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,81 @@
+﻿@model IEnumerable<SeaAngel.Application.DTOs.HabitacionDTO>
+
+@{
+    ViewData["Title"] = "Mantenimiento de Habitaciones";
+}
+
+<h1 class="text-center text-white my-5 animate__animated animate__fadeIn">Mantenimiento de Habitaciones</h1>
+
+<div class="container">
+    <div class="d-flex justify-content-center mb-4">
+        <a asp-action="Create" class="btn btn-primary btn-lg shadow-sm d-flex align-items-center px-4 py-2" style="border-radius: 12px; font-weight: bold;">
+            <i class="fas fa-plus-circle me-2"></i> Crear Habitación
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-light table-striped table-hover rounded">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Cap. Mínima</th>
+                    <th scope="col">Cap. Máxima</th>
+                    <th scope="col">Tamaño (m²)</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="animate__animated animate__fadeIn">
+                        <td>@item.Nombre</td>
+                        <td>@item.CapacidadMin</td>
+                        <td>@item.CapacidadMax</td>
+                        <td>@item.TamanoM2</td>
+                        <td>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-warning shadow-sm px-3 py-2" style="border-radius: 10px; font-weight: bold;">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-info shadow-sm px-3 py-2" style="border-radius: 10px; font-weight: bold;">
+                                    <i class="fas fa-eye"></i> Detalles
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .table {
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(5px);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+        .table th, .table td {
+            font-size: 1rem;
+            padding: 12px;
+            text-align: center;
+        }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.15);
+        transform: scale(1.01);
+    }
+
+    .btn {
+        transition: all 0.3s ease-in-out;
+    }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">

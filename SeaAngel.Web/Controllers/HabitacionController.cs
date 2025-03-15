@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SeaAngel.Application.DTOs;
 using SeaAngel.Application.Services.Implementations;
 using SeaAngel.Application.Services.Interfaces;
 
@@ -56,47 +57,88 @@ namespace SeaAngel.Web.Controllers
             }
         }
 
-        // GET: HabitacionController/Create
-        public ActionResult Create()
+        // GET: Lista de Mantenemiento
+        [HttpGet]
+        public async Task<IActionResult> Mantenimiento()
         {
+            var collection = await _serviceHabitacion.ListAsync();
+            return View(collection);
+        }
+
+        // GET: HabitacionController/Create
+        public async Task<IActionResult> Create()
+        {
+            var nextReceiptNumber = await _serviceHabitacion.GetNextNumber();
+            ViewBag.CurrentReceipt = nextReceiptNumber;
+
             return View();
         }
 
-        // POST: HabitacionController/Create
+        // POST: BarcoController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(HabitacionDTO dto, IFormFile imageFile)
         {
+            MemoryStream target = new MemoryStream();
+
             try
             {
-                return RedirectToAction(nameof(Index));
+
+                // Cuando es Insert Image viene en null porque se pasa diferente
+                if (dto.Foto == null)
+                {
+                    if (imageFile != null)
+                    {
+                        imageFile.OpenReadStream().CopyTo(target);
+
+                        dto.Foto = target.ToArray();
+                        ModelState.Remove("Imagen");
+                    }
+                }
+
+                //Agregar datos faltantes al barco
+                dto.ID = 0;
+
+                await _serviceHabitacion.AddAsync(dto);
+
+                return RedirectToAction("Index");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return BadRequest(ex.Message);
             }
         }
 
         // GET: HabitacionController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            var habitacion = await _serviceHabitacion.FindByIdAsync(id);
+
+            if (habitacion == null)
+            {
+                return NotFound("La habitación no existe.");
+            }
+
+            return View(habitacion);
         }
 
         // POST: HabitacionController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, HabitacionDTO dto)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                await _serviceHabitacion.UpdateAsync(id, dto);
+                return RedirectToAction("Index");
+
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return BadRequest(ex.Message);
             }
         }
+
 
         // GET: HabitacionController/Delete/5
         public ActionResult Delete(int id)
