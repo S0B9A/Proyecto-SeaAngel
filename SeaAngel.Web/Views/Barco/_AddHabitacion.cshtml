@@ -3,55 +3,53 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-10">
-            <div class="card border-primary shadow-lg rounded-lg overflow-hidden">
+            <div class="card border-0 shadow-lg rounded-lg overflow-hidden">
                 <div class="card-header bg-primary text-white text-center py-3">
                     <h5 class="mb-0">Agregar Habitación</h5>
                 </div>
                 <div class="card-body p-4">
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-                    <div class="row align-items-start g-5">
-                        <!-- Formulario -->
+                    <div class="row g-4">
+                        <!-- Formulario más compacto -->
                         <div class="col-md-5">
                             <div class="mb-3">
-                                <label asp-for="Idhabitacion" class="form-label fw-semibold text-primary">Nombre de la habitacion</label>
-                                <input asp-for="Idhabitacion" id="IdhabitacionModal" type="text" class="form-control border-primary shadow-sm rounded" autocomplete="off" />
+                                <label asp-for="Idhabitacion" class="form-label fw-semibold text-primary">Nombre de la habitación</label>
+                                <input asp-for="Idhabitacion" id="IdhabitacionModal" type="text" class="form-control border-secondary shadow-sm rounded" autocomplete="off" />
                                 <span asp-validation-for="Idhabitacion" class="text-danger"></span>
                             </div>
                             <div class="mb-3">
                                 <label asp-for="CantDisponible" class="form-label fw-semibold text-primary">Cantidad Disponible</label>
-                                <input asp-for="CantDisponible" id="CantDisponibleModal" type="number" class="form-control border-primary shadow-sm rounded" />
+                                <input asp-for="CantDisponible" id="CantDisponibleModal" type="number" class="form-control border-secondary shadow-sm rounded" />
                                 <span asp-validation-for="CantDisponible" class="text-danger"></span>
                             </div>
-                            <div class="d-grid mt-4">
-                                <button type="button" class="btn btn-primary shadow rounded-pill px-3 py-2" onclick="addHabitacion()">
-                                    <i class="fas fa-plus"></i> Agregar Habitación
+                            <div class="d-grid mt-3">
+                                <button type="button" class="btn btn-primary shadow-sm rounded-pill px-3 py-2" onclick="addHabitacion()">
+                                    <i class="fas fa-plus"></i> Agregar
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Imagen y Lista de Habitaciones en horizontal -->
-                        <div class="col-md-7 d-flex align-items-center justify-content-between">
-                            <div class="text-center me-4">
-                                <img src="/Images/Logo2.png" class="img-fluid rounded shadow" id="ImgHabitacion" style="width: 160px; height: 160px; object-fit: cover;">
-                            </div>
-                            <div class="flex-grow-1 ps-3" style="max-width: 100%;">
-                                <h6 class="fw-semibold text-primary text-center mb-3">Habitaciones Disponibles</h6>
-                                <div class="overflow-auto p-2" style="max-height: 200px; background: #f8f9fa; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                                    <ul class="list-group list-group-flush w-100">
-                                        @foreach (var habitacion in ViewBag.ListHabitacion)
-                                        {
-                                            <li class="list-group-item list-group-item-action border-0 rounded mb-2 text-center shadow-sm" style="font-size: 14px; padding: 10px; background: white;">
-                                                <i class="fas fa-bed text-primary me-2"></i> @habitacion.Nombre
-                                            </li>
-                                        }
-                                    </ul>
-                                </div>
+                        <!-- Lista de Habitaciones Disponibles -->
+                        <div class="col-md-7">
+                            <h6 class="fw-semibold text-primary text-center mb-3">Habitaciones Disponibles</h6>
+                            <div class="overflow-auto p-2 w-100" style="max-height: 200px; background: #f8f9fa; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var habitacion in ViewBag.ListHabitacion)
+                                    {
+                                        <li class="list-group-item list-group-item-action border-0 rounded mb-2 text-center shadow-sm" style="font-size: 14px; padding: 10px; background: white;">
+                                            <i class="fas fa-bed text-primary me-2"></i> @habitacion.Nombre
+                                        </li>
+                                    }
+                                </ul>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Imagen, Nombre y Descripción -->
                     <div class="mt-4 text-center">
-                        <p id="HabitacionSelect" class="fw-semibold text-primary" style="font-size: 13px;">Habitación: -</p>
-                        <p id="DescripcionSelect" class="fw-semibold text-primary" style="font-size: 13px;">Descripción: -</p>
+                        <img src="/Images/Logo2.png" class="img-fluid rounded shadow mb-3" id="ImgHabitacion" style="width: 150px; height: 150px; object-fit: cover;">
+                        <p id="HabitacionSelect" class="fw-semibold text-primary text-center" style="font-size: 14px;">Habitación: -</p>
+                        <p id="DescripcionSelect" class="fw-semibold text-primary text-center" style="font-size: 14px;">Descripción: -</p>
                     </div>
                 </div>
             </div>

@@ -76,25 +76,28 @@
     </div>
 </div>
 
-<!-- Modal Habitaciones -->
 
+<!-- Modal Habitaciones -->
 <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Habitaciones</h1>
+                <h1 class="modal-title fs-4" id="exampleModalLabel">Habitaciones</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body p-4">
                 <div id="mostrar"></div>
-                @await Html.PartialAsync("_AddHabitacion", new SeaAngel.Web.ViewModels.ViewModelInput())
+                <div class="p-3" style="border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); background: #f8f9fa;">
+                    @await Html.PartialAsync("_AddHabitacion", new SeaAngel.Web.ViewModels.ViewModelInput())
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-secondary btn-lg px-4" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
-</div> 
+</div>
+
 
 @section Scripts {
     <script>
