@@ -1,24 +1,39 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using SeaAngel.Application.DTOs;
 using SeaAngel.Application.Services.Interfaces;
+using System.Text.Json;
 
 namespace SeaAngel.Web.Controllers
 {
     public class CruceroController : Controller
     {
         private readonly IServiceCrucero _serviceCrucero;
+        private readonly IServiceBarco _serviceBarco;
 
-        public CruceroController(IServiceCrucero serviceCrucero)
+        public CruceroController(IServiceCrucero serviceCrucero, IServiceBarco serviceBarco)
         {
             _serviceCrucero = serviceCrucero;
+            _serviceBarco = serviceBarco;
         }
 
         // GET:EncReservaController
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var collection = await _serviceCrucero.ListAsync();
-            return View(collection);
+            try
+            {
+                var collection = await _serviceCrucero.ListAsync();
+                return View(collection);
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
         }
 
         // GET: EncReservaController/Details/5
@@ -43,67 +58,79 @@ namespace SeaAngel.Web.Controllers
                 throw new Exception(ex.Message);
             }
         }
-        // GET: CruceroController/Create
-        public ActionResult Create()
+
+        // GET: Lista de Mantenemiento
+        [HttpGet]
+        public async Task<IActionResult> Mantenimiento()
         {
+            var collection = await _serviceCrucero.ListAsync();
+            return View(collection);
+        }
+
+
+        // GET: CruceroController/Create
+        public async Task<IActionResult> Create()
+        {
+            ViewBag.ListBarco = await _serviceBarco.ListAsync();
+
+            // Clear CarShopping
+            TempData["CartShopping"] = null;
+            TempData.Keep();
+
             return View();
         }
+
 
         // POST: CruceroController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(CruceroDTO dto, IFormFile imageFile)
         {
+            MemoryStream target = new MemoryStream();
+
+            // string json;
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                /*
+                json = (string)TempData["CartShopping"]!;
+
+                if (string.IsNullOrEmpty(json))
+                {
+                    return BadRequest("No hay datos por facturar");
+                }
+                */
+
+                // Cuando es Insert Image viene en null porque se pasa diferente
+                if (dto.Foto == null)
+                {
+                    if (imageFile != null)
+                    {
+                        imageFile.OpenReadStream().CopyTo(target);
+
+                        dto.Foto = target.ToArray();
+                        ModelState.Remove("Foto");
+                    }
+                }
+
+                //var lista = JsonSerializer.Deserialize<List<ItinerarioDTO>>(json!)!;
+
+                //Agregar datos faltantes al barco
+                dto.Id = 0;
+
+                //dto.Itinerario = lista;
+
+                await _serviceCrucero.AddAsync(dto);
+
+                return RedirectToAction("Index");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                // Keep Cache data
+                TempData.Keep();
+                return BadRequest(ex.Message);
             }
         }
 
-        // GET: CruceroController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: CruceroController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: CruceroController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: CruceroController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }

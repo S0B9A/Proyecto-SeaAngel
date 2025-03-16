@@ -49,5 +49,31 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
 
             return collection;
         }
+
+        public async Task<int> AddAsync(Crucero entity)
+        {
+            try
+            {
+                // Iniciar la transacción
+                await _context.Database.BeginTransactionAsync();
+
+                // Agregar el crucero a la base de datos
+                await _context.Set<Crucero>().AddAsync(entity);
+
+                // Guardar cambios en la base de datos
+                await _context.SaveChangesAsync();
+
+                // Confirmar la transacción
+                await _context.Database.CommitTransactionAsync();
+
+                return entity.Id;
+            }
+            catch (Exception ex)
+            {
+                // Si hay un error, hacer rollback de la transacción
+                await _context.Database.RollbackTransactionAsync();
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

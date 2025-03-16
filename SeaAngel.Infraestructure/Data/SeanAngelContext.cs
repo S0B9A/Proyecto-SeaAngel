@@ -46,9 +46,9 @@ public partial class SeanAngelContext : DbContext
     {
         modelBuilder.Entity<Barco>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Barco__3214EC275642DA6E");
+            entity.HasKey(e => e.Id).HasName("PK__Barco__3214EC27855A6158");
 
-            entity.HasIndex(e => e.Nombre, "UQ__Barco__75E3EFCFB4FD029C").IsUnique();
+            entity.HasIndex(e => e.Nombre, "UQ__Barco__75E3EFCF5A15FA67").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Descripcion).HasMaxLength(255);
@@ -101,9 +101,9 @@ public partial class SeanAngelContext : DbContext
 
         modelBuilder.Entity<Destino>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Destino__3214EC27955092EE");
+            entity.HasKey(e => e.Id).HasName("PK__Destino__3214EC2704523B2C");
 
-            entity.HasIndex(e => e.Nombre, "UQ__Destino__75E3EFCFCC370665").IsUnique();
+            entity.HasIndex(e => e.Nombre, "UQ__Destino__75E3EFCFFDA0B8F5").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Nombre).HasMaxLength(100);
@@ -191,7 +191,7 @@ public partial class SeanAngelContext : DbContext
 
         modelBuilder.Entity<FechasPrecios>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__FechasPr__3214EC272E0070B5");
+            entity.HasKey(e => e.Id).HasName("PK__FechasPr__3214EC27C78808D8");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Idcrucero).HasColumnName("IDCrucero");
@@ -210,7 +210,7 @@ public partial class SeanAngelContext : DbContext
 
         modelBuilder.Entity<Habitacion>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Habitaci__3214EC272CC319F1");
+            entity.HasKey(e => e.Id).HasName("PK__Habitaci__3214EC27459B7AAF");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Descripcion).HasMaxLength(255);
@@ -220,26 +220,25 @@ public partial class SeanAngelContext : DbContext
 
         modelBuilder.Entity<Itinerario>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Itinerar__3214EC2743616603");
+            entity.HasKey(e => new { e.Idcrucero, e.Idpuerto }).HasName("PK__Itinerar__3214EC27A1672406");
 
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Descripcion).HasMaxLength(255);
             entity.Property(e => e.Idcrucero).HasColumnName("IDCrucero");
             entity.Property(e => e.Idpuerto).HasColumnName("IDPuerto");
+            entity.Property(e => e.Descripcion).HasMaxLength(255);
 
             entity.HasOne(d => d.IdcruceroNavigation).WithMany(p => p.Itinerario)
                 .HasForeignKey(d => d.Idcrucero)
-                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__Itinerari__IDCru__4F7CD00D");
 
             entity.HasOne(d => d.IdpuertoNavigation).WithMany(p => p.Itinerario)
                 .HasForeignKey(d => d.Idpuerto)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Itinerari__IDPue__5070F446");
         });
 
         modelBuilder.Entity<Pago>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Pago__3214EC27238A1401");
+            entity.HasKey(e => e.Id).HasName("PK__Pago__3214EC2742EF722F");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Cvv)
@@ -262,7 +261,7 @@ public partial class SeanAngelContext : DbContext
 
         modelBuilder.Entity<Puerto>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Puerto__3214EC27E25A19B8");
+            entity.HasKey(e => e.Id).HasName("PK__Puerto__3214EC27C84A6EC4");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Iddestino).HasColumnName("IDDestino");
@@ -294,9 +293,9 @@ public partial class SeanAngelContext : DbContext
 
         modelBuilder.Entity<Usuario>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Usuario__3214EC27CA7A27A6");
+            entity.HasKey(e => e.Id).HasName("PK__Usuario__3214EC279523C7B6");
 
-            entity.HasIndex(e => e.CorreoElectronico, "UQ__Usuario__531402F369001061").IsUnique();
+            entity.HasIndex(e => e.CorreoElectronico, "UQ__Usuario__531402F39FBAAF29").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Contraseña).HasMaxLength(255);

@@ -11,5 +11,6 @@ namespace SeaAngel.Application.Services.Interfaces
     {
         Task<ICollection<CruceroDTO>> ListAsync();
         Task<CruceroDTO> FindByIdAsync(int id);
+        Task<int> AddAsync(CruceroDTO dto);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SeaAngel.Application.DTOs;
 using SeaAngel.Application.Services.Interfaces;
+using SeaAngel.Infraestructure.Models;
 using SeaAngel.Infraestructure.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,20 @@ namespace SeaAngel.Application.Services.Implementations
             var list = await _repository.ListAsync();
             var collection = _mapper.Map<ICollection<CruceroDTO>>(list);
             return collection;
+        }
+
+        public async Task<int> AddAsync(CruceroDTO dto)
+        {
+            try
+            {
+                var objectMapped = _mapper.Map<Crucero>(dto); // Map CruceroDTO to Crucero
+                return await _repository.AddAsync(objectMapped);  // Return
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

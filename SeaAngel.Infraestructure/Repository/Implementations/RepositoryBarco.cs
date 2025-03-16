@@ -65,11 +65,6 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
                 await _context.Database.RollbackTransactionAsync();
                 throw new Exception(ex.Message);
             }
-
-
-            //await _context.Set<Barco>().AddAsync(entity);
-            //await _context.SaveChangesAsync();
-            //return entity.Id;
         }
 
 

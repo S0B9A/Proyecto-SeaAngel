@@ -1,0 +1,121 @@
+﻿@model SeaAngel.Application.DTOs.CruceroDTO
+
+@{
+	ViewData["Title"] = "Crear";
+}
+
+<style>
+	ul.ui-autocomplete {
+		z-index: 1100;
+	}
+</style>
+
+<div class="container d-flex justify-content-center align-items-center" style="margin-top: 100px;">
+	<div class="card shadow-lg p-4 rounded-3" style="border: 2px solid #003366; background-color: #f8f9fa; width: 60%;">
+		<form asp-action="Create" id="myForm" data-ajax="true" data-ajax-method="POST" data-ajax-begin="onBegin" data-ajax-failure="onFailure" data-ajax-success="onSuccess"
+			  data-ajax-complete="onComplete" asp-antiforgery="true" enctype="multipart/form-data">
+			<div class="row">
+				<!-- Columna Izquierda -->
+				<div class="col-md-6">
+					<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+					<div class="form-group mb-3">
+						<label asp-for="Nombre" class="form-label fw-bold">Nombre del crucero</label>
+						<input asp-for="Nombre" class="form-control" id="Nombre" placeholder="Ingrese el nombre del crucero" />
+						<span asp-validation-for="Nombre" class="text-danger"></span>
+					</div>
+
+					<div class="form-group mb-3">
+						<label asp-for="Idbarco" class="control-label"></label>
+						@* <input asp-for="IdAutor" class="form-control" /> *@
+						@Html.DropDownListFor(m => m.Idbarco,
+															new SelectList(ViewBag.ListBarco, "Id", "Nombre"),
+															new { @class = "form-select" })
+						<span asp-validation-for="Idbarco" class="text-danger"></span>
+					</div>
+
+					<div class="form-group mb-3">
+						<label asp-for="CantDias" class="form-label fw-bold">Capacidad</label>
+						<input asp-for="CantDias" class="form-control" placeholder="Capacidad máxima" />
+						<span asp-validation-for="CantDias" class="text-danger"></span>
+					</div>
+
+
+					<div class="form-group mb-3">
+						<label asp-for="FechaInicio" class="control-label fw-normal"></label>
+						<input asp-for="FechaInicio" type="date" class="form-control form-control-sm" />
+						<span asp-validation-for="FechaInicio" class="text-danger"></span>
+					</div>
+
+				</div>
+
+				<!-- Columna Derecha -->
+				<div class="col-md-6">
+					<div class="form-group mb-3">
+						<label asp-for="Foto" class="form-label fw-bold">Imagen del Crucero</label>
+						<input type="file" class="form-control" id="ImageFile" name="ImageFile" required onchange="previewImage()" />
+						<span asp-validation-for="Foto" class="text-danger"></span>
+					</div>
+
+					<div class="form-group text-center">
+						<label class="fw-bold">Vista previa</label>
+						<div class="d-flex justify-content-center">
+							<img id="imagePreview" src="#" alt="Imagen seleccionada" class="img-fluid border rounded" style="display:none; width: 50%; height: auto; border: 2px solid #003366;" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="d-flex justify-content-between mt-4">
+				<a asp-action="Index" class="btn btn-outline-dark">Regresar al listado</a>
+				<input type="submit" value="Crear" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
+</div>
+
+
+@section Scripts {
+
+	<script>
+		function previewImage() {
+			var file = document.getElementById('ImageFile').files[0];
+			var reader = new FileReader();
+			reader.onloadend = function () {
+				var imagePreview = document.getElementById('imagePreview');
+				imagePreview.src = reader.result;
+				imagePreview.style.display = 'block';
+			}
+			if (file) {
+				reader.readAsDataURL(file);
+			} else {
+				document.getElementById('imagePreview').style.display = 'none';
+			}
+		}
+
+		function onBegin() { console.log("onBegin"); }
+		function onFailure(response) { Swal.fire({ title: "Error!", text: response.responseText, icon: "error" }); }
+		function onSuccess(response) {
+			$("#myForm")[0].reset();
+			$("#barcoHabitacionView").html("");
+			Swal.fire({
+				icon: "success",
+				title: "Curcero salvado",
+				showConfirmButton: true
+			}).then(() => {
+				setTimeout(() => {
+					window.location.href = '@Url.Action("Index", "Crucero")';
+				}, 2000); // Espera 2000 ms (2 segundos) antes de redirigir
+			});
+		}
+		function onComplete() { console.log("Fin del proceso"); }
+	</script>
+
+
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+
+
+
+}
