@@ -111,6 +111,7 @@ namespace SeaAngel.Web.Controllers
 
                 if (string.IsNullOrEmpty(json))
                 {
+                    TempData.Keep();
                     return BadRequest("No hay puertos en el crucero");
                 }
 
@@ -128,6 +129,21 @@ namespace SeaAngel.Web.Controllers
                 }
 
                 var lista = JsonSerializer.Deserialize<List<ItinerarioDTO>>(json!)!;
+
+
+                // Verificar si hay al menos dos registros
+                if (lista.Count < 2)
+                {
+                    TempData.Keep();
+                    return BadRequest("El crucero debe incluir al menos dos puertos para su creación.");
+                }
+
+                //Verificar si la cantidad total dias del crucero corresponde a la cantidad de dias de la lista de puertose
+                if(lista.Count != dto.CantDias)
+                {
+                    TempData.Keep();
+                    return BadRequest("Los días del itinerario del crucero deben coincidir con el total indicado");
+                }
 
                 //Agregar datos faltantes al crucero
                 dto.Id = 0;
@@ -206,9 +222,23 @@ namespace SeaAngel.Web.Controllers
                 json = (string)TempData["CartShopping"]!;
                 lista = JsonSerializer.Deserialize<List<ItinerarioDTO>>(json!)!;
 
+                // Encontrar el puerto a eliminar
+                var puertoAEliminar = lista.FirstOrDefault(p => p.Idpuerto == idPuerto);
+                // Obtener el día del puerto antes de eliminarlo
+                int diaDelPuerto = puertoAEliminar.Dia;
+
                 //Eliminar de la lista segun el indice
                 int idx = lista.FindIndex(p => p.Idpuerto == idPuerto);
+
                 lista.RemoveAt(idx);
+
+                foreach (var item in lista)
+                {
+                    if(item.Dia > diaDelPuerto)
+                    {
+                        item.Dia -= 1;
+                    }
+                }
 
                 json = JsonSerializer.Serialize(lista);
                 TempData["CartShopping"] = json;
