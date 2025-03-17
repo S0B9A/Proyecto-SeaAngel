@@ -10,9 +10,9 @@ namespace SeaAngel.Application.DTOs
     public class ItinerarioDTO
     {
 
-        public int? Idcrucero { get; set; }
+        public int Idcrucero { get; set; }
 
-        public int? Idpuerto { get; set; }
+        public int Idpuerto { get; set; }
 
         public int Dia { get; set; }
 

@@ -1,0 +1,68 @@
+﻿@model SeaAngel.Web.ViewModels.ViewModelPuerto
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-lg rounded-lg overflow-hidden">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h5 class="mb-0">Agregar Puerto al Itinerario</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <div class="row g-4">
+                        <!-- Formulario más compacto -->
+                        <div class="col-md-5">
+                            <div class="mb-3">
+                                <label asp-for="IdPuerto" class="form-label fw-semibold text-primary">Nombre del puerto</label>
+                                <input asp-for="IdPuerto" id="IdpuertoModal" type="text" class="form-control border-secondary shadow-sm rounded" autocomplete="off" />
+                                <span asp-validation-for="IdPuerto" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Dia" class="form-label fw-semibold text-primary">Dia</label>
+                                <input asp-for="Dia" id="DiaModal" type="number" class="form-control border-secondary shadow-sm rounded" />
+                                <span asp-validation-for="Dia" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Descripcion" class="form-label fw-semibold text-primary">Descripcion del Itinerario</label>
+                                <input asp-for="Descripcion" id="DescripcionModal" type="text" class="form-control border-secondary shadow-sm rounded" />
+                                <span asp-validation-for="Descripcion" class="text-danger"></span>
+                            </div>
+                            <div class="d-grid mt-3">
+                                <button type="button" class="btn btn-primary shadow-sm rounded-pill px-3 py-2" onclick="addPuerto()">
+                                    <i class="fas fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Lista de Habitaciones Disponibles -->
+                        <div class="col-md-7">
+                            <h6 class="fw-semibold text-primary text-center mb-3">Habitaciones Disponibles</h6>
+                            <div class="overflow-auto p-2 w-100" style="max-height: 200px; background: #f8f9fa; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var puerto in ViewBag.ListPuerto)
+                                    {
+                                        <li class="list-group-item list-group-item-action border-0 rounded mb-2 text-center shadow-sm" style="font-size: 14px; padding: 10px; background: white;">
+                                            <i class="fas fa-bed text-primary me-2"></i> @puerto.Nombre - @puerto.Pais
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Imagen, Nombre de puerto y Pais -->
+                    <div class="mt-4 text-center">
+                        <p id="PuertoSelect" class="fw-semibold text-primary text-center" style="font-size: 14px;">Puerto nombre: -</p>
+                        <p id="PaisSelect" class="fw-semibold text-primary text-center" style="font-size: 14px;">Pais: -</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

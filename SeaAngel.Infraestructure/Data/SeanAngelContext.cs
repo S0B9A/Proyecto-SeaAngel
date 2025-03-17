@@ -220,7 +220,7 @@ public partial class SeanAngelContext : DbContext
 
         modelBuilder.Entity<Itinerario>(entity =>
         {
-            entity.HasKey(e => new { e.Idcrucero, e.Idpuerto }).HasName("PK__Itinerar__3214EC27A1672406");
+            entity.HasKey(e => new { e.Idcrucero, e.Idpuerto, e.Dia }).HasName("PK__Itinerar__3214EC27A1672406");
 
             entity.Property(e => e.Idcrucero).HasColumnName("IDCrucero");
             entity.Property(e => e.Idpuerto).HasColumnName("IDPuerto");

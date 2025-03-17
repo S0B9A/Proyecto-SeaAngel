@@ -37,6 +37,7 @@ namespace SeaAngel.Application.Services.Implementations
             return collection;
         }
 
+
         public async Task<int> AddAsync(CruceroDTO dto)
         {
             try

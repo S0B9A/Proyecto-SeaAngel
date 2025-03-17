@@ -1,0 +1,53 @@
+﻿@model IEnumerable<SeaAngel.Application.DTOs.ItinerarioDTO>
+
+<div id="myCard">
+    <div class="card">
+        <div class="card-header">
+            Detalle
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-bordered text-center" id="detalleFactura">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Idpuerto)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Dia)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Descripcion)
+                            </th>
+                            <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        @{
+                            if (Model != null)
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td align="center">
+                                            @Html.DisplayFor(modelItem => item.Idpuerto)
+                                        </td>
+                                        <td align="left">
+                                            @Html.DisplayFor(modelItem => item.Dia)
+                                        </td>
+                                        <td align="right">
+                                            @Html.DisplayFor(modelItem => item.Descripcion)
+                                        </td>
+                                        <td align="right">
+                                            <button type="button" class="btn btn-danger" onclick="deletePuerto(@item.Idpuerto)">Eliminar</button>
+                                        </td>
+                                    </tr>
+                                }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

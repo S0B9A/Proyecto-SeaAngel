@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SeaAngel.Application.DTOs;
+using SeaAngel.Application.Services.Implementations;
 using SeaAngel.Application.Services.Interfaces;
+using SeaAngel.Infraestructure.Models;
 using System.Text.Json;
 
 namespace SeaAngel.Web.Controllers
@@ -11,14 +13,26 @@ namespace SeaAngel.Web.Controllers
     {
         private readonly IServiceCrucero _serviceCrucero;
         private readonly IServiceBarco _serviceBarco;
+        private readonly IServicePuerto _servicePuerto;
 
-        public CruceroController(IServiceCrucero serviceCrucero, IServiceBarco serviceBarco)
+
+        public CruceroController(IServiceCrucero serviceCrucero, IServiceBarco serviceBarco, IServicePuerto servicePuerto)
         {
             _serviceCrucero = serviceCrucero;
             _serviceBarco = serviceBarco;
+            _servicePuerto = servicePuerto;
         }
 
-        // GET:EncReservaController
+
+        public async Task<IActionResult> GetPuertoByName(string filtro)
+        {
+
+            var collection = await _servicePuerto.FindByNameAsync(filtro);
+            return Json(collection);
+
+        }
+
+        // GET:CruceroController
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -36,7 +50,7 @@ namespace SeaAngel.Web.Controllers
 
         }
 
-        // GET: EncReservaController/Details/5
+        // GET: Crucero/Details/5
         public async Task<ActionResult> Details(int? id)
         {
             try
@@ -72,7 +86,7 @@ namespace SeaAngel.Web.Controllers
         public async Task<IActionResult> Create()
         {
             ViewBag.ListBarco = await _serviceBarco.ListAsync();
-
+            ViewBag.ListPuerto = await _servicePuerto.ListAsync();
             // Clear CarShopping
             TempData["CartShopping"] = null;
             TempData.Keep();
@@ -88,18 +102,18 @@ namespace SeaAngel.Web.Controllers
         {
             MemoryStream target = new MemoryStream();
 
-            // string json;
+            string json;
 
             try
             {
-                /*
+
                 json = (string)TempData["CartShopping"]!;
 
                 if (string.IsNullOrEmpty(json))
                 {
-                    return BadRequest("No hay datos por facturar");
+                    return BadRequest("No hay puertos en el crucero");
                 }
-                */
+
 
                 // Cuando es Insert Image viene en null porque se pasa diferente
                 if (dto.Foto == null)
@@ -113,12 +127,12 @@ namespace SeaAngel.Web.Controllers
                     }
                 }
 
-                //var lista = JsonSerializer.Deserialize<List<ItinerarioDTO>>(json!)!;
+                var lista = JsonSerializer.Deserialize<List<ItinerarioDTO>>(json!)!;
 
-                //Agregar datos faltantes al barco
+                //Agregar datos faltantes al crucero
                 dto.Id = 0;
 
-                //dto.Itinerario = lista;
+                dto.Itinerario = lista;
 
                 await _serviceCrucero.AddAsync(dto);
 
@@ -130,6 +144,81 @@ namespace SeaAngel.Web.Controllers
                 TempData.Keep();
                 return BadRequest(ex.Message);
             }
+        }
+
+        public async Task<IActionResult> AddPuerto(int id, int dia, string descripcion)
+        {
+            ItinerarioDTO itinerarioDTO = new ItinerarioDTO();
+            var lista = new List<ItinerarioDTO>();
+            string json = "";
+
+            var Puerto = await _servicePuerto.FindByIdAsync(id);
+
+            ItinerarioDTO item = new ItinerarioDTO();
+
+
+            if (TempData["CartShopping"] != null)
+            {
+                json = (string)TempData["CartShopping"]!;
+                lista = JsonSerializer.Deserialize<List<ItinerarioDTO>>(json!)!;
+            }
+
+
+            itinerarioDTO.Idpuerto = Puerto.Id;
+            itinerarioDTO.Dia = dia;
+            itinerarioDTO.Descripcion = descripcion;
+
+            //Agregar al carrito de compras
+            lista.Add(itinerarioDTO);
+
+            json = JsonSerializer.Serialize(lista);
+            TempData["CartShopping"] = json;
+            TempData.Keep();
+
+            return PartialView("_DetailItinerario", lista);
+        }
+
+
+        public IActionResult GetItinenario()
+        {
+            List<ItinerarioDTO> lista = new List<ItinerarioDTO>();
+
+            string json = "";
+
+            json = (string)TempData["CartShopping"]!;
+            lista = JsonSerializer.Deserialize<List<ItinerarioDTO>>(json!)!;
+
+            json = JsonSerializer.Serialize(lista);
+            TempData["CartShopping"] = json;
+            TempData.Keep();
+
+            return PartialView("_DetailItinerario", lista);
+        }
+
+        public IActionResult DeletePuerto(int idPuerto)
+        {
+            ItinerarioDTO itinerarioDTO = new ItinerarioDTO();
+            List<ItinerarioDTO> lista = new List<ItinerarioDTO>();
+            string json = "";
+
+            if (TempData["CartShopping"] != null)
+            {
+                json = (string)TempData["CartShopping"]!;
+                lista = JsonSerializer.Deserialize<List<ItinerarioDTO>>(json!)!;
+
+                //Eliminar de la lista segun el indice
+                int idx = lista.FindIndex(p => p.Idpuerto == idPuerto);
+                lista.RemoveAt(idx);
+
+                json = JsonSerializer.Serialize(lista);
+                TempData["CartShopping"] = json;
+            }
+
+            TempData.Keep();
+
+            // return Content("Ok");
+            return PartialView("_DetailItinerario", lista);
+
         }
 
     }

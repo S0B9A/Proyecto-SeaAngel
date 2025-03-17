@@ -1,4 +1,6 @@
-﻿@model SeaAngel.Application.DTOs.CruceroDTO
+﻿@using System.Text.Json
+@using SeaAngel.Application.DTOs
+@model SeaAngel.Application.DTOs.CruceroDTO
 
 @{
 	ViewData["Title"] = "Crear";
@@ -47,6 +49,12 @@
 						<span asp-validation-for="FechaInicio" class="text-danger"></span>
 					</div>
 
+					<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal">Agregar Puerto</button>
+
+					<div class="mt-4" id="itinerarioView">
+						@await Html.PartialAsync("_DetailItinerario")
+					</div>
+
 				</div>
 
 				<!-- Columna Derecha -->
@@ -74,6 +82,26 @@
 	</div>
 </div>
 
+<!-- Modal Puertos -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-4" id="exampleModalLabel">Puertos</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body p-4">
+				<div id="mostrar"></div>
+				<div class="p-3" style="border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); background: #f8f9fa;">
+					@await Html.PartialAsync("_AddPuerto")
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-lg px-4" data-bs-dismiss="modal">Cerrar</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 @section Scripts {
 
@@ -91,6 +119,68 @@
 			} else {
 				document.getElementById('imagePreview').style.display = 'none';
 			}
+		}
+
+		$("#IdpuertoModal").autocomplete({
+			source: function (request, response) {
+				$.ajax({
+					type: "GET",
+					url: '@Url.Action("GetPuertoByName", "Crucero")',
+					dataType: "json",
+					data: { filtro: $("#IdpuertoModal").val() },
+					success: function (data) {
+						response($.map(data, function (item) {
+							return { label: item.nombre, value: item.Id, data: item };
+						}));
+					},
+					error: function (xhr, status, error) {
+						console.log(error);
+					},
+				});
+			},
+			select: function (event, ui) {
+				$("#IdpuertoModal").val(ui.item.data.id);
+				$("#PuertoSelect").html("Nombre de Puerto: " + ui.item.data.nombre);
+				$("#PaisSelect").html("Pais del Puerto: " + ui.item.data.pais);
+				return false;
+			}
+		});
+
+		function addPuerto() {
+			let IdPuerto = $("#IdpuertoModal").val();
+			let Dia = $("#DiaModal").val();
+			let Descripcion = $("#DescripcionModal").val();
+			let divCrucero = $("#itinerarioView");
+
+			if (!$.isNumeric(IdPuerto) || !$.isNumeric(Dia) || parseInt(Dia) <= 0) {
+				Swal.fire({
+					title: "Error!",
+					text: "Ingrese un código y un dia válida.",
+					icon: "error"
+				});
+				return;
+			}
+
+			const myRequest = '@Url.Action("AddPuerto", "Crucero")';
+			fetch(myRequest + "?id=" + IdPuerto + "&dia=" + Dia + "&descripcion=" + Descripcion)
+				.then(response => response.text())
+				.then(text => divCrucero.html(text))
+				.catch(error => Swal.fire({ title: "Error", text: error, icon: "error" }));
+
+			$("#IdpuertoModal").val("");
+			$("#DiaModal").val("");
+			$("#DescripcionModal").val("");
+			$("#PuertoSelect").html("");
+			$("#PaisSelect").html("");
+		}
+
+		 function deletePuerto(id) {
+			const divCrucero = $("#itinerarioView");
+			const myRequest = '@Url.Action("DeletePuerto", "Crucero")';
+			fetch(myRequest + "?idPuerto=" + id)
+				.then(response => response.text())
+				.then(text => divCrucero.html(text))
+				.catch(error => Swal.fire({ title: "Error", text: error, icon: "error" }));
 		}
 
 		function onBegin() { console.log("onBegin"); }

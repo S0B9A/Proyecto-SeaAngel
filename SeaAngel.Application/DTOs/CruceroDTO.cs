@@ -12,7 +12,6 @@ namespace SeaAngel.Application.DTOs
     public class CruceroDTO
     {
         [Display(Name = "Identificador Crucero")]
-        [ValidateNever]
         public int Id { get; set; }
 
         [Display(Name = "Nombre Crucero")]
@@ -46,7 +45,6 @@ namespace SeaAngel.Application.DTOs
         [ValidateNever]
         public virtual BarcoDTO? IdbarcoNavigation { get; set; } = null!;
 
-        [ValidateNever]
         public virtual List<ItinerarioDTO> Itinerario { get; set; } = null!;
     }
 }
