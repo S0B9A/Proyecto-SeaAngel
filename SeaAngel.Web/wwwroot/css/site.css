@@ -1,4 +1,8 @@
-html {
+/* ---------- Reset de Márgenes y Ancho Completo ---------- */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Evita desbordamiento horizontal */
     font-size: 14px;
 }
 
@@ -8,72 +12,62 @@ html {
     }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
+/* ---------- Ajustes Generales ---------- */
 html {
     position: relative;
     min-height: 100%;
 }
 
 body {
-    margin-bottom: 60px;
     font-family: "Montserrat", sans-serif;
 }
 
-@media (min-width: 1400px) {
-    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
-        max-width: unset !important; /* Elimina cualquier valor establecido */
-    }
+/* ---------- Contenedor sin Márgenes Laterales ---------- */
+.container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 
-
-
-/* ---------  Navbar - Navegación ---------- */
+/* ---------- Navbar ---------- */
 .navbar {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra ligera */
-    background-color: #F1F0F0; /* Color de fondo gris claro */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    background-color: #F1F0F0;
 }
 
-/* Logo */
 .logo-img {
-    width: 10%; /* Tamaño del logo */
+    width: 10%;
 }
 
-/* Texto azul marino para SeaAngel con tamaño grande */
 .text-navy {
-    color: #003366; /* Azul marino */
+    color: #003366;
     font-weight: bold;
-    font-size: 1.5rem; /* Título más grande */
+    font-size: 1.5rem;
 }
 
-/* Texto dorado oscuro para Company Cruises */
 .text-dark-gold {
-    color: #B88A46; /* Dorado oscuro */
+    color: #B88A46;
     font-weight: bold;
 }
 
-/* Para que Company y Cruises sean más pequeños */
 .small {
-    font-size: 0.90rem; /* Tamaño más pequeño */
+    font-size: 0.90rem;
 }
 
-/* Ajuste de tamaño para el enlace "Inicio" */
+/* ---------- Links del Navbar ---------- */
 .navbar-nav .nav-link {
-    color: #003366 !important; /* Azul marino */
+    color: #003366 !important;
     font-weight: bold;
-    font-size: 1.0rem; /* Un tamaño más grande para "Inicio" */
+    font-size: 1.0rem;
     transition: color 0.3s, font-size 0.3s;
 }
 
-    /* Cambio de color al pasar el ratón sobre el enlace */
     .navbar-nav .nav-link:hover {
-        font-size: 1.1rem; /* Un poco más grande cuando pasas el ratón */
-        color: #B88A46 !important; /* Dorado oscuro al pasar el mouse */
+        font-size: 1.1rem;
+        color: #B88A46 !important;
     }
 
-/* Subrayado animado dorado oscuro */
+/* Subrayado animado */
 .itemPag::after {
     content: "";
     height: 3px;
@@ -87,110 +81,103 @@ body {
     width: 100%;
 }
 
-/* ---------- Estilo del carrusel ---------- */
-
+/* ---------- Carrusel ---------- */
 #carouselE {
-    width: 100vw !important; /* 100% del ancho de la pantalla */
+    width: 100% !important; /* Se evita usar 100vw */
     max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
 }
 
 .carousel-inner img {
-    width: 100% !important; /* Hace que la imagen cubra todo el ancho */
-    height: 60vh !important; /* Ajusta la altura */
-    object-fit: cover !important; /* Evita deformaciones */
-    filter: brightness(30%) !important; /* Hace la imagen más oscura */
+    width: 100% !important;
+    height: 60vh !important;
+    object-fit: cover !important;
+    filter: brightness(30%) !important;
 }
 
-/* Ajusta la posición de los textos dentro del carrusel */
+/* Ajuste de la posición de textos en el carrusel */
 .carousel-caption {
-    bottom: 15% !important; /* Baja la posición del texto */
-}
-
-.btn {
-    color: white;
-    font-size: 16px;
-    background-color: #003366; /* Azul rey oscuro */
-    color: white;
-    border: none;
-}
-
-.btn:hover {
-    background-color: #B88A46; /* Azul más oscuro para hover */
-    box-shadow: 0 0 10px rgba(0, 51, 102, 0.6); /* Sombra azul */
-}
-
-.carousel-caption {
+    bottom: 15% !important;
     margin-bottom: 70px;
 }
 
-/* ---------- Estilo de la pagina de barcos ---------- */
+/* ---------- Botones ---------- */
+.btn {
+    color: white;
+    font-size: 16px;
+    background-color: #003366;
+    border: none;
+}
 
+    .btn:hover {
+        background-color: #B88A46;
+        box-shadow: 0 0 10px rgba(0, 51, 102, 0.6);
+    }
+
+/* ---------- Estilos de Páginas de Barcos ---------- */
 .services {
     padding: 80px 0;
 }
 
     .services .card {
-        max-height: 175px; /* Asegura que todas tengan una altura mínima */
-        min-height: 175px; /* Asegura que todas tengan una altura mínima */
+        max-height: 175px;
+        min-height: 175px;
     }
 
-.bg-barco1 {
-    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(../Images/bg-barco1.jpg);
+.bg-barco1, .bg-barco2, .bg-barco3 {
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+.bg-barco1 {
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(../Images/bg-barco1.jpg);
 }
 
 .bg-barco2 {
     background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(../Images/bg-barco2.jpg);
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
 }
 
 .bg-barco3 {
     background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(../Images/bg-barco3.jpg);
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
 }
 
 .barcos {
     padding: 2px 0;
     position: relative;
 }
+
     .barcos .row {
         margin-top: 30px;
     }
 
 .barco .card {
-    max-height: 90%; /* Asegura que todas tengan una altura mínima */
-    min-height: 90%; /* Asegura que todas tengan una altura mínima */
+    max-height: 90%;
+    min-height: 90%;
 }
 
 .parrafo-barco {
     font-size: 15px;
 }
 
-/* Colores azul rey oscuro */
+/* ---------- Estilos Generales ---------- */
 .text-blue-dark {
-    color: #003366; /* Azul rey oscuro */
+    color: #003366;
 }
 
 .btn-blue-dark {
-    background-color: #003366; /* Azul rey oscuro */
+    background-color: #003366;
     color: white;
     border: none;
 }
 
     .btn-blue-dark:hover {
-        background-color: #B88A46; /* Azul más oscuro para hover */
-        box-shadow: 0 0 10px rgba(0, 51, 102, 0.6); /* Sombra azul */
+        background-color: #B88A46;
+        box-shadow: 0 0 10px rgba(0, 51, 102, 0.6);
     }
 
-/* Animaciones con hover */
+/* Animaciones */
 .hover-animate {
     transition: transform 0.3s ease-in-out;
 }
@@ -199,28 +186,27 @@ body {
         transform: translateY(-10px);
     }
 
-/* Bordes redondeados en las imágenes */
+/* Bordes redondeados en imágenes */
 .card img {
     width: 250px;
     height: 150px;
     border-radius: 15px;
 }
 
-/* Línea decorativa azul rey oscuro */
+/* Línea decorativa */
 .linea-decorativa {
-    width: 400px; /* Ajusta el ancho según prefieras */
+    width: 400px;
     height: 2px;
-    background: #003366; /* Azul rey oscuro */
+    background: #003366;
     border-radius: 2px;
-    margin-top: 10px; /* Espaciado debajo del título */
+    margin-top: 10px;
 }
 
-/* ---------- Estilo de la pagina de barcos Detalle ---------- */
-
-.detalleBarco-container{
+/* ---------- Detalles de Barcos ---------- */
+.detalleBarco-container {
     margin-top: 100px !important;
 }
 
 .bg-darkblue {
-    background-color: #1D3557; /* Azul rey oscuro */
+    background-color: #1D3557;
 }

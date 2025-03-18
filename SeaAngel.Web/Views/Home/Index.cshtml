@@ -3,6 +3,64 @@
 	var notificationMessage = TempData["Mensaje"] as string;
 }
 
+<style>
+	.actividades {
+		margin: 10px;
+		margin-bottom: 50px;
+	}
+
+	.card-hover {
+		transition: box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out;
+		cursor: pointer;
+		border-radius: 12px;
+		overflow: hidden;
+		position: relative;
+		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+	}
+
+		.card-hover:hover {
+			box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+			transform: translateY(-5px);
+		}
+
+	.actividad-img {
+		position: relative;
+		width: 100%;
+		height: 170px;
+		overflow: hidden;
+	}
+
+		.actividad-img img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			transition: transform 0.4s ease-in-out;
+		}
+
+	.card-hover:hover .actividad-img img {
+		transform: scale(1.1);
+	}
+
+	.overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.5);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.actividad-nombre {
+		color: white;
+		font-size: 1.5rem;
+		font-weight: bold;
+		text-align: center;
+	}
+
+</style>
 <div class="container-fluid p-0 mt-5">
 	<div id="carouselE" class="carousel slide" data-bs-ride="carousel">
 		<!-- Indicadores -->
@@ -16,7 +74,7 @@
 		</div>
 
 		<!-- Contenido del carrusel -->
-		
+
 		<div class="carousel-inner">
 			<div class="carousel-item active">
 				<img src="@Url.Content("~/Images/crucero4.jpg")" class="d-block w-100 carousel-img"
@@ -24,7 +82,7 @@
 				<div class="carousel-caption">
 					<h5 class="animate__animated animate__backInLeft">Las mejores experiencias</h5>
 					<p>
-						Te ofrecemos una variada selección de experiencias a bordo, incluyendo una amplia gama de itinerarios 
+						Te ofrecemos una variada selección de experiencias a bordo, incluyendo una amplia gama de itinerarios
 						en destinos exóticos, así como paquetes completos para disfrutar de vacaciones inolvidables en nuestros lujosos cruceros.
 					</p>
 					<a href="contacto.html"
@@ -77,23 +135,47 @@
 		</button>
 	</div>
 
-	<div class="position-fixed top-200 start-50 translate-middle-x mt-3">
-		<a class="btn btn-success btn-sm" asp-controller="Home" asp-action="Enviar">Enviar</a>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="section-header text-center pb-5 pt-5">
+				<h2>TE OFRECEMOS</h2>
+			</div>
+		</div>
 	</div>
 
-</div>
+	<div class="container-md">
+		<div class="actividades">
+			<div class="row g-1">
+				@{
+					var actividades = new[] {
+				new { Imagen = "piscina.png", Titulo = "Piscina" },
+				new { Imagen = "futbol.png", Titulo = "Campo de Fútbol" },
+				new { Imagen = "voley.png", Titulo = "Vóley Playa" },
+				new { Imagen = "spa.png", Titulo = "Spa y Relajación" },
+				};
+				}
 
-<!-- Mostrar mensaje SweetAlert si existe -->
-@if (!string.IsNullOrEmpty(notificationMessage))
-{
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>  <!-- Asegúrate de tener la librería de SweetAlert -->
-	<script>
-		Swal.fire({
-			icon: 'success',
-			title: 'Enviado',
-			text: '@notificationMessage',
-			showConfirmButton: false,
-			timer: 1500
-		});
-	</script>
-}
+				@foreach (var actividad in actividades)
+				{
+					<div class="col-lg-3 col-md-6">
+						<div class="card card-hover shadow-lg rounded-3 h-100">
+							<div class="actividad-img">
+								<img src="@Url.Content("~/Images/Actividades/" + actividad.Imagen)" alt="@actividad.Titulo">
+								<div class="overlay">
+									<h5 class="actividad-nombre">@actividad.Titulo</h5>
+								</div>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+
+
+
+	</div>
+
+	<div class="text-center mt-3">
+		<img src="@Url.Content("~/Images/header.png")" class="img-fluid" alt="Encabezado Actividades">
+	</div>
+</div>
