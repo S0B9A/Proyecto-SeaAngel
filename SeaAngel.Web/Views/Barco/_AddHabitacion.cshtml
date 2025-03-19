@@ -3,53 +3,116 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-10">
-            <div class="card border-0 shadow-lg rounded-lg overflow-hidden">
-                <div class="card-header bg-primary text-white text-center py-3">
-                    <h5 class="mb-0">Agregar Habitación</h5>
+            <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+                <!-- Encabezado con gradiente -->
+                <div class="card-header bg-gradient py-4" style="background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);">
+                    <h4 class="mb-0 text-white text-center fw-bold">
+                        <i class="fas fa-door-open me-2"></i>Agregar Habitación
+                    </h4>
                 </div>
+
                 <div class="card-body p-4">
-                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <div asp-validation-summary="ModelOnly" class="text-danger alert alert-danger alert-dismissible fade show py-2 mb-4" role="alert" style="border-left: 4px solid #dc3545;">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+
                     <div class="row g-4">
-                        <!-- Formulario más compacto -->
+                        <!-- Formulario con efectos modernos -->
                         <div class="col-md-5">
-                            <div class="mb-3">
-                                <label asp-for="Idhabitacion" class="form-label fw-semibold text-primary">Nombre de la habitación</label>
-                                <input asp-for="Idhabitacion" id="IdhabitacionModal" type="text" class="form-control border-secondary shadow-sm rounded" autocomplete="off" />
-                                <span asp-validation-for="Idhabitacion" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <label asp-for="CantDisponible" class="form-label fw-semibold text-primary">Cantidad Disponible</label>
-                                <input asp-for="CantDisponible" id="CantDisponibleModal" type="number" class="form-control border-secondary shadow-sm rounded" />
-                                <span asp-validation-for="CantDisponible" class="text-danger"></span>
-                            </div>
-                            <div class="d-grid mt-3">
-                                <button type="button" class="btn btn-primary shadow-sm rounded-pill px-3 py-2" onclick="addHabitacion()">
-                                    <i class="fas fa-plus"></i> Agregar
-                                </button>
+                            <div class="card border-0 shadow-sm rounded-3 h-100 p-3" style="background: #f8f9fa;">
+                                <div class="mb-4 position-relative">
+                                    <label asp-for="Idhabitacion" class="form-label fw-semibold text-primary">
+                                        <i class="fas fa-tag me-1"></i> Nombre de la habitación
+                                    </label>
+                                    <input asp-for="Idhabitacion" id="IdhabitacionModal" type="text"
+                                           class="form-control border-0 shadow-sm rounded-3 ps-3"
+                                           style="height: 50px; transition: all 0.3s;"
+                                           autocomplete="off"
+                                           placeholder="Ingrese nombre" />
+                                    <span asp-validation-for="Idhabitacion" class="text-danger position-absolute mt-1 small"></span>
+                                </div>
+
+                                <div class="mb-4 position-relative">
+                                    <label asp-for="CantDisponible" class="form-label fw-semibold text-primary">
+                                        <i class="fas fa-calculator me-1"></i> Cantidad Disponible
+                                    </label>
+                                    <input asp-for="CantDisponible" id="CantDisponibleModal" type="number"
+                                           class="form-control border-0 shadow-sm rounded-3 ps-3"
+                                           style="height: 50px; transition: all 0.3s;"
+                                           placeholder="0" />
+                                    <span asp-validation-for="CantDisponible" class="text-danger position-absolute mt-1 small"></span>
+                                </div>
+
+                                <div class="d-grid mt-4">
+                                    <button type="button" class="btn btn-primary btn-lg shadow rounded-3 py-3"
+                                            style="background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%); transition: all 0.3s;"
+                                            onclick="addHabitacion()">
+                                        <i class="fas fa-plus-circle me-2"></i> Agregar Habitación
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Lista de Habitaciones Disponibles -->
+                        <!-- Lista de Habitaciones con diseño mejorado (sin botones) -->
                         <div class="col-md-7">
-                            <h6 class="fw-semibold text-primary text-center mb-3">Habitaciones Disponibles</h6>
-                            <div class="overflow-auto p-2 w-100" style="max-height: 200px; background: #f8f9fa; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                                <ul class="list-group list-group-flush">
-                                    @foreach (var habitacion in ViewBag.ListHabitacion)
-                                    {
-                                        <li class="list-group-item list-group-item-action border-0 rounded mb-2 text-center shadow-sm" style="font-size: 14px; padding: 10px; background: white;">
-                                            <i class="fas fa-bed text-primary me-2"></i> @habitacion.Nombre
-                                        </li>
-                                    }
-                                </ul>
+                            <div class="card border-0 shadow-sm rounded-3 h-100">
+                                <div class="card-header border-0 bg-transparent">
+                                    <h5 class="fw-bold text-primary text-center mb-0">
+                                        <i class="fas fa-list-alt me-2"></i> Habitaciones Disponibles
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="overflow-auto p-3 w-100" style="max-height: 250px; border-radius: 10px; background: #f8f9fa;">
+                                        <ul class="list-group list-group-flush">
+                                            @foreach (var habitacion in ViewBag.ListHabitacion)
+                                            {
+                                                <li class="list-group-item list-group-item-action border-0 rounded-3 mb-2 text-center"
+                                                    style="padding: 12px 15px; background: white; transition: all 0.2s;"
+                                                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)';"
+                                                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.05)';">
+                                                    <i class="fas fa-bed text-primary me-2"></i>
+                                                    <span class="fw-medium">@habitacion.Nombre</span>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Imagen, Nombre y Descripción -->
-                    <div class="mt-4 text-center">
-                        <img src="/Images/Logo2.png" class="img-fluid rounded shadow mb-3" id="ImgHabitacion" style="width: 150px; height: 150px; object-fit: cover;">
-                        <p id="HabitacionSelect" class="fw-semibold text-primary text-center" style="font-size: 14px;">Habitación: -</p>
-                        <p id="DescripcionSelect" class="fw-semibold text-primary text-center" style="font-size: 14px;">Descripción: -</p>
+                    <!-- Sección de Vista Previa con Diseño Mejorado (sin badge de disponibilidad) -->
+                    <div class="mt-5">
+                        <h5 class="fw-bold text-primary text-center mb-4">
+                            <i class="fas fa-eye me-2"></i> Vista Previa
+                        </h5>
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-md-4 text-center">
+                                <div class="position-relative mb-3 mx-auto" style="width: 180px; height: 180px;">
+                                    <img src="/Images/Logo2.png" class="img-fluid rounded-3 shadow" id="ImgHabitacion"
+                                         style="width: 100%; height: 100%; object-fit: cover; border: 4px solid white; transition: all 0.3s;">
+                                    <div class="position-absolute bottom-0 end-0">
+                                        <button class="btn btn-sm btn-primary rounded-circle shadow-sm" style="width: 36px; height: 36px;">
+                                            <i class="fas fa-camera"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card border-0 shadow-sm rounded-3 p-3" style="background: #f8f9fa;">
+                                    <div class="d-flex flex-column gap-2">
+                                        <div>
+                                            <span class="text-muted small">Habitación:</span>
+                                            <p id="HabitacionSelect" class="fw-bold text-primary mb-2" style="font-size: 18px;">-</p>
+                                        </div>
+                                        <div>
+                                            <span class="text-muted small">Descripción:</span>
+                                            <p id="DescripcionSelect" class="fw-medium text-dark mb-0" style="font-size: 16px;">-</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -61,4 +124,28 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        // Script para efectos visuales
+        document.addEventListener('DOMContentLoaded', function() {
+            // Efecto focus en inputs
+            const inputs = document.querySelectorAll('.form-control');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.style.boxShadow = "0 0 0 0.25rem rgba(30, 136, 229, 0.25)";
+                    this.style.borderColor = "#1e88e5";
+                });
+
+                input.addEventListener('blur', function() {
+                    this.style.boxShadow = "";
+                    this.style.borderColor = "";
+                });
+            });
+
+            // Actualizar nombre de habitación en vista previa
+            document.getElementById('IdhabitacionModal').addEventListener('input', function() {
+                document.getElementById('HabitacionSelect').textContent = this.value || '-';
+            });
+        });
+    </script>
 }

@@ -88,9 +88,9 @@ namespace SeaAngel.Web.Controllers
             {
                 json = (string)TempData["CartShopping"]!;
 
-                if (string.IsNullOrEmpty(json))
+                if (string.IsNullOrEmpty(json) || json.Trim() == "[]")
                 {
-                    return BadRequest("No hay datos por facturar");
+                    return BadRequest("No hay habitaciones por agregar");
                 }
 
                 // Cuando es Insert Image viene en null porque se pasa diferente
@@ -175,9 +175,9 @@ namespace SeaAngel.Web.Controllers
             {
                 json = (string)TempData["CartShopping"]!;
 
-                if (string.IsNullOrEmpty(json))
+                if (string.IsNullOrEmpty(json) || json.Trim() == "[]")
                 {
-                    return BadRequest("No hay datos por facturar");
+                    return BadRequest("No hay habitaciones por agregar");
                 }
 
                 var lista = JsonSerializer.Deserialize<List<BarcoHabitacionDTO>>(json!)!;
