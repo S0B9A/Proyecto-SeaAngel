@@ -3,228 +3,320 @@
 @model SeaAngel.Application.DTOs.CruceroDTO
 
 @{
-	ViewData["Title"] = "Crear";
+    ViewData["Title"] = "Crear";
 }
 
 <style>
-	ul.ui-autocomplete {
-		z-index: 1100;
-	}
+    ul.ui-autocomplete {
+        z-index: 1100;
+    }
+
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    .card-header-blue {
+        background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
+        color: white;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
+        border: none;
+        transition: all 0.3s;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+    .custom-card {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s;
+        box-shadow: 0 10px 20px rgba(0, 51, 102, 0.1);
+    }
+
+    .form-label {
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #0d47a1;
+    }
+
+    .modal-content {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+    }
 </style>
 
-<div class="container d-flex justify-content-center align-items-center" style="margin-top: 100px;">
-	<div class="card shadow-lg p-4 rounded-3" style="border: 2px solid #003366; background-color: #f8f9fa; width: 60%;">
-		<form asp-action="Create" id="myForm" data-ajax="true" data-ajax-method="POST" data-ajax-begin="onBegin" data-ajax-failure="onFailure" data-ajax-success="onSuccess"
-			  data-ajax-complete="onComplete" asp-antiforgery="true" enctype="multipart/form-data">
-			<div class="row">
-				<!-- Columna Izquierda -->
-				<div class="col-md-6">
-					<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+<div class="container d-flex justify-content-center align-items-center" style="margin-top: 100px; margin-bottom: 50px;">
+    <div class="card custom-card shadow-lg p-0 rounded-3" style="width: 75%;">
+        <!-- Card Header -->
+        <div class="card-header card-header-blue py-4 px-4">
+            <h3 class="mb-0 text-center fw-bold">
+                <i class="fas fa-ship me-2"></i>Registrar Nuevo Crucero
+            </h3>
+            <p class="text-center text-white-50 mb-0 mt-2">Complete los detalles para agregar un nuevo crucero a la flota</p>
+        </div>
 
-					<div class="form-group mb-3">
-						<label asp-for="Nombre" class="form-label fw-bold">Nombre del crucero</label>
-						<input asp-for="Nombre" class="form-control" id="Nombre" placeholder="Ingrese el nombre del crucero" />
-						<span asp-validation-for="Nombre" class="text-danger"></span>
-					</div>
+        <!-- Card Body -->
+        <div class="card-body p-4">
+            <form asp-action="Create" id="myForm" data-ajax="true" data-ajax-method="POST" data-ajax-begin="onBegin" data-ajax-failure="onFailure" data-ajax-success="onSuccess"
+                  data-ajax-complete="onComplete" asp-antiforgery="true" enctype="multipart/form-data">
+                <div class="row g-4">
+                    <!-- Columna Izquierda -->
+                    <div class="col-md-6">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3 p-3 bg-danger-subtle rounded border-start border-danger border-4"></div>
 
-					<div class="form-group mb-3">
-						<label asp-for="Idbarco" class="control-label"></label>
-						@* <input asp-for="IdAutor" class="form-control" /> *@
-						@Html.DropDownListFor(m => m.Idbarco,
-															new SelectList(ViewBag.ListBarco, "Id", "Nombre"),
-															new { @class = "form-select" })
-						<span asp-validation-for="Idbarco" class="text-danger"></span>
-					</div>
+                        <div class="card shadow-sm rounded-3 mb-4 border-0">
+                            <div class="card-body p-4" style="background-color: #f8f9fa;">
+                                <h5 class="card-title mb-3 pb-2 border-bottom text-primary">
+                                    <i class="fas fa-info-circle me-2"></i>Información Básica
+                                </h5>
 
-					<div class="form-group mb-3">
-						<label asp-for="CantDias" class="form-label fw-bold">Total de dias del crucero</label>
-						<input asp-for="CantDias" class="form-control" placeholder="Cantidad total de dias del crucero" />
-						<span asp-validation-for="CantDias" class="text-danger"></span>
-					</div>
+                                <div class="form-group mb-4">
+                                    <label asp-for="Nombre" class="form-label">
+                                        <i class="fas fa-tag me-1"></i>Nombre del Crucero
+                                    </label>
+                                    <input asp-for="Nombre" class="form-control form-control-lg rounded-3 border-0 shadow-sm" id="Nombre" placeholder="Ingrese el nombre del crucero" style="height: 50px;" />
+                                    <span asp-validation-for="Nombre" class="text-danger mt-1 d-block"></span>
+                                </div>
 
+                                <div class="form-group mb-4">
+                                    <label asp-for="Idbarco" class="form-label">
+                                        <i class="fas fa-anchor me-1"></i>Seleccione el Barco
+                                    </label>
+                                    @Html.DropDownListFor(m => m.Idbarco,
+                                                                    new SelectList(ViewBag.ListBarco, "Id", "Nombre"),
+                                                                    new { @class = "form-select form-select-lg rounded-3 border-0 shadow-sm", style = "height: 50px;" })
+                                    <span asp-validation-for="Idbarco" class="text-danger mt-1 d-block"></span>
+                                </div>
 
-					<div class="form-group mb-3">
-						<label asp-for="FechaInicio" class="control-label fw-normal"></label>
-						<input asp-for="FechaInicio" type="date" class="form-control form-control-sm" />
-						<span asp-validation-for="FechaInicio" class="text-danger"></span>
-					</div>
+                                <div class="form-group mb-4">
+                                    <label asp-for="CantDias" class="form-label">
+                                        <i class="fas fa-calendar-alt me-1"></i>Total de Días del Crucero
+                                    </label>
+                                    <input asp-for="CantDias" class="form-control rounded-3 border-0 shadow-sm" placeholder="Cantidad total de días del crucero" style="height: 50px;" />
+                                    <span asp-validation-for="CantDias" class="text-danger mt-1 d-block"></span>
+                                </div>
 
-					<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal">Agregar Puerto</button>
+                            </div>
+                        </div>
 
-					<div class="mt-4" id="itinerarioView">
-						@await Html.PartialAsync("_DetailItinerario")
-					</div>
+                        <div class="d-flex align-items-center gap-3 mb-4">
+                            <button type="button" class="btn btn-primary py-3 px-4 rounded-3 shadow" data-bs-toggle="modal" data-bs-target="#myModal">
+                                <i class="fas fa-plus-circle me-2"></i>Agregar Puerto
+                            </button>
 
-				</div>
+                            <span class="text-muted fst-italic">Añada puertos al itinerario del crucero</span>
+                        </div>
 
-				<!-- Columna Derecha -->
-				<div class="col-md-6">
-					<div class="form-group mb-3">
-						<label asp-for="Foto" class="form-label fw-bold">Imagen del Crucero</label>
-						<input type="file" class="form-control" id="ImageFile" name="ImageFile" required onchange="previewImage()" />
-						<span asp-validation-for="Foto" class="text-danger"></span>
-					</div>
+                        <div class="card shadow-sm rounded-3 border-0">
+                            <div class="card-body p-0">
+                                <div class="mt-2" id="itinerarioView">
+                                    @await Html.PartialAsync("_DetailItinerario")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-					<div class="form-group text-center">
-						<label class="fw-bold">Vista previa</label>
-						<div class="d-flex justify-content-center">
-							<img id="imagePreview" src="#" alt="Imagen seleccionada" class="img-fluid border rounded" style="display:none; width: 50%; height: auto; border: 2px solid #003366;" />
-						</div>
-					</div>
-				</div>
-			</div>
+                    <!-- Columna Derecha -->
+                    <div class="col-md-6">
+                        <div class="card shadow-sm rounded-3 border-0 h-100">
+                            <div class="card-body p-4" style="background-color: #f8f9fa;">
+                                <h5 class="card-title mb-3 pb-2 border-bottom text-primary">
+                                    <i class="fas fa-image me-2"></i>Imagen del Crucero
+                                </h5>
 
-			<div class="d-flex justify-content-between mt-4">
-				<a asp-action="Index" class="btn btn-outline-dark">Regresar al listado</a>
-				<input type="submit" value="Crear" class="btn btn-primary" />
-			</div>
-		</form>
-	</div>
+                                <div class="form-group mb-4">
+                                    <label asp-for="Foto" class="form-label">
+                                        <i class="fas fa-upload me-1"></i>Seleccionar Imagen
+                                    </label>
+                                    <input type="file" class="form-control rounded-3 border-0 shadow-sm py-2"
+                                           id="ImageFile" name="ImageFile" required onchange="previewImage()" />
+                                    <span asp-validation-for="Foto" class="text-danger mt-1 d-block"></span>
+                                    <small class="text-muted">Formatos aceptados: JPG, PNG. Tamaño máximo: 5MB</small>
+                                </div>
+
+                                <div class="form-group text-center mt-4">
+                                    <label class="form-label d-block mb-3">
+                                        <i class="fas fa-eye me-1"></i>Vista previa
+                                    </label>
+                                    <div class="d-flex justify-content-center align-items-center bg-white p-3 rounded-3 shadow-sm" style="min-height: 240px;">
+                                        <img id="imagePreview" src="#" alt="Imagen seleccionada"
+                                             class="img-fluid rounded-3 shadow-sm"
+                                             style="display:none; max-height: 200px; object-fit: contain;" />
+                                        <div id="placeholderText" class="text-muted text-center">
+                                            <i class="fas fa-camera fa-3x mb-3 d-block opacity-50"></i>
+                                            <p>La imagen seleccionada aparecerá aquí</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                    <a asp-action="Index" class="btn btn-outline-secondary rounded-3 py-2 px-4">
+                        <i class="fas fa-arrow-left me-2"></i>Regresar al listado
+                    </a>
+                    <input type="submit" value="Guardar Crucero" class="btn btn-primary rounded-3 py-2 px-4" />
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <!-- Modal Puertos -->
 <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h1 class="modal-title fs-4" id="exampleModalLabel">Puertos</h1>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body p-4">
-				<div id="mostrar"></div>
-				<div class="p-3" style="border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); background: #f8f9fa;">
-					@await Html.PartialAsync("_AddPuerto")
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary btn-lg px-4" data-bs-dismiss="modal">Cerrar</button>
-			</div>
-		</div>
-	</div>
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header card-header-blue py-3">
+                <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">
+                    <i class="fas fa-anchor me-2"></i>Gestión de Puertos
+                </h1>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div id="mostrar"></div>
+                <div class="p-4 rounded-3 shadow-sm" style="background: #f8f9fa;">
+                    @await Html.PartialAsync("_AddPuerto")
+                </div>
+            </div>
+            <div class="modal-footer py-3">
+                <button type="button" class="btn btn-secondary rounded-3 py-2 px-4" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
 
-	<script>
-		function previewImage() {
-			var file = document.getElementById('ImageFile').files[0];
-			var reader = new FileReader();
-			reader.onloadend = function () {
-				var imagePreview = document.getElementById('imagePreview');
-				imagePreview.src = reader.result;
-				imagePreview.style.display = 'block';
-			}
-			if (file) {
-				reader.readAsDataURL(file);
-			} else {
-				document.getElementById('imagePreview').style.display = 'none';
-			}
-		}
+    <script>
+        function previewImage() {
+            var file = document.getElementById('ImageFile').files[0];
+            var reader = new FileReader();
+            reader.onloadend = function () {
+                var imagePreview = document.getElementById('imagePreview');
+                imagePreview.src = reader.result;
+                imagePreview.style.display = 'block';
+                document.getElementById('placeholderText').style.display = 'none';
+            }
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('imagePreview').style.display = 'none';
+                document.getElementById('placeholderText').style.display = 'block';
+            }
+        }
 
-		$("#IdpuertoModal").autocomplete({
-			source: function (request, response) {
-				$.ajax({
-					type: "GET",
-					url: '@Url.Action("GetPuertoByName", "Crucero")',
-					dataType: "json",
-					data: { filtro: $("#IdpuertoModal").val() },
-					success: function (data) {
-						response($.map(data, function (item) {
-							return { label: item.nombre, value: item.Id, data: item };
-						}));
-					},
-					error: function (xhr, status, error) {
-						console.log(error);
-					},
-				});
-			},
-			select: function (event, ui) {
-				$("#IdpuertoModal").val(ui.item.data.id);
-				$("#PuertoSelect").html("Nombre de Puerto: " + ui.item.data.nombre);
-				$("#PaisSelect").html("Pais del Puerto: " + ui.item.data.pais);
-				return false;
-			}
-		});
+        $("#IdpuertoModal").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("GetPuertoByName", "Crucero")',
+                    dataType: "json",
+                    data: { filtro: $("#IdpuertoModal").val() },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.nombre, value: item.Id, data: item };
+                        }));
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    },
+                });
+            },
+            select: function (event, ui) {
+                $("#IdpuertoModal").val(ui.item.data.id);
+                $("#PuertoSelect").html("Nombre de Puerto: " + ui.item.data.nombre);
+                $("#PaisSelect").html("Pais del Puerto: " + ui.item.data.pais);
+                return false;
+            }
+        });
 
-		function addPuerto() {
-			let IdPuerto = $("#IdpuertoModal").val();
-			let Dia = $("#DiaModal").val();
-			let Descripcion = $("#DescripcionModal").val();
-			let divCrucero = $("#itinerarioView");
-			// Obtener el valor actual del día
-			let diaActual = parseInt($('#DiaModal').val());
+        function addPuerto() {
+            let IdPuerto = $("#IdpuertoModal").val();
+            let Dia = $("#DiaModal").val();
+            let Descripcion = $("#DescripcionModal").val();
+            let divCrucero = $("#itinerarioView");
+            // Obtener el valor actual del día
+            let diaActual = parseInt($('#DiaModal').val());
 
-			if (!$.isNumeric(IdPuerto) || !$.isNumeric(Dia) || parseInt(Dia) <= 0) {
-				Swal.fire({
-					title: "Error!",
-					text: "Ingrese un código y un dia válida.",
-					icon: "error"
-				});
-				return;
-			}
+            if (!$.isNumeric(IdPuerto) || !$.isNumeric(Dia) || parseInt(Dia) <= 0) {
+                Swal.fire({
+                    title: "Error!",
+                    text: "Ingrese un código y un dia válida.",
+                    icon: "error"
+                });
+                return;
+            }
 
-			const myRequest = '@Url.Action("AddPuerto", "Crucero")';
-			fetch(myRequest + "?id=" + IdPuerto + "&dia=" + Dia + "&descripcion=" + Descripcion)
-				.then(response => response.text())
-				.then(text => divCrucero.html(text))
-				.catch(error => Swal.fire({ title: "Error", text: error, icon: "error" }));
+            const myRequest = '@Url.Action("AddPuerto", "Crucero")';
+            fetch(myRequest + "?id=" + IdPuerto + "&dia=" + Dia + "&descripcion=" + Descripcion)
+                .then(response => response.text())
+                .then(text => divCrucero.html(text))
+                .catch(error => Swal.fire({ title: "Error", text: error, icon: "error" }));
 
-			$("#IdpuertoModal").val("");
-			$("#DescripcionModal").val("");
-			$("#PuertoSelect").html("");
-			$("#PaisSelect").html("");
+            $("#IdpuertoModal").val("");
+            $("#DescripcionModal").val("");
+            $("#PuertoSelect").html("");
+            $("#PaisSelect").html("");
 
-			// Incrementar el día
-			diaActual += 1;
-			// Establecer el nuevo valor en el campo
-			$('#DiaModal').val(diaActual);
-		}
+            // Incrementar el día
+            diaActual += 1;
+            // Establecer el nuevo valor en el campo
+            $('#DiaModal').val(diaActual);
+        }
 
-		 function deletePuerto(id) {
-			const divCrucero = $("#itinerarioView");
-			const myRequest = '@Url.Action("DeletePuerto", "Crucero")';
-			fetch(myRequest + "?idPuerto=" + id)
-				.then(response => response.text())
-				.then(text => divCrucero.html(text))
-				.catch(error => Swal.fire({ title: "Error", text: error, icon: "error" }));
+        function deletePuerto(id) {
+            const divCrucero = $("#itinerarioView");
+            const myRequest = '@Url.Action("DeletePuerto", "Crucero")';
+            fetch(myRequest + "?idPuerto=" + id)
+                .then(response => response.text())
+                .then(text => divCrucero.html(text))
+                .catch(error => Swal.fire({ title: "Error", text: error, icon: "error" }));
 
-		// Obtener el valor actual del día
-		let diaActual = parseInt($('#DiaModal').val());
+            // Obtener el valor actual del día
+            let diaActual = parseInt($('#DiaModal').val());
 
-		// Disminuir el día si es mayor que 1
-		if (diaActual > 1) {
-			diaActual -= 1;
-		}
+            // Disminuir el día si es mayor que 1
+            if (diaActual > 1) {
+                diaActual -= 1;
+            }
 
-		// Establecer el nuevo valor en el campo
-		$('#DiaModal').val(diaActual);
-		}
+            // Establecer el nuevo valor en el campo
+            $('#DiaModal').val(diaActual);
+        }
 
+        function onBegin() { console.log("onBegin"); }
+        function onFailure(response) { Swal.fire({ title: "Error!", text: response.responseText, icon: "error" }); }
+        function onSuccess(response) {
+            $("#myForm")[0].reset();
+            $("#itinerarioView").html("");
+            Swal.fire({
+                icon: "success",
+                title: "Crucero guardado",
+                showConfirmButton: true
+            }).then(() => {
+                setTimeout(() => {
+                    window.location.href = '@Url.Action("Index", "Crucero")';
+                }, 2000); // Espera 2000 ms (2 segundos) antes de redirigir
+            });
+        }
+        function onComplete() { console.log("Fin del proceso"); }
+    </script>
+    
 
-
-		function onBegin() { console.log("onBegin"); }
-		function onFailure(response) { Swal.fire({ title: "Error!", text: response.responseText, icon: "error" }); }
-		function onSuccess(response) {
-			$("#myForm")[0].reset();
-			$("#barcoHabitacionView").html("");
-			Swal.fire({
-				icon: "success",
-				title: "Curcero salvado",
-				showConfirmButton: true
-			}).then(() => {
-				setTimeout(() => {
-					window.location.href = '@Url.Action("Index", "Crucero")';
-				}, 2000); // Espera 2000 ms (2 segundos) antes de redirigir
-			});
-		}
-		function onComplete() { console.log("Fin del proceso"); }
-	</script>
-
-
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
-
-
-
-}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

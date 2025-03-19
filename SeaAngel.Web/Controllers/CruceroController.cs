@@ -109,7 +109,7 @@ namespace SeaAngel.Web.Controllers
 
                 json = (string)TempData["CartShopping"]!;
 
-                if (string.IsNullOrEmpty(json))
+                if (string.IsNullOrEmpty(json) || json.Trim() == "[]")
                 {
                     TempData.Keep();
                     return BadRequest("No hay puertos en el crucero");

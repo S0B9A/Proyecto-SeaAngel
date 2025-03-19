@@ -24,7 +24,6 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
             var @object = await _context.Set<Crucero>()
                 .Where(c => c.Id == id)
                 .Include(c => c.IdbarcoNavigation) // Cargar la relación con el Barco
-                .Include(c => c.EncReserva) // Cargar las reservas asociadas
                 .Include(c => c.Fecha)
                 .Include(c => c.Itinerario) // Cargar los itinerarios
                 .ThenInclude(it => it.IdpuertoNavigation)
@@ -39,7 +38,6 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
             // Obtener los barcos e incluir la relación BarcoHabitacion
             var collection = await _context.Set<Crucero>()
                 .Include(c => c.IdbarcoNavigation) // Incluir información del Barco
-                .Include(c => c.EncReserva) // Incluir las reservas
                 .Include(c => c.Fecha)
                 .Include(c => c.Itinerario) // Incluir el itinerario
                 .ThenInclude(it => it.IdpuertoNavigation)

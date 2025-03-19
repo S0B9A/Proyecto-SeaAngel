@@ -14,7 +14,7 @@ namespace SeaAngel.Application.DTOs
 
         public int? Idusuario { get; set; }
 
-        public int? Idcrucero { get; set; }
+        public int? Idfecha { get; set; }
 
         public DateTime? FechaCreacion { get; set; }
 
@@ -35,7 +35,7 @@ namespace SeaAngel.Application.DTOs
         public string? PrecioTotal { get; set; }
 
         public virtual UsuarioDTO? IdusuarioNavigation { get; set; }
-        public virtual CruceroDTO? IdcruceroNavigation { get; set; }
+        public virtual FechaDTO? IdfechaNavigation { get; set; }
         public virtual ICollection<ReservaComplementosDTO> ReservaComplementos { get; set; } 
     }
 }

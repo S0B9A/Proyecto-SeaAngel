@@ -15,10 +15,6 @@ public partial class Crucero
 
     public int? Idbarco { get; set; }
 
-    public DateOnly? FechaInicio { get; set; }
-
-    public virtual ICollection<EncReserva> EncReserva { get; set; } = new List<EncReserva>();
-
     public virtual ICollection<Fecha> Fecha { get; set; } = new List<Fecha>();
 
     public virtual Barco? IdbarcoNavigation { get; set; }

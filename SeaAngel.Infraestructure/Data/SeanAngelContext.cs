@@ -164,7 +164,7 @@ public partial class SeanAngelContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.FechaPago).HasColumnType("datetime");
-            entity.Property(e => e.Idcrucero).HasColumnName("IDCrucero");
+            entity.Property(e => e.Idfecha).HasColumnName("IDFecha");
             entity.Property(e => e.Idusuario).HasColumnName("IDUsuario");
             entity.Property(e => e.Impuesto)
                 .HasMaxLength(10)
@@ -179,10 +179,9 @@ public partial class SeanAngelContext : DbContext
                 .HasMaxLength(10)
                 .IsFixedLength();
 
-            entity.HasOne(d => d.IdcruceroNavigation).WithMany(p => p.EncReserva)
-                .HasForeignKey(d => d.Idcrucero)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__Reservas__Crucer__45F365D3");
+            entity.HasOne(d => d.IdfechaNavigation).WithMany(p => p.EncReserva)
+                .HasForeignKey(d => d.Idfecha)
+                .HasConstraintName("FK_EncReserva_Fecha");
 
             entity.HasOne(d => d.IdusuarioNavigation).WithMany(p => p.EncReserva)
                 .HasForeignKey(d => d.Idusuario)

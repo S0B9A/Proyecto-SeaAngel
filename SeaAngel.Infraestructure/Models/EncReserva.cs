@@ -9,7 +9,7 @@ public partial class EncReserva
 
     public int? Idusuario { get; set; }
 
-    public int? Idcrucero { get; set; }
+    public int? Idfecha { get; set; }
 
     public DateTime? FechaCreacion { get; set; }
 
@@ -33,7 +33,7 @@ public partial class EncReserva
 
     public virtual ICollection<DetReserva> DetReserva { get; set; } = new List<DetReserva>();
 
-    public virtual Crucero? IdcruceroNavigation { get; set; }
+    public virtual Fecha? IdfechaNavigation { get; set; }
 
     public virtual Usuario? IdusuarioNavigation { get; set; }
 

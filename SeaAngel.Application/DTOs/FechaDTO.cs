@@ -13,9 +13,9 @@ namespace SeaAngel.Application.DTOs
 
         public int? Idcrucero { get; set; }
 
-        public DateOnly FechaInicio { get; set; }
+        public DateOnly? FechaInicio { get; set; }
 
-        public DateOnly FechaLimitePago { get; set; }
+        public DateOnly? FechaLimitePago { get; set; }
 
         public virtual CruceroDTO? IdcruceroNavigation { get; set; }
 

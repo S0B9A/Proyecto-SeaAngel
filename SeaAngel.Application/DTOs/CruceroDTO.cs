@@ -30,12 +30,6 @@ namespace SeaAngel.Application.DTOs
         [Required(ErrorMessage = "{0} es un dato requerido")]
         public int? Idbarco { get; set; }
 
-        [Display(Name = "Fecha")]
-        [DataType(DataType.Date)]
-        [Required(ErrorMessage = "{0} es un dato requerido")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
-        public DateOnly? FechaInicio { get; set; }
-
         [ValidateNever]
         public virtual List<EncReservaDTO> EncReserva { get; set; } = null!;
 

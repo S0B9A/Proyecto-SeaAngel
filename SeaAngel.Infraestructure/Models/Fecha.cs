@@ -13,6 +13,8 @@ public partial class Fecha
 
     public DateOnly FechaLimitePago { get; set; }
 
+    public virtual ICollection<EncReserva> EncReserva { get; set; } = new List<EncReserva>();
+
     public virtual ICollection<FechaHabitacion> FechaHabitacion { get; set; } = new List<FechaHabitacion>();
 
     public virtual Crucero? IdcruceroNavigation { get; set; }
