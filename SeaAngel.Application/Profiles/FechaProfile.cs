@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace SeaAngel.Application.Profiles
 {
-    public class FechasPreciosProfile : Profile
+    public class FechaProfile : Profile
     {
-        public FechasPreciosProfile()
+        public FechaProfile()
         {
-            CreateMap<FechasPreciosDTO, FechasPrecios>().ReverseMap();
+            CreateMap<FechaDTO, Fecha>().ReverseMap();
         }
     }
 }

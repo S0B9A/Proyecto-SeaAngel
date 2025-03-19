@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace SeaAngel.Infraestructure.Models;
 
-public partial class BarcoHabitacion
+public partial class FechaHabitacion
 {
-    public int Idbarco { get; set; }
-
     public int Idhabitacion { get; set; }
 
-    public int CantDisponible { get; set; }
+    public int Idfecha { get; set; }
 
-    public virtual Barco IdbarcoNavigation { get; set; } = null!;
+    public decimal? Precio { get; set; }
+
+    public virtual Fecha IdfechaNavigation { get; set; } = null!;
 
     public virtual Habitacion IdhabitacionNavigation { get; set; } = null!;
 }

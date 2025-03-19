@@ -47,7 +47,8 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<CruceroProfile>();
     config.AddProfile<ComplementosProfile>();
     config.AddProfile<ReservaComplementosProfile>();
-    config.AddProfile<FechasPreciosProfile>();
+    config.AddProfile<FechaProfile>();
+    config.AddProfile<FechaHabitacionProfile>();
 });
 
 // Configuar Conexión a la Base de Datos SQL

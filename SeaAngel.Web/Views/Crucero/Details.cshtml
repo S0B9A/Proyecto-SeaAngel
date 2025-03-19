@@ -144,12 +144,11 @@
             <div class="col-md-6">
                 <div class="seccion-titulo">Fechas y Precios</div>
                 <ul class="list-group mt-2">
-                    @foreach (var fechaPrecio in Model.FechasPrecios)
+                    @foreach (var fecha in Model.Fecha)
                     {
                         <li class="list-group-item">
-                            <strong>Fecha de Inicio:</strong> @fechaPrecio.FechaInicio <br>
-                            <small class="text-muted">@fechaPrecio.IdhabitacionNavigation.Nombre - </small>
-                            <small class="text-muted">₡@fechaPrecio.Precio</small>
+                            <strong>Fecha de Inicio:</strong> @fecha.FechaInicio <br>
+                            <small class="text-muted">@fecha.FechaLimitePago - </small>
                         </li>
                     }
                 </ul>

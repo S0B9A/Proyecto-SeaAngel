@@ -19,7 +19,7 @@ public partial class Crucero
 
     public virtual ICollection<EncReserva> EncReserva { get; set; } = new List<EncReserva>();
 
-    public virtual ICollection<FechasPrecios> FechasPrecios { get; set; } = new List<FechasPrecios>();
+    public virtual ICollection<Fecha> Fecha { get; set; } = new List<Fecha>();
 
     public virtual Barco? IdbarcoNavigation { get; set; }
 

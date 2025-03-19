@@ -28,7 +28,9 @@ public partial class SeanAngelContext : DbContext
 
     public virtual DbSet<EncReserva> EncReserva { get; set; }
 
-    public virtual DbSet<FechasPrecios> FechasPrecios { get; set; }
+    public virtual DbSet<Fecha> Fecha { get; set; }
+
+    public virtual DbSet<FechaHabitacion> FechaHabitacion { get; set; }
 
     public virtual DbSet<Habitacion> Habitacion { get; set; }
 
@@ -61,7 +63,6 @@ public partial class SeanAngelContext : DbContext
 
             entity.Property(e => e.Idbarco).HasColumnName("IDBarco");
             entity.Property(e => e.Idhabitacion).HasColumnName("IDHabitacion");
-            entity.Property(e => e.PrecioHabitacion).HasColumnType("decimal(18, 0)");
 
             entity.HasOne(d => d.IdbarcoNavigation).WithMany(p => p.BarcoHabitacion)
                 .HasForeignKey(d => d.Idbarco)
@@ -189,23 +190,36 @@ public partial class SeanAngelContext : DbContext
                 .HasConstraintName("FK__Reservas__Usuari__44FF419A");
         });
 
-        modelBuilder.Entity<FechasPrecios>(entity =>
+        modelBuilder.Entity<Fecha>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__FechasPr__3214EC27C78808D8");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Idcrucero).HasColumnName("IDCrucero");
-            entity.Property(e => e.Idhabitacion).HasColumnName("IDHabitacion");
-            entity.Property(e => e.Precio).HasColumnType("decimal(10, 2)");
 
-            entity.HasOne(d => d.IdcruceroNavigation).WithMany(p => p.FechasPrecios)
+            entity.HasOne(d => d.IdcruceroNavigation).WithMany(p => p.Fecha)
                 .HasForeignKey(d => d.Idcrucero)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__FechasPre__IDCru__4D94879B");
+        });
 
-            entity.HasOne(d => d.IdhabitacionNavigation).WithMany(p => p.FechasPrecios)
+        modelBuilder.Entity<FechaHabitacion>(entity =>
+        {
+            entity.HasKey(e => new { e.Idhabitacion, e.Idfecha });
+
+            entity.Property(e => e.Idhabitacion).HasColumnName("IDHabitacion");
+            entity.Property(e => e.Idfecha).HasColumnName("IDFecha");
+            entity.Property(e => e.Precio).HasColumnType("decimal(18, 0)");
+
+            entity.HasOne(d => d.IdfechaNavigation).WithMany(p => p.FechaHabitacion)
+                .HasForeignKey(d => d.Idfecha)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_FechaHabitacion_Fecha");
+
+            entity.HasOne(d => d.IdhabitacionNavigation).WithMany(p => p.FechaHabitacion)
                 .HasForeignKey(d => d.Idhabitacion)
-                .HasConstraintName("FK__FechasPre__IDHab__4E88ABD4");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_FechaHabitacion_Habitacion");
         });
 
         modelBuilder.Entity<Habitacion>(entity =>

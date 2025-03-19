@@ -40,7 +40,7 @@ namespace SeaAngel.Application.DTOs
         public virtual List<EncReservaDTO> EncReserva { get; set; } = null!;
 
         [ValidateNever]
-        public virtual List<FechasPreciosDTO> FechasPrecios { get; set; } = null!;
+        public virtual List<FechaDTO> Fecha { get; set; } = null!;
 
         [ValidateNever]
         public virtual BarcoDTO? IdbarcoNavigation { get; set; } = null!;

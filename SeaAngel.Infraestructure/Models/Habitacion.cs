@@ -23,5 +23,5 @@ public partial class Habitacion
 
     public virtual ICollection<DetReserva> DetReserva { get; set; } = new List<DetReserva>();
 
-    public virtual ICollection<FechasPrecios> FechasPrecios { get; set; } = new List<FechasPrecios>();
+    public virtual ICollection<FechaHabitacion> FechaHabitacion { get; set; } = new List<FechaHabitacion>();
 }
