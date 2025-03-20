@@ -1,0 +1,193 @@
+﻿@model SeaAngel.Application.DTOs.FechaDTO
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+                <div class="card-header bg-gradient py-4" style="background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);">
+                    <h4 class="mb-0 text-white text-center fw-bold">
+                        <i class="fas fa-calendar-alt me-2"></i> Agregar Fecha
+                    </h4>
+                </div>
+
+                <div class="card-body p-4">
+                    <form asp-action="Create" id="myForm" data-ajax="true" data-ajax-method="POST" data-ajax-begin="onBegin"
+                          data-ajax-failure="onFailure" data-ajax-success="onSuccess" data-ajax-complete="onComplete"
+                          asp-antiforgery="true" enctype="multipart/form-data">
+
+                        <div class="row g-4">
+                            <!-- Inputs de Fecha en una fila -->
+                            <div class="col-md-6">
+                                <label asp-for="FechaInicio" class="form-label fw-semibold text-primary">
+                                    <i class="fas fa-calendar-alt me-1"></i> Fecha de Inicio
+                                </label>
+                                <input asp-for="FechaInicio" id="fechaInicio" type="date" class="form-control border-0 shadow-sm rounded-3 ps-3"
+                                       style="height: 50px;" placeholder="Seleccione la fecha de inicio" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="FechaLimitePago" class="form-label fw-semibold text-primary">
+                                    <i class="fas fa-calendar-times me-1"></i> Fecha Límite de Pago
+                                </label>
+                                <input asp-for="FechaLimitePago" id="fechaLimitePago" type="date" class="form-control border-0 shadow-sm rounded-3 ps-3"
+                                       style="height: 50px;" placeholder="Seleccione la fecha límite de pago" />
+                            </div>
+                        </div>
+
+                        <div class="row g-4 mt-3">
+                            <!-- Lista de habitaciones disponibles -->
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm rounded-3 h-100">
+                                    <div class="card-header border-0 bg-transparent">
+                                        <h5 class="fw-bold text-primary text-center mb-0">
+                                            <i class="fas fa-list-alt me-2"></i> Habitaciones Disponibles
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Input para el nombre de la habitación -->
+                                        <div class="mb-3">
+                                            <input type="text" id="habitacionSeleccionada" class="form-control border-0 shadow-sm rounded-3 ps-3"
+                                                   style="height: 50px; transition: all 0.3s;" readonly placeholder="Seleccione una habitación">
+                                            <input type="text" id="precioHabitacion" class="form-control border-0 shadow-sm rounded-3 ps-3 mt-3"
+                                                   style="height: 50px; transition: all 0.3s;" placeholder="Digite su precio">
+                                            <input type="hidden" id="idhabitacion">
+                                        </div>
+
+                                        <!-- Lista de habitaciones -->
+                                        <div class="overflow-auto p-3 w-100" style="max-height: 250px; border-radius: 10px; background: #f8f9fa;">
+                                            <ul class="list-group list-group-flush">
+                                                @foreach (var h in ViewBag.ListHabitaciones)
+                                                {
+                                                    <li class="list-group-item list-group-item-action border-0 rounded-3 mb-2 text-center habitacion-item"
+                                                        style="padding: 12px 15px; background: white; transition: all 0.2s; cursor: pointer;"
+                                                        data-nombre="@h.Nombre" data-id="@h.ID"
+                                                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)';"
+                                                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.05)';">
+                                                        <i class="fas fa-anchor text-primary me-2"></i>
+                                                        <span class="fw-medium">@h.Nombre - @h.Descripcion</span>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+
+                                        <div class="d-grid mt-4">
+                                            <button type="button" class="btn btn-primary btn-lg shadow rounded-3 py-2 w-50" onclick="addHabitacion()">
+                                               Agregar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm rounded-3 h-100">
+                                    <div class="card-header border-0 bg-transparent">
+                                        <h5 class="fw-bold text-primary text-center mb-0">
+                                            <i class="fas fa-list-alt me-2"></i> Habitaciones Agregadas
+                                        </h5>
+                                    </div>
+                                    <div class="mt-2" id="fechaHabitacionView">
+                                        @await Html.PartialAsync("_DetailFechaHabitacion")
+                                    </div>
+                                </div>
+                        </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="button" id="btnSalir" class="btn btn-danger btn-lg shadow rounded-3 px-4" disabled
+                                        onclick="window.location.href='@Url.Action("Index", "Crucero")'">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Salir
+                                </button>
+@* 
+                                <button type="submit" class="btn btn-primary btn-lg shadow rounded-3 px-4">
+                                    <i class="fas fa-save me-2"></i> Guardar Fecha
+                                </button>
+ *@
+                                <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                                    <input type="submit" value="Guardar Fecha" class="btn btn-primary rounded-3 py-2 px-4" />
+                                </div>
+                            </div>
+
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Selecciona todos los elementos de la lista de habitaciones
+            document.querySelectorAll(".habitacion-item").forEach(item => {
+                item.addEventListener("click", function () {
+                    let nombreHabitacion = this.getAttribute("data-nombre"); // Obtiene el nombre de la habitación
+                    document.getElementById("habitacionSeleccionada").value = nombreHabitacion; // Lo coloca en el input
+                    let idhabitacion = this.getAttribute("data-id"); // Obtiene el nombre de la habitación
+                    document.getElementById("idhabitacion").value = idhabitacion;
+                });
+            });
+        });
+
+         function addHabitacion() {
+            let IdhabitacionModal = $("#idhabitacion").val();
+            let PrecioModal = $("#precioHabitacion").val();
+            let divBarco = $("#fechaHabitacionView");
+
+                if (!IdhabitacionModal || isNaN(PrecioModal) || PrecioModal <= 0){
+                Swal.fire({
+                    title: "Error!",
+                    text: "Ingrese un precio válido.",
+                    icon: "error"
+                });
+                return;
+            }
+
+            const myRequest = '@Url.Action("AddHabitacion", "Fecha")';
+            fetch(myRequest + "?id=" + IdhabitacionModal + "&precio=" + PrecioModal)
+                .then(response => response.text())
+                .then(text => divBarco.html(text))
+                .catch(error => Swal.fire({ title: "Error", text: error, icon: "error" }));
+
+            $("#idhabitacion").val("");
+            $("#precioHabitacion").val("");
+            $("#habitacionSeleccionada").html("");
+
+        }
+
+        function onBegin() { console.log("onBegin"); }
+         function onFailure(response) { Swal.fire({ title: "Error!", text: response.responseText, icon: "error" }); }
+         function onSuccess(response) {
+             $("#myForm")[0].reset();
+             Swal.fire({
+                 icon: "success",
+                 title: "Habitacion salvada",
+                 showConfirmButton: true
+             }
+             ).then(() => {
+                 setTimeout(() => {
+                    // window.location.href = '@Url.Action("Index", "Barco")';
+                 }, 2000); // Espera 2000 ms (2 segundos) antes de redirigir
+             });
+         }
+
+            function onSuccess(response) {
+            $("#myForm")[0].reset();
+            Swal.fire({
+                icon: "success",
+                title: "Fecha creada exitosamente",
+                showConfirmButton: true
+            }).then(() => {
+                document.getElementById("btnSalir").disabled = false; // Habilitar el botón de salir
+            });
+        }
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

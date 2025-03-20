@@ -83,7 +83,19 @@ namespace SeaAngel.Web.Controllers
 
             try
             {
+                if (dto.CapacidadMax <= dto.CapacidadMin)
+                {
+                    return BadRequest("La capacidad máxima debe ser mayor a la mínima");
+                }
 
+                var lista = await _serviceHabitacion.ListAsync();
+                var item = lista.FirstOrDefault(o => o.Nombre == dto.Nombre);
+
+                if (item != null)
+                {
+                    return BadRequest("Nombre existente");
+
+                }
                 // Cuando es Insert Image viene en null porque se pasa diferente
                 if (dto.Foto == null)
                 {

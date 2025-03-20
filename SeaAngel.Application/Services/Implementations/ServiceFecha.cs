@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SeaAngel.Application.DTOs;
 using SeaAngel.Application.Services.Interfaces;
+using SeaAngel.Infraestructure.Models;
 using SeaAngel.Infraestructure.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,10 @@ namespace SeaAngel.Application.Services.Implementations
 {
     public class ServiceFecha : IServiceFecha
     {
-        private readonly IRepositoryPuerto _repository;
+        private readonly IRepositoryFecha _repository;
         private readonly IMapper _mapper;
 
-        public ServiceFecha(IRepositoryPuerto repository, IMapper mapper)
+        public ServiceFecha(IRepositoryFecha repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -34,6 +35,25 @@ namespace SeaAngel.Application.Services.Implementations
             var collection = _mapper.Map<ICollection<FechaDTO>>(list);
             return collection;
         }
+        public async Task<int> AddAsync(FechaDTO dto)
+        {
+            try
+            {
+                var objectMapped = _mapper.Map<Fecha>(dto); // Map BarcoDTO to Barco
+                return await _repository.AddAsync(objectMapped);  // Return
 
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
+
+        public async Task<int> GetNextNumber()
+        {
+            int nextReceipt = await _repository.GetNextNumber();
+            return nextReceipt + 1;
+        }
     }
 }

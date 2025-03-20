@@ -12,5 +12,6 @@ namespace SeaAngel.Infraestructure.Repository.Interfaces
         Task<ICollection<Crucero>> ListAsync();
         Task<Crucero> FindByIdAsync(int id);
         Task<int> AddAsync(Crucero entity);
+        Task<int> GetNextNumber();
     }
 }

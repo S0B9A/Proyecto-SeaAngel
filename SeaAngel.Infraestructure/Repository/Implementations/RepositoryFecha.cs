@@ -48,5 +48,57 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
 
             return collection;
         }
+
+        public async Task<int> AddAsync(Fecha entity)
+        {
+
+            try
+            {
+                // Iniciar la transacción
+                await _context.Database.BeginTransactionAsync();
+
+                // Agregar el barco a la base de datos
+                await _context.Set<Fecha>().AddAsync(entity);
+
+                // Guardar cambios en la base de datos
+                await _context.SaveChangesAsync();
+
+                // Confirmar la transacción
+                await _context.Database.CommitTransactionAsync();
+
+                return entity.Id;
+            }
+            catch (Exception ex)
+            {
+                await _context.Database.RollbackTransactionAsync();
+                throw new Exception(ex.Message);
+            }
+
+        }
+        public async Task<int> GetNextNumber()
+        {
+            int current = 0;
+
+            string sql = string.Format("SELECT IDENT_CURRENT ('Fecha') AS Current_Identity;");
+
+            System.Data.DataTable dataTable = new System.Data.DataTable();
+
+            System.Data.Common.DbConnection connection = _context.Database.GetDbConnection();
+            System.Data.Common.DbProviderFactory dbFactory = System.Data.Common.DbProviderFactories.GetFactory(connection!)!;
+            using (var cmd = dbFactory!.CreateCommand())
+            {
+                cmd!.Connection = connection;
+                cmd.CommandText = sql;
+                using (System.Data.Common.DbDataAdapter adapter = dbFactory.CreateDataAdapter()!)
+                {
+                    adapter.SelectCommand = cmd;
+                    adapter.Fill(dataTable);
+                }
+            }
+
+
+            current = Convert.ToInt32(dataTable.Rows[0][0].ToString());
+            return await Task.FromResult(current);
+        }
     }
 }

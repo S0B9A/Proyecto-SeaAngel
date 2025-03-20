@@ -51,5 +51,10 @@ namespace SeaAngel.Application.Services.Implementations
                 throw new Exception(ex.Message);
             }
         }
+        public async Task<int> GetNextNumber()
+        {
+            int nextReceipt = await _repository.GetNextNumber();
+            return nextReceipt;
+        }
     }
 }

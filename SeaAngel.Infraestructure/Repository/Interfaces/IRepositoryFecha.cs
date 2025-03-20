@@ -11,5 +11,7 @@ namespace SeaAngel.Infraestructure.Repository.Interfaces
     {
         Task<ICollection<Fecha>> ListAsync();
         Task<Fecha> FindByIdAsync(int id);
+        Task<int> AddAsync(Fecha entity);
+        Task<int> GetNextNumber();
     }
 }

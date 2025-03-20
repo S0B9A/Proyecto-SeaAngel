@@ -11,5 +11,7 @@ namespace SeaAngel.Application.Services.Interfaces
     {
         Task<ICollection<FechaDTO>> ListAsync();
         Task<FechaDTO> FindByIdAsync(int id);
+        Task<int> AddAsync(FechaDTO dto);
+        Task<int> GetNextNumber();
     }
 }
