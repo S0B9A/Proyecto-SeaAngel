@@ -10,6 +10,7 @@ namespace SeaAngel.Infraestructure.Repository.Interfaces
     public interface IRepositoryBarco
     {
         Task<ICollection<Barco>> ListAsync();
+        Task<ICollection<Habitacion>> ListHabitaciones(int id);
         Task<Barco> FindByIdAsync(int id);
         Task<int> AddAsync(Barco entity);
         Task UpdateAsync(Barco entity);

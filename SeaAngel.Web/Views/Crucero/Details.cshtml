@@ -67,7 +67,23 @@
         font-weight: 700;
     }
 
+    .dia-container {
+        width: 40px;
+        height: 40px;
+        background-color: #0077B6;
+        color: white;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
     .list-group-item {
+        display: flex;
+        align-items: center;
         background-color: #f1f9fc;
         border: none;
         border-left: 5px solid #0077B6;
@@ -96,6 +112,7 @@
         text-align: center;
         box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
     }
+
 </style>
 
 <div class="contenedor-detalle">
@@ -128,31 +145,88 @@
 
         <!-- Segunda fila: Itinerario y Fechas/Precios -->
         <div class="row">
-            <div class="col-md-6">
-                <div class="seccion-titulo">Itinerario</div>
-                <ul class="list-group mt-2">
-                    @foreach (var item in Model.Itinerario)
-                    {
-                        <li class="list-group-item">
-                            <strong>Puerto:</strong> @item.IdpuertoNavigation.Nombre <br>
-                            <small class="text-muted">@item.Descripcion</small>
-                        </li>
-                    }
-                </ul>
+            <div class="row">
+                <div class="col-12">
+                    <div class="seccion-titulo">Itinerario</div>
+                    <ul class="list-group mt-2">
+                        @foreach (var item in Model.Itinerario)
+                        {
+                            <li class="list-group-item d-flex align-items-center">
+                                <div class="dia-container">@item.Dia</div>
+                                <div class="ms-3">
+                                    <strong>Puerto:</strong> @item.IdpuertoNavigation.Nombre <br>
+                                    <small class="text-muted">@item.Descripcion</small>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="seccion-titulo">Fechas y Precios</div>
-                <ul class="list-group mt-2">
-                    @foreach (var fecha in Model.Fecha)
-                    {
-                        <li class="list-group-item">
-                            <strong>Fecha de Inicio:</strong> @fecha.FechaInicio <br>
-                            <small class="text-muted">@fecha.FechaLimitePago - </small>
-                        </li>
+            <!-- Fila para la Disponibilidad de Habitaciones -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="seccion-titulo">Disponibilidad de habitaciones</div>
+
+                    @{
+                        var fechasUnicas = Model.Fecha.Select(fp => fp.FechaInicio).Distinct().OrderBy(f => f);
                     }
-                </ul>
+
+                    @foreach (var fecha in fechasUnicas)
+                    {
+                        var f = Model.Fecha.FirstOrDefault(fp => fp.FechaInicio == fecha);
+                        var fechaLimite = f.FechaLimitePago;
+
+                        <div class="row align-items-center mt-4 border p-3 rounded shadow-sm">
+                            <!-- Columna izquierda: Imagen y fechas -->
+                            <div class="col-md-4 text-center">
+                                <img src="@Url.Content("~/Images/calendar.png")" class="img-fluid rounded-3 mb-2" alt="Calendario" style="max-width: 150px;">
+                                <h5 class="fw-bold" style="color: #0A1F44;">
+                                    <strong>Desde:</strong> @fecha
+                                </h5>
+                                <h5 class="fw-bold" style="color: #0A1F44;">
+                                    <strong>Hasta:</strong> @fechaLimite
+                                </h5>
+                            </div>
+
+                            <!-- Columna derecha: Tabla de habitaciones -->
+                            <div class="col-md-8">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead style="background-color: #B3E0FF; color: #0A1F44;">
+                                            <tr>
+                                                <th>Habitación</th>
+                                                <th>Descripción</th>
+                                                <th>Precio</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var fechaPrecio in Model.Fecha.Where(fp => fp.FechaInicio == fecha))
+                                            {
+                                                @foreach (var habitacion in fechaPrecio.FechaHabitacion)
+                                                {
+                                                    <tr>
+                                                        <td >
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="fas fa-bed text-primary me-2"></i>
+                                                                <span class="flex-grow-1 text-center fw-medium">@habitacion.IdhabitacionNavigation.Nombre</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>@habitacion.IdhabitacionNavigation.Descripcion</td>
+                                                        <td>₡@habitacion.Precio</td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
             </div>
+
+
         </div>
     </div>
 </div>

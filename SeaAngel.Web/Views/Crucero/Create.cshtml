@@ -109,11 +109,13 @@
                         </div>
 
                         <div class="d-flex align-items-center gap-3 mb-4">
-                            <button type="button" class="btn btn-primary py-3 px-4 rounded-3 shadow" data-bs-toggle="modal" data-bs-target="#myModal">
+                            <button type="button" class="btn btn-primary py-3 px-4 rounded-3 shadow" data-bs-toggle="modal" data-bs-target="#myModalPuertos">
                                 <i class="fas fa-plus-circle me-2"></i>Agregar Puerto
                             </button>
 
-                            <span class="text-muted fst-italic">Añada puertos al itinerario del crucero</span>
+                            <button type="button" class="btn btn-primary py-3 px-4 rounded-3 shadow" data-bs-toggle="modal" data-bs-target="#myModalFechas" id="btnAgregarFechas">
+                                <i class="fas fa-plus-circle me-2"></i>Agregar Fechas
+                            </button>
                         </div>
 
                         <div class="card shadow-sm rounded-3 border-0">
@@ -174,7 +176,7 @@
 </div>
 
 <!-- Modal Puertos -->
-<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModalPuertos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
         <div class="modal-content shadow-lg">
             <div class="modal-header card-header-blue py-3">
@@ -198,6 +200,34 @@
     </div>
 </div>
 
+
+<!-- Modal Fechas -->
+<div class="modal fade" id="myModalFechas" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header card-header-blue py-3">
+                <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">
+                    <i class="fas fa-anchor me-2"></i>Gestión de Fechas 
+                </h1>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div id="mostrar"></div>
+                <div class="p-4 rounded-3 shadow-sm" style="background: #f8f9fa;">
+               
+                    @await Html.PartialAsync("../Fecha/_Create")
+
+                </div>
+            </div>
+            <div class="modal-footer py-3">
+                <button type="button" class="btn btn-secondary rounded-3 py-2 px-4" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts {
 
     <script>
@@ -314,8 +344,23 @@
         }
         function onComplete() { console.log("Fin del proceso"); }
     </script>
-    
 
+    <script>
+        $(document).ready(function () {
+            // Detectar cambios en el dropdown de barco
+            $("#Idbarco").change(function () {
+                let barcoId = $(this).val();
+                $("#btnAgregarFechas").attr("data-idbarco", barcoId);
+            });
+
+            // Pasar el ID del barco al modal cuando se abre
+            $("#myModalFechas").on("show.bs.modal", function (event) {
+                let barcoId = $("#btnAgregarFechas").attr("data-idbarco");
+                console.log("ID del Barco seleccionado:", barcoId);
+                $("#modalBarcoId").val(barcoId);
+            });
+        });
+    </script>
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

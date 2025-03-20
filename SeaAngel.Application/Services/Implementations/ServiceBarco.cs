@@ -36,6 +36,12 @@ namespace SeaAngel.Application.Services.Implementations
             var collection = _mapper.Map<ICollection<BarcoDTO>>(list);
             return collection;
         }
+        public async Task<ICollection<HabitacionDTO>> ListHabitaciones(int id)
+        {
+            var list = await _repository.ListHabitaciones(id);
+            var collection = _mapper.Map<ICollection<HabitacionDTO>>(list);
+            return collection;
+        }
 
         public async Task<int> AddAsync(BarcoDTO dto)
         {

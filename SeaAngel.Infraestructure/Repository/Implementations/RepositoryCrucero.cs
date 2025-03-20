@@ -25,10 +25,17 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
                 .Where(c => c.Id == id)
                 .Include(c => c.IdbarcoNavigation) // Cargar la relación con el Barco
                 .Include(c => c.Fecha)
+                .ThenInclude(it => it.FechaHabitacion)
+                .ThenInclude(it => it.IdhabitacionNavigation)
                 .Include(c => c.Itinerario) // Cargar los itinerarios
                 .ThenInclude(it => it.IdpuertoNavigation)
 
                 .FirstOrDefaultAsync();
+
+            if (@object != null)
+            {
+                @object.Itinerario = @object.Itinerario.OrderBy(it => it.Dia).ToList();
+            }
 
             return @object!;
         }

@@ -10,6 +10,7 @@ namespace SeaAngel.Application.Services.Interfaces
     public interface IServiceBarco
     {
         Task<ICollection<BarcoDTO>> ListAsync();
+        Task<ICollection<HabitacionDTO>> ListHabitaciones(int id);
         Task<BarcoDTO> FindByIdAsync(int id);
         Task<int> AddAsync(BarcoDTO dto);
         Task UpdateAsync(int id, BarcoDTO dto);

@@ -29,6 +29,18 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
             return @object!;
         }
 
+        public async Task<ICollection<Habitacion>> ListHabitaciones(int id)
+        {
+            var habitaciones = await _context.Set<Barco>()
+        .Where(b => b.Id == id)  // Filtra el barco por ID
+        .Include(b => b.BarcoHabitacion)
+            .ThenInclude(bh => bh.IdhabitacionNavigation) // Navega a Habitacion
+        .SelectMany(b => b.BarcoHabitacion.Select(bh => bh.IdhabitacionNavigation)) // Extrae habitaciones
+        .ToListAsync();
+
+            return habitaciones;
+        }
+
         public async Task<ICollection<Barco>> ListAsync()
         {
             // Obtener los barcos e incluir la relación BarcoHabitacion
