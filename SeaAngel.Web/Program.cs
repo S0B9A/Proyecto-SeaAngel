@@ -9,8 +9,15 @@ using Serilog.Events;
 using Serilog;
 using System.Text;
 using SeaAngel.Web.Middleware;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
+using Libreria.Application.Config;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Mapeo de la clase AppConfig para leer appsettings.json
+builder.Services.Configure<AppConfig>(builder.Configuration);
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -25,6 +32,7 @@ builder.Services.AddTransient<IRepositoryEncReserva, RepositoryEncReserva>();
 builder.Services.AddTransient<IRepositoryCrucero, RepositoryCrucero>();
 builder.Services.AddTransient<IRepositoryPuerto, RepositoryPuerto>();
 builder.Services.AddTransient<IRepositoryFecha, RepositoryFecha>();
+builder.Services.AddTransient<IRepositoryUsuario, RepositoryUsuario>();
 //Services
 builder.Services.AddTransient<IServiceBarco, ServiceBarco>();
 builder.Services.AddTransient<IServiceHabitacion, ServiceHabitacion>();
@@ -32,6 +40,29 @@ builder.Services.AddTransient<IServiceEncReserva, ServiceEncReserva>();
 builder.Services.AddTransient<IServiceCrucero, ServiceCrucero>();
 builder.Services.AddTransient<IServicePuerto, ServicePuerto>();
 builder.Services.AddTransient<IServiceFecha, ServiceFecha>();
+builder.Services.AddTransient<IServiceUsuario, ServiceUsuario>();
+
+//Seguridad
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login/Index";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        options.AccessDeniedPath = "/Login/Forbidden/";
+    });
+
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add(
+            new ResponseCacheAttribute
+            {
+                NoStore = true,
+                Location = ResponseCacheLocation.None,
+            }
+        );
+});
+
+
 
 //Configurar Automapper
 builder.Services.AddAutoMapper(config =>
@@ -123,6 +154,6 @@ app.UseAntiforgery();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Login}/{action=Index}/{id?}");
 
 app.Run();

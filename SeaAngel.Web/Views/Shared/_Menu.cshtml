@@ -11,7 +11,7 @@
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarS"
-                aria-controls="navbarS" aria-expanded="false" aria-label="Toggle navigation">
+        aria-controls="navbarS" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -41,30 +41,33 @@
                         <i class="bi bi-person-circle fs-4"></i> <!-- Ícono de usuario -->
                     </a>
                 </li>
+                @if (User.IsInRole("Administrador") == true)
+                {
+                    <!-- Menú desplegable de configuración -->
+                    <li class="nav-item dropdown mx-2">
+                        <a href="#" class="nav-link dropdown-toggle" id="configDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-gear-fill fs-4 text-dark-blue"></i> <!-- Ícono de configuración -->
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="configDropdown">
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("Mantenimiento", "Barco")">
+                                    Mantenimiento Barco
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("Mantenimiento", "Habitacion")">
+                                    Mantenimiento Habitación
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("Mantenimiento", "Crucero")">
+                                    Mantenimiento Crucero
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                }
 
-                <!-- Menú desplegable de configuración -->
-                <li class="nav-item dropdown mx-2">
-                    <a href="#" class="nav-link dropdown-toggle" id="configDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-gear-fill fs-4 text-dark-blue"></i> <!-- Ícono de configuración -->
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="configDropdown">
-                        <li>
-                            <a class="dropdown-item" href="@Url.Action("Mantenimiento", "Barco")">
-                                 Mantenimiento Barco
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="@Url.Action("Mantenimiento", "Habitacion")">
-                               Mantenimiento Habitación
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="@Url.Action("Mantenimiento", "Crucero")">
-                                Mantenimiento Crucero
-                            </a>
-                        </li>
-                    </ul>
-                </li>
             </ul>
 
         </div>
