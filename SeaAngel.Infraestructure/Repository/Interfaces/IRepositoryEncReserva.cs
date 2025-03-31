@@ -11,5 +11,7 @@ namespace SeaAngel.Infraestructure.Repository.Interfaces
     {
         Task<ICollection<EncReserva>> ListAsync();
         Task<EncReserva> FindByIdAsync(int id);
+
+        Task<int> AddAsync(EncReserva entity);
     }
 }

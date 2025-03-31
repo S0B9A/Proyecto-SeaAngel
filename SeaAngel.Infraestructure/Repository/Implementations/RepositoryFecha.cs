@@ -22,9 +22,6 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
         public async Task<Fecha> FindByIdAsync(int id)
         {
             var @object = await _context.Set<Fecha>()
-                .Include(a => a.Idcrucero)
-                .Include(a => a.FechaInicio)
-                .Include(a => a.FechaLimitePago)
                 .Include(a => a.IdcruceroNavigation)
                 .Include(a => a.FechaHabitacion)
                     .ThenInclude(b => b.IdhabitacionNavigation)
@@ -38,9 +35,6 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
         {
             // Obtener los Puertoa e incluir la relación Itinerario
             var collection = await _context.Set<Fecha>()
-                .Include(a => a.Idcrucero)
-                .Include(a => a.FechaInicio)
-                .Include(a => a.FechaLimitePago)
                 .Include(a => a.IdcruceroNavigation)
                 .Include(a => a.FechaHabitacion)
                     .ThenInclude(b => b.IdhabitacionNavigation)

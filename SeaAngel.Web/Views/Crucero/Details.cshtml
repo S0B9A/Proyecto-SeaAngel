@@ -126,9 +126,6 @@
                     <li class="list-group-item"><strong>Cantidad de Días:</strong> @Model.CantDias días</li>
                     <li class="list-group-item"><strong>Barco:</strong> @(Model.IdbarcoNavigation?.Nombre ?? "No disponible")</li>
                 </ul>
-                <div class="mt-4">
-                    <a href="@Url.Action("Reservar", "Crucero", new { id = Model.Id })" class="btn btn-marine">Reservar Ahora</a>
-                </div>
             </div>
 
             <div class="col-md-6 crucero-img text-center">
@@ -187,6 +184,9 @@
                                 <h5 class="fw-bold" style="color: #0A1F44;">
                                     <strong>Hasta:</strong> @fechaLimite
                                 </h5>
+                                <a href="@Url.Action("Create", "EncReserva", new { idcrucero = Model.Id, idfecha = f.Id })" class="btn btn-marine">
+                                    Reservar Ahora
+                                </a>
                             </div>
 
                             <!-- Columna derecha: Tabla de habitaciones -->

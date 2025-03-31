@@ -1,115 +1,198 @@
 ﻿@model SeaAngel.Application.DTOs.EncReservaDTO
 
 @{
-    ViewData["Title"] = "Create";
+	ViewData["Title"] = "Create";
 }
 
 <div class="container-fluid py-5 mt-5">
-    <div class="row justify-content-center">
-        <!-- Formulario principal (9 columnas) -->
-        <div class="col-lg-9">
-            <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
-                <div class="card-header bg-gradient py-4" style="background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);">
-                    <h4 class="mb-0 text-black text-center fw-bold">
-                        <i class="fas fa-calendar-alt me-2"></i> Crear Reserva
-                    </h4>
-                </div>
+	<div class="row justify-content-center">
+		<!-- Formulario principal (9 columnas) -->
+		<div class="col-lg-9">
+			<div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+				<div class="card-header bg-gradient py-4" style="background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);">
+					<h4 class="mb-0 text-black text-center fw-bold">
+						<i class="fas fa-calendar-alt me-2"></i> Crear Reserva
+					</h4>
+				</div>
 
-                <div class="card-body p-4">
-                    <form asp-action="Create" id="myForm" data-ajax="true" data-ajax-method="POST" data-ajax-begin="onBegin"
-                          data-ajax-failure="onFailure" data-ajax-success="onSuccess" data-ajax-complete="onComplete"
-                          asp-antiforgery="true" enctype="multipart/form-data">
+				<div class="card-body p-4">
+					<form asp-action="Create" id="myForm" data-ajax="true" data-ajax-method="POST" data-ajax-begin="onBegin"
+						  data-ajax-failure="onFailure" data-ajax-success="onSuccess" data-ajax-complete="onComplete"
+						  asp-antiforgery="true" enctype="multipart/form-data">
 
-                        <!-- Lista de cruceros en el formulario -->
-                        <div class="mb-4">
-                            <h5 class="fw-bold text-primary mb-3">
-                                <i class="fas fa-ship me-2"></i> Seleccione un crucero
-                            </h5>
+						<div class="mb-4 p-4 bg-white shadow rounded-3">
+							<h5 class="fw-bold text-primary mb-3">
+								<i class="fas fa-ship me-2"></i> Crucero Seleccionado
+							</h5>
 
-                            <input type="text" id="cruceroSeleccionado" class="form-control border-0 shadow-sm rounded-3 ps-3 mb-3"
-                                   style="height: 50px;" readonly placeholder="Crucero seleccionado">
+							<div class="d-flex align-items-center">
+								<!-- Imagen del crucero -->
+								<div class="me-3">
+									@if (ViewBag.Crucero.Foto != null && ViewBag.Crucero.Foto.Length > 0)
+									{
+										<img src="data:image/jpeg;base64,@Convert.ToBase64String(ViewBag.Crucero.Foto)"
+											 class="rounded shadow-sm" style="width: 150px; height: 100px; object-fit: cover;"
+											 alt="@ViewBag.Crucero.Nombre">
+									}
+									else
+									{
+										<div class="bg-light d-flex align-items-center justify-content-center rounded shadow-sm"
+											 style="width: 150px; height: 100px;">
+											<i class="fas fa-ship text-secondary fa-2x"></i>
+										</div>
+									}
+								</div>
 
-                            <input type="hidden" id="idcrucero" asp-for="Id">
+								<!-- Información del crucero -->
+								<div>
+									<h6 class="fw-bold text-dark">@ViewBag.Crucero.Nombre</h6>
+									<p class="text-muted mb-1"><i class="fas fa-calendar-day me-1"></i> Duración: @ViewBag.Crucero.CantDias días</p>
+									<small class="text-muted">
+										<i class="fas fa-anchor me-1"></i> Barco asignado: @(ViewBag.Crucero.IdbarcoNavigation?.Nombre ?? "No asignado")
+									</small>
+								</div>
+							</div>
 
-                            <div class="d-flex flex-row flex-nowrap overflow-auto py-2" id="lista-cruceros">
-                                @foreach (var c in ViewBag.ListCrucero)
-                                {
-                                    <div class="flex-shrink-0 me-3" style="width: 200px;">
-                                        <div class="card crucero-item border-0 rounded-3 shadow-sm h-100"
-                                             data-nombre="@c.Nombre" data-id="@c.Id"
-                                             style="cursor: pointer;">
-                                            @if (c.Foto != null && c.Foto.Length > 0)
-                                            {
-                                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(c.Foto)"
-                                                     class="img-fluid rounded-top w-100"
-                                                     style="object-fit: cover; height: 100px;"
-                                                     alt="@c.Nombre">
-                                            }
-                                            <div class="card-body p-2">
-                                                <h6 class="card-title fw-bold text-primary mb-1">@c.Nombre</h6>
-                                                <small class="text-muted">@c.CantDias días</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        </div>
+							<hr class="my-3">
 
-                        <!-- Resto de campos del formulario -->
-                        <!-- ... -->
 
-                        <div class="d-flex justify-content-between mt-4">
-                            <input type="submit" value="Guardar Reserva" class="btn btn-primary rounded-3 py-2 px-4" />
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+							<div class="form-group mb-3">
+								<!-- Fecha de inicio -->
+								<label for="fechaInicio" class="fw-bold text-primary">Fecha de inicio del crucero:</label>
+								<input type="text" id="fechaInicio" class="form-control border-0 shadow-sm rounded-3 ps-3"
+									   style="height: 50px;" readonly value="@ViewBag.fecha.FechaInicio.ToString("dd-MM-yyyy")">
 
-        <!-- Resumen simple (3 columnas) -->
-        <div class="col-lg-3">
-            <div class="card border-0 shadow-sm rounded-3 sticky-top" style="top: 20px;">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0 fw-bold">
-                        <i class="fas fa-check-circle me-2"></i> Resumen
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div id="resumen-crucero-container" class="alert alert-secondary mb-0">
-                        No hay crucero seleccionado
-                    </div>
-                </div>
-            </div>
-        </div>
+								<!-- Fecha de inicio id oculto -->
+								<input asp-for="Idfecha" class="form-control rounded-3 border-0 shadow-sm" type="hidden" id="idfecha" name="idfecha" value="@ViewBag.fecha.Id">
+							</div>
 
-    </div>
+							<div class="form-group mb-3">
+								<label asp-for="FechaCreacion" class="fw-bold text-primary"> Fecha de creacion de reserva</label>
+								<input asp-for="FechaCreacion" type="text" class="form-control border-0 shadow-sm rounded-3 ps-3" value="@DateTime.Today.ToString("dd-MM-yyyy")" style="height: 50px;" readonly />
+								<span asp-validation-for="FechaCreacion" class="text-danger"></span>
+							</div>
+
+							<div class="form-group mb-3">
+								<label asp-for="CantidadDePasajeros" class="form-label">
+									<i class="fas fa-users text-primary me-2"></i>Cantidad de pasajeros
+								</label>
+								<input asp-for="CantidadDePasajeros" class="form-control rounded-3 border-0 shadow-sm" placeholder="Cantidad de pasajeros" style="height: 50px;" />
+								<span asp-validation-for="CantidadDePasajeros" class="text-danger mt-1 d-block"></span>
+							</div>
+
+							<div class="form-group mb-3">
+								<label asp-for="CantidadDeCamarotes" class="form-label">
+									<i class="fas fa-bed text-primary me-2"></i>Cantidad de habitaciones
+								</label>
+								<input asp-for="CantidadDeCamarotes" class="form-control rounded-3 border-0 shadow-sm" placeholder="Cantidad de habitaciones" style="height: 50px;" />
+								<span asp-validation-for="CantidadDeCamarotes" class="text-danger mt-1 d-block"></span>
+							</div>
+
+						</div>
+
+
+						<!-- Resto de campos del formulario -->
+						<!-- ... -->
+
+						
+
+						<div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+							<a asp-action="Index" class="btn btn-outline-secondary rounded-3 py-2 px-4">
+								<i class="fas fa-arrow-left me-2"></i>Regresar al listado
+							</a>
+							<input type="submit" value="Guardar Barco" class="btn btn-primary rounded-3 py-2 px-4" />
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- Resumen simple (3 columnas) -->
+		<div class="col-lg-3">
+			<div class="card border-0 shadow-sm rounded-3 sticky-top" style="top: 20px;">
+				<div class="card-header bg-primary text-white">
+					<h5 class="mb-0 fw-bold">
+						<i class="fas fa-check-circle me-2"></i> Resumen
+					</h5>
+				</div>
+				<div class="card-body">
+					<div id="resumen-crucero-container" class="alert alert-light border rounded-3 p-3">
+						<!-- Nombre del crucero -->
+						<h6 class="fw-bold text-dark mb-2">
+							<i class="fas fa-ship me-2"></i> @ViewBag.Crucero.Nombre
+						</h6>
+
+						<!-- Fecha de inicio -->
+						<p class="mb-0 text-muted">
+							<i class="fas fa-calendar-day me-2"></i> Fecha de inicio:
+							<span class="fw-bold">@ViewBag.fecha.FechaInicio.ToString("dd-MM-yyyy")</span>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
 </div>
 
 @section Scripts {
-    <script>
-        $(document).ready(function() {
-            // Manejar clic en los elementos de crucero
-            $('.crucero-item').click(function() {
-                var nombre = $(this).data('nombre');
-                var id = $(this).data('id');
+	<script>
 
-                // Actualizar formulario
-                $('#cruceroSeleccionado').val(nombre);
-                $('#idcrucero').val(id);
+				$(document).ready(function () {
+			function actualizarResumen() {
+				var cantidadPasajeros = $("#CantidadDePasajeros").val();
+				var cantidadCamarotes = $("#CantidadDeCamarotes").val();
 
-                // Actualizar resumen
-                $('#resumen-crucero-container').html(`
-                    <strong><i class="fas fa-ship me-1"></i> Crucero seleccionado:</strong>
-                    <div class="mt-2">${nombre}</div>
-                `).removeClass('alert-secondary').addClass('alert-success');
+				// Verifica si los campos no están vacíos
+				cantidadPasajeros = cantidadPasajeros ? cantidadPasajeros : 0;
+				cantidadCamarotes = cantidadCamarotes ? cantidadCamarotes : 0;
 
-                // Resaltar selección
-                $('.crucero-item').removeClass('border-primary bg-light');
-                $(this).addClass('border-primary bg-light');
-            });
-        });
-    </script>
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+				// Crear el HTML del resumen actualizado
+				var resumenHTML = `
+					<h6 class="fw-bold text-dark mb-2">
+						<i class="fas fa-ship me-2"></i> ${"@ViewBag.Crucero.Nombre"}
+					</h6>
+					<p class="mb-0 text-muted">
+						<i class="fas fa-calendar-day me-2"></i> Fecha de inicio:
+						<span class="fw-bold">${"@ViewBag.fecha.FechaInicio.ToString("dd-MM-yyyy")"}</span>
+					</p>
+					<p class="mb-0 text-muted">
+						<i class="fas fa-users me-2"></i> Pasajeros:
+						<span class="fw-bold">${cantidadPasajeros}</span>
+					</p>
+					<p class="mb-0 text-muted">
+						<i class="fas fa-bed me-2"></i> Habitaciones:
+						<span class="fw-bold">${cantidadCamarotes}</span>
+					</p>`;
+
+				$("#resumen-crucero-container").html(resumenHTML);
+			}
+
+			// Detectar cambios en los campos de entrada
+			$("#CantidadDePasajeros, #CantidadDeCamarotes").on("input", function () {
+				actualizarResumen();
+			});
+		});
+
+
+		function onBegin() { console.log("onBegin"); }
+		function onFailure(response) { Swal.fire({ title: "Error!", text: response.responseText, icon: "error" }); }
+		function onSuccess(response) {
+			$("#myForm")[0].reset();
+			// $("#barcoHabitacionView").html("");
+			Swal.fire({
+				icon: "success",
+				title: "Reserva salvado",
+				showConfirmButton: true
+			}).then(() => {
+				setTimeout(() => {
+					window.location.href = '@Url.Action("Index", "EncReserva")';
+				}, 2000); // Espera 2000 ms (2 segundos) antes de redirigir
+			});
+		}
+		function onComplete() { console.log("Fin del proceso"); }
+	</script>
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 }

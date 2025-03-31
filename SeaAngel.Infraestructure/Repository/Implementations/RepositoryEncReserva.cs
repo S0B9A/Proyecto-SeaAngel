@@ -50,5 +50,32 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
                                 .ToListAsync();
             return collection;
         }
+
+        public async Task<int> AddAsync(EncReserva entity)
+        {
+
+            try
+            {
+                // Iniciar la transacción
+                await _context.Database.BeginTransactionAsync();
+
+                // Agregar el barco a la base de datos
+                await _context.Set<EncReserva>().AddAsync(entity);
+
+                // Guardar cambios en la base de datos
+                await _context.SaveChangesAsync();
+
+                // Confirmar la transacción
+                await _context.Database.CommitTransactionAsync();
+
+                return entity.Id;
+            }
+            catch (Exception ex)
+            {
+                // Si hay un error, hacer rollback de la transacción
+                await _context.Database.RollbackTransactionAsync();
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

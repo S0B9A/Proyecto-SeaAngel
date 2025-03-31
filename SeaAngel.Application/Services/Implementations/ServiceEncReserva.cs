@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using SeaAngel.Application.DTOs;
 using SeaAngel.Application.Services.Interfaces;
+using SeaAngel.Infraestructure.Models;
 using SeaAngel.Infraestructure.Repository.Interfaces;
 
 namespace SeaAngel.Application.Services.Implementations
@@ -32,8 +33,24 @@ namespace SeaAngel.Application.Services.Implementations
         public async Task<ICollection<EncReservaDTO>> ListAsync()
         {
             var list = await _repository.ListAsync();
-            var collection = _mapper.Map<ICollection<EncReservaDTO>>(list);   
+            var collection = _mapper.Map<ICollection<EncReservaDTO>>(list);
             return collection;
         }
+
+        public async Task<int> AddAsync(EncReservaDTO dto)
+        {
+            try
+            {
+                var objectMapped = _mapper.Map<EncReserva>(dto); // Map BarcoDTO to Barco
+                return await _repository.AddAsync(objectMapped);  // Return
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
     }
+
 }
