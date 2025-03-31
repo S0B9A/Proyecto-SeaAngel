@@ -8,10 +8,12 @@ namespace SeaAngel.Web.Controllers
     {
 
         private readonly IServiceEncReserva _serviceEncReserva;
+        private readonly IServiceCrucero _serviceCrucero;
 
-        public EncReservaController(IServiceEncReserva serviceEncReserva)
+        public EncReservaController(IServiceEncReserva serviceEncReserva, IServiceCrucero serviceCrucero)
         {
             _serviceEncReserva = serviceEncReserva;
+            _serviceCrucero = serviceCrucero;
         }
 
         // GET:EncReservaController
@@ -43,6 +45,15 @@ namespace SeaAngel.Web.Controllers
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        // GET: EncController/Create
+        public async Task<IActionResult> Create()
+        {
+            ViewBag.ListCrucero = await _serviceCrucero.ListAsync();
+            TempData.Keep();
+
+            return View();
         }
     }
 }

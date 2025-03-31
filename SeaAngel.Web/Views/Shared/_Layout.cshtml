@@ -33,55 +33,8 @@
         </main>
     </div>
 
-    <footer class="text-white pt-5 pb-4" style="background-color: #0A1931;">
-        <div class="container text-center text-md-start">
-            <div class="row text-center text-md-start">
-
-                <!-- Sección Nosotros -->
-                <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3" data-aos="fade-up">
-                    <h5 class="text-uppercase font-weight-bold">Nosotros</h5>
-                    <hr class="mb-4">
-                    <p><a asp-controller="Home" asp-action="About" class="text-white text-decoration-none">Nuestra información</a></p>
-                    <p><a asp-controller="Home" asp-action="Diferenciales" class="text-white text-decoration-none">Nuestros diferenciales</a></p>
-                    <p><a asp-controller="Servicios" asp-action="Index" class="text-white text-decoration-none">Nuestros servicios</a></p>
-                </div>
-
-                <!-- Sección Contacto -->
-                <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3" data-aos="fade-up" data-aos-delay="100">
-                    <h5 class="text-uppercase font-weight-bold">Contacto</h5>
-                    <hr class="mb-4">
-                    <p><a asp-controller="Contact" asp-action="Index" class="text-white text-decoration-none">Contáctenos</a></p>
-                    <p><a asp-controller="Home" asp-action="FAQ" class="text-white text-decoration-none">Preguntas frecuentes</a></p>
-                    <p><a asp-controller="Contact" asp-action="Index" class="text-white text-decoration-none">Mapa</a></p>
-                </div>
-
-                <!-- Sección Productos -->
-                <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3" data-aos="fade-up" data-aos-delay="200">
-                    <h5 class="text-uppercase font-weight-bold">Ofrecemos</h5>
-                    <hr class="mb-4">
-                    <p><a asp-controller="Barco" asp-action="Index" class="text-white text-decoration-none">Nuestros Barcos</a></p>
-                    <p><a asp-controller="Crucero" asp-action="Index" class="text-white text-decoration-none">Nuestros Cruceros</a></p>
-                    <p><a asp-controller="Habitacion" asp-action="Index" class="text-white text-decoration-none">Nuestas Habitaciones</a></p>
-                </div>
-
-                <!-- Sección Redes Sociales -->
-                <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3" data-aos="fade-up" data-aos-delay="300">
-                    <h5 class="text-uppercase font-weight-bold">Redes Sociales</h5>
-                    <hr class="mb-4">
-                    <ul class="list-unstyled list-inline">
-                        <li class="list-inline-item"><a href="https://www.facebook.com/sebas.ariasvargas.1/?locale=es_ES" class="text-white"><i class="fab fa-facebook-f"></i></a></li>
-                        <li class="list-inline-item"><a href="https://wa.me/87133971" class="text-white"><i class="fa-brands fa-whatsapp whatsapp-icon"></i></a></li>
-                        <li class="list-inline-item"><a href="https://www.instagram.com/sba0_09?igsh=MXYwYnhzcmU4MTg4Zg==" class="text-white"><i class="fab fa-instagram"></i></a></li>
-                    </ul>
-                </div>
-
-            </div>
-
-            <!-- Copyright -->
-            <div class="text-center pt-3">
-                &copy; @DateTime.Now.Year - SeaAngel.Web - <a asp-controller="Home" asp-action="Privacy" class="text-white">Privacy</a>
-            </div>
-        </div>
+    <footer>
+        @await Html.PartialAsync("_Footer")
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

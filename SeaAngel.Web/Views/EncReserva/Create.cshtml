@@ -1,0 +1,115 @@
+﻿@model SeaAngel.Application.DTOs.EncReservaDTO
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container-fluid py-5 mt-5">
+    <div class="row justify-content-center">
+        <!-- Formulario principal (9 columnas) -->
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+                <div class="card-header bg-gradient py-4" style="background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);">
+                    <h4 class="mb-0 text-black text-center fw-bold">
+                        <i class="fas fa-calendar-alt me-2"></i> Crear Reserva
+                    </h4>
+                </div>
+
+                <div class="card-body p-4">
+                    <form asp-action="Create" id="myForm" data-ajax="true" data-ajax-method="POST" data-ajax-begin="onBegin"
+                          data-ajax-failure="onFailure" data-ajax-success="onSuccess" data-ajax-complete="onComplete"
+                          asp-antiforgery="true" enctype="multipart/form-data">
+
+                        <!-- Lista de cruceros en el formulario -->
+                        <div class="mb-4">
+                            <h5 class="fw-bold text-primary mb-3">
+                                <i class="fas fa-ship me-2"></i> Seleccione un crucero
+                            </h5>
+
+                            <input type="text" id="cruceroSeleccionado" class="form-control border-0 shadow-sm rounded-3 ps-3 mb-3"
+                                   style="height: 50px;" readonly placeholder="Crucero seleccionado">
+
+                            <input type="hidden" id="idcrucero" asp-for="Id">
+
+                            <div class="d-flex flex-row flex-nowrap overflow-auto py-2" id="lista-cruceros">
+                                @foreach (var c in ViewBag.ListCrucero)
+                                {
+                                    <div class="flex-shrink-0 me-3" style="width: 200px;">
+                                        <div class="card crucero-item border-0 rounded-3 shadow-sm h-100"
+                                             data-nombre="@c.Nombre" data-id="@c.Id"
+                                             style="cursor: pointer;">
+                                            @if (c.Foto != null && c.Foto.Length > 0)
+                                            {
+                                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(c.Foto)"
+                                                     class="img-fluid rounded-top w-100"
+                                                     style="object-fit: cover; height: 100px;"
+                                                     alt="@c.Nombre">
+                                            }
+                                            <div class="card-body p-2">
+                                                <h6 class="card-title fw-bold text-primary mb-1">@c.Nombre</h6>
+                                                <small class="text-muted">@c.CantDias días</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Resto de campos del formulario -->
+                        <!-- ... -->
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <input type="submit" value="Guardar Reserva" class="btn btn-primary rounded-3 py-2 px-4" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumen simple (3 columnas) -->
+        <div class="col-lg-3">
+            <div class="card border-0 shadow-sm rounded-3 sticky-top" style="top: 20px;">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-check-circle me-2"></i> Resumen
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="resumen-crucero-container" class="alert alert-secondary mb-0">
+                        No hay crucero seleccionado
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Manejar clic en los elementos de crucero
+            $('.crucero-item').click(function() {
+                var nombre = $(this).data('nombre');
+                var id = $(this).data('id');
+
+                // Actualizar formulario
+                $('#cruceroSeleccionado').val(nombre);
+                $('#idcrucero').val(id);
+
+                // Actualizar resumen
+                $('#resumen-crucero-container').html(`
+                    <strong><i class="fas fa-ship me-1"></i> Crucero seleccionado:</strong>
+                    <div class="mt-2">${nombre}</div>
+                `).removeClass('alert-secondary').addClass('alert-success');
+
+                // Resaltar selección
+                $('.crucero-item').removeClass('border-primary bg-light');
+                $(this).addClass('border-primary bg-light');
+            });
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
