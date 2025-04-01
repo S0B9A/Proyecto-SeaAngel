@@ -71,6 +71,7 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<HabitacionProfile>();
     config.AddProfile<BarcoHabitacionProfile>();
     config.AddProfile<EncReservaProfile>();
+    config.AddProfile<DetReservaProfile>();
     config.AddProfile<UsuarioProfile>();
     config.AddProfile<DestinoProfile>();
     config.AddProfile<PuertoProfile>();

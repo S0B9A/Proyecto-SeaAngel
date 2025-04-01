@@ -55,12 +55,20 @@ namespace SeaAngel.Application.DTOs
 
 
         [ValidateNever]
-        public virtual UsuarioDTO? IdusuarioNavigation { get; set; }
+        public virtual List<DetPasajero> DetPasajero { get; set; } = null!; //Hacer DTO de DetPasajero
+
+        public virtual List<DetReservaDTO> DetReserva { get; set; } = null!;
 
         [ValidateNever]
         public virtual FechaDTO? IdfechaNavigation { get; set; }
 
         [ValidateNever]
-        public virtual ICollection<ReservaComplementosDTO> ReservaComplementos { get; set; } 
+        public virtual UsuarioDTO? IdusuarioNavigation { get; set; }
+
+        [ValidateNever]
+        public virtual List<Pago> Pago { get; set; } = new List<Pago>(); //Hacer DTO de Pago
+
+        [ValidateNever]
+        public virtual List<ReservaComplementosDTO> ReservaComplementos { get; set; } = null!;
     }
 }

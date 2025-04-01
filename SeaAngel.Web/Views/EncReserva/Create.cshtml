@@ -87,7 +87,14 @@
 								<input asp-for="CantidadDeCamarotes" class="form-control rounded-3 border-0 shadow-sm" placeholder="Cantidad de habitaciones" style="height: 50px;" />
 								<span asp-validation-for="CantidadDeCamarotes" class="text-danger mt-1 d-block"></span>
 							</div>
+						</div>
 
+						<div class="d-flex align-items-center gap-3 mb-4">
+							<button type="button" class="btn btn-primary py-3 px-4 rounded-3 shadow" data-bs-toggle="modal" data-bs-target="#myModal">
+								<i class="fas fa-plus-circle me-2"></i>Agregar Habitación
+							</button>
+
+							<span class="text-muted fst-italic">Añada habitaciones disponibles para tu reserva</span>
 						</div>
 
 
@@ -132,6 +139,31 @@
 			</div>
 		</div>
 
+	</div>
+</div>
+
+<!-- Modal Habitaciones -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content shadow-lg">
+			<div class="modal-header card-header-blue py-3">
+				<h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">
+					<i class="fas fa-bed me-2"></i>Reserva de Habitaciones
+				</h1>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body p-4">
+				<div id="mostrar"></div>
+				<div class="p-4 rounded-3 shadow-sm" style="background: #f8f9fa;">
+					@await Html.PartialAsync("_AddHabitacion")
+				</div>
+			</div>
+			<div class="modal-footer py-3">
+				<button type="button" class="btn btn-secondary rounded-3 py-2 px-4" data-bs-dismiss="modal">
+					<i class="fas fa-times me-2"></i>Cerrar
+				</button>
+			</div>
+		</div>
 	</div>
 </div>
 

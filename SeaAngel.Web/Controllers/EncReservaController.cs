@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using SeaAngel.Application.DTOs;
 using SeaAngel.Application.Services.Implementations;
 using SeaAngel.Application.Services.Interfaces;
@@ -12,12 +13,15 @@ namespace SeaAngel.Web.Controllers
         private readonly IServiceEncReserva _serviceEncReserva;
         private readonly IServiceCrucero _serviceCrucero;
         private readonly IServiceFecha _serviceFecha;
+        private readonly IServiceHabitacion _serviceHabitacion;
 
-        public EncReservaController(IServiceEncReserva serviceEncReserva, IServiceCrucero serviceCrucero, IServiceFecha serviceFecha)
+        public EncReservaController(IServiceEncReserva serviceEncReserva, IServiceCrucero serviceCrucero, IServiceFecha serviceFecha, IServiceHabitacion serviceHabitacion)
         {
             _serviceEncReserva = serviceEncReserva;
             _serviceCrucero = serviceCrucero;
             _serviceFecha = serviceFecha;
+            _serviceHabitacion = serviceHabitacion;
+
         }
 
         // GET:EncReservaController
@@ -58,24 +62,38 @@ namespace SeaAngel.Web.Controllers
             ViewBag.Crucero = await _serviceCrucero.FindByIdAsync(idcrucero);
             ViewBag.fecha = await _serviceFecha.FindByIdAsync(idfecha);
 
+
+            // Clear CarShopping
+            TempData["CartHabitacion"] = null;
             TempData.Keep();
 
             return View();
         }
+
 
         // POST: EncReservaController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(EncReservaDTO dto)
         {
-            
+            string json;
+
             try
             {
-               
+                json = (string)TempData["CartHabitacion"]!;
+
+                if (string.IsNullOrEmpty(json) || json.Trim() == "[]")
+                {
+                    return BadRequest("No hay habitaciones por agregar en la reserva");
+                }
+
+                var lista = JsonSerializer.Deserialize<List<DetReservaDTO>>(json!)!;
+
                 //Agregar datos faltantes a la reserva
                 dto.Id = 0;
                 dto.Idusuario = 1;
                 dto.FechaCreacion = DateTime.Today;
+                dto.DetReserva = lista;
 
                 await _serviceEncReserva.AddAsync(dto);
 
@@ -88,5 +106,57 @@ namespace SeaAngel.Web.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
+        public async Task<IActionResult> AddHabitacion(int id, int cantidad)
+        {
+            DetReservaDTO detReservaDTO = new DetReservaDTO();
+            var lista = new List<DetReservaDTO>();
+            string json = "";
+
+            var Habitacion = await _serviceHabitacion.FindByIdAsync(id);
+
+            DetReservaDTO item = new DetReservaDTO();
+
+            //Cantidad de item a guardar
+            detReservaDTO.CantidadPasajeros = cantidad;
+
+            if (TempData["CartHabitacion"] != null)
+            {
+                json = (string)TempData["CartHabitacion"]!;
+                lista = JsonSerializer.Deserialize<List<DetReservaDTO>>(json!)!;
+
+                //Buscar si existe en la lista de habitaciones
+                item = lista.FirstOrDefault(o => o.Idhabitacion == id);
+                if (item != null)
+                {
+                    detReservaDTO.CantidadPasajeros += cantidad;
+
+                }
+            }
+
+            if (item != null && item.CantidadPasajeros != 0)
+            {
+                //Actualizar cantidad de habitaciones existente
+                item.CantidadPasajeros += cantidad;
+            }
+            else
+            {
+                detReservaDTO.Idhabitacion = Habitacion.ID;
+                detReservaDTO.CantidadPasajeros = cantidad;
+                detReservaDTO.NombreHabitacion = Habitacion.Nombre;
+
+                //Agregar al carrito de compras
+                lista.Add(detReservaDTO);
+
+            }
+
+            json = JsonSerializer.Serialize(lista);
+            TempData["CartHabitacion"] = json;
+            TempData.Keep();
+
+            return PartialView("_DetailDetReserva", lista);
+        }
+
     }
 }
