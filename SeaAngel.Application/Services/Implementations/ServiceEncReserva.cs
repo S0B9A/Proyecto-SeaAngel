@@ -51,6 +51,12 @@ namespace SeaAngel.Application.Services.Implementations
             }
 
         }
+
+        public async Task<int> GetNextNumberReserva()
+        {
+            int nextReceipt = await _repository.GetNextNumberReserva();
+            return nextReceipt;
+        }
     }
 
 }

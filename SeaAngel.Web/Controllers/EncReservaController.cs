@@ -158,5 +158,27 @@ namespace SeaAngel.Web.Controllers
             return PartialView("_DetailDetReserva", lista);
         }
 
+
+        public async Task<ActionResult> PagoReserva()
+        {
+            try
+            {
+                var @numero = await _serviceEncReserva.GetNextNumberReserva();
+                var @object = await _serviceEncReserva.FindByIdAsync(@numero);
+
+                if (@object == null)
+                {
+
+
+                    throw new Exception("Reserva no existente");
+
+                }
+                return View(@object);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

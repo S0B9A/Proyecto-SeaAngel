@@ -77,5 +77,31 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<int> GetNextNumberReserva()
+        {
+            int current = 0;
+
+            string sql = string.Format("SELECT IDENT_CURRENT ('EncReserva') AS Current_Identity;");
+
+            System.Data.DataTable dataTable = new System.Data.DataTable();
+
+            System.Data.Common.DbConnection connection = _context.Database.GetDbConnection();
+            System.Data.Common.DbProviderFactory dbFactory = System.Data.Common.DbProviderFactories.GetFactory(connection!)!;
+            using (var cmd = dbFactory!.CreateCommand())
+            {
+                cmd!.Connection = connection;
+                cmd.CommandText = sql;
+                using (System.Data.Common.DbDataAdapter adapter = dbFactory.CreateDataAdapter()!)
+                {
+                    adapter.SelectCommand = cmd;
+                    adapter.Fill(dataTable);
+                }
+            }
+
+
+            current = Convert.ToInt32(dataTable.Rows[0][0].ToString());
+            return await Task.FromResult(current);
+        }
     }
 }

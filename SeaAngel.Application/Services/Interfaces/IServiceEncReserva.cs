@@ -12,5 +12,6 @@ namespace SeaAngel.Application.Services.Interfaces
         Task<ICollection<EncReservaDTO>> ListAsync();
         Task<EncReservaDTO> FindByIdAsync(int id);
         Task<int> AddAsync(EncReservaDTO dto);
+        Task<int> GetNextNumberReserva();
     }
 }
