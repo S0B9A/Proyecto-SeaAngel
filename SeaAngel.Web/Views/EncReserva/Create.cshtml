@@ -4,6 +4,55 @@
 	ViewData["Title"] = "Create";
 }
 
+
+<style>
+	ul.ui-autocomplete {
+		z-index: 1100;
+	}
+
+	.form-control:focus {
+		border-color: #0d6efd;
+		box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+	}
+
+	.card-header-blue {
+		background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
+		color: white;
+		border-radius: 8px 8px 0 0;
+	}
+
+	.btn-primary {
+		background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
+		border: none;
+		transition: all 0.3s;
+	}
+
+		.btn-primary:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		}
+
+	.custom-card {
+		border: none;
+		border-radius: 12px;
+		overflow: hidden;
+		transition: all 0.3s;
+		box-shadow: 0 10px 20px rgba(0, 51, 102, 0.1);
+	}
+
+	.form-label {
+		margin-bottom: 0.5rem;
+		font-weight: 600;
+		color: #0d47a1;
+	}
+
+	.modal-content {
+		border: none;
+		border-radius: 12px;
+		overflow: hidden;
+	}
+</style>
+
 <div class="container-fluid py-5 mt-5">
 	<div class="row justify-content-center">
 		<!-- Formulario principal (9 columnas) -->
@@ -97,17 +146,25 @@
 							<span class="text-muted fst-italic">Añada habitaciones disponibles para tu reserva</span>
 						</div>
 
+						<div class="card shadow-sm rounded-3 border-0">
+							<div class="card-body p-0">
+								<div class="mt-2" id="detReservaView">
+									@await Html.PartialAsync("_DetailDetReserva")
+								</div>
+							</div>
+						</div>
+
 
 						<!-- Resto de campos del formulario -->
 						<!-- ... -->
 
-						
+
 
 						<div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
 							<a asp-action="Index" class="btn btn-outline-secondary rounded-3 py-2 px-4">
 								<i class="fas fa-arrow-left me-2"></i>Regresar al listado
 							</a>
-							<input type="submit" value="Guardar Barco" class="btn btn-primary rounded-3 py-2 px-4" />
+							<input type="submit" value="Guardar Reserva" class="btn btn-primary rounded-3 py-2 px-4" />
 						</div>
 					</form>
 				</div>
@@ -206,6 +263,62 @@
 			});
 		});
 
+
+			$("#IdhabitacionModal").autocomplete({
+			source: function (request, response) {
+				$.ajax({
+					type: "GET",
+					url: '@Url.Action("GetHabitacionByNameAndFecha", "Habitacion")',
+					dataType: "json",
+					data: {
+						filtro: $("#IdhabitacionModal").val(),
+						fechaId: $("#idfecha").val() // Corregido
+					},
+					success: function (data) {
+						response($.map(data, function (item) {
+							return { label: item.nombre, value: item.id, data: item };
+						}));
+					},
+					error: function (xhr, status, error) {
+						console.log(error);
+					},
+				});
+			},
+			select: function (event, ui) {
+				$("#IdhabitacionModal").val(ui.item.data.id);
+				$("#HabitacionSelect").html("Habitación: " + ui.item.data.nombre);
+				$("#DescripcionSelect").html("Descripción: " + ui.item.data.descripcion);
+				$("#ImgHabitacion").attr("src", "data:image/jpeg;base64," + ui.item.data.foto);
+				return false;
+			}
+		});
+
+			function addHabitacion() {
+			let IdhabitacionModal = $("#IdhabitacionModal").val();
+			let CantidadPasajerosModal = $("#CantidadPasajerosModal").val();
+			let divDetReserva = $("#detReservaView");
+
+			if (!$.isNumeric(IdhabitacionModal) || !$.isNumeric(CantidadPasajerosModal) || parseInt(CantidadPasajerosModal) <= 0) {
+				Swal.fire({
+					title: "Error!",
+					text: "Ingrese un código y una cantidad válida.",
+					icon: "error"
+				});
+				return;
+			}
+
+			const myRequest = '@Url.Action("AddHabitacion", "EncReserva")';
+			fetch(myRequest + "?id=" + IdhabitacionModal + "&cantidad=" + CantidadPasajerosModal)
+				.then(response => response.text())
+				.then(text => divDetReserva.html(text))
+				.catch(error => Swal.fire({ title: "Error", text: error, icon: "error" }));
+
+			$("#IdhabitacionModal").val("");
+			$("#CantidadPasajerosModal").val("");
+			$("#HabitacionSelect").html("");
+			$("#DescripcionSelect").html("");
+			$("#ImgHabitacion").attr("src", "/Images/Logo2.png");
+		}
 
 		function onBegin() { console.log("onBegin"); }
 		function onFailure(response) { Swal.fire({ title: "Error!", text: response.responseText, icon: "error" }); }

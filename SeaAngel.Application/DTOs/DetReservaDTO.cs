@@ -20,8 +20,11 @@ namespace SeaAngel.Application.DTOs
         [Display(Name = "Habitación")]
         public string NombreHabitacion { get; set; } = default!;
 
-        [Display(Name = "Cantidad")]
+        [Display(Name = "Cantidad de pasajeros")]
         public int CantidadPasajeros { get; set; }
+
+        [Display(Name = "Precio")]
+        public decimal Precio { get; set; }
 
         [JsonIgnore]
         public virtual EncReservaDTO IdencReservaNavigation { get; set; } = null!;

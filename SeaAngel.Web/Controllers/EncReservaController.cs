@@ -14,14 +14,15 @@ namespace SeaAngel.Web.Controllers
         private readonly IServiceCrucero _serviceCrucero;
         private readonly IServiceFecha _serviceFecha;
         private readonly IServiceHabitacion _serviceHabitacion;
+        private readonly IServiceFechaHabitacion _serviceFechaHabitacion;
 
-        public EncReservaController(IServiceEncReserva serviceEncReserva, IServiceCrucero serviceCrucero, IServiceFecha serviceFecha, IServiceHabitacion serviceHabitacion)
+        public EncReservaController(IServiceEncReserva serviceEncReserva, IServiceCrucero serviceCrucero, IServiceFecha serviceFecha, IServiceHabitacion serviceHabitacion, IServiceFechaHabitacion serviceFechaHabitacion)
         {
             _serviceEncReserva = serviceEncReserva;
             _serviceCrucero = serviceCrucero;
             _serviceFecha = serviceFecha;
             _serviceHabitacion = serviceHabitacion;
-
+            _serviceFechaHabitacion = serviceFechaHabitacion;
         }
 
         // GET:EncReservaController
@@ -115,11 +116,13 @@ namespace SeaAngel.Web.Controllers
             string json = "";
 
             var Habitacion = await _serviceHabitacion.FindByIdAsync(id);
+            var FechaHabitacion = await _serviceFechaHabitacion.FindByIdHabitacionAsync(Habitacion.ID);
 
             DetReservaDTO item = new DetReservaDTO();
 
             //Cantidad de item a guardar
             detReservaDTO.CantidadPasajeros = cantidad;
+            detReservaDTO.Precio = (decimal)FechaHabitacion.Precio;
 
             if (TempData["CartHabitacion"] != null)
             {
@@ -131,7 +134,7 @@ namespace SeaAngel.Web.Controllers
                 if (item != null)
                 {
                     detReservaDTO.CantidadPasajeros += cantidad;
-
+                    detReservaDTO.Precio += (decimal)FechaHabitacion.Precio;
                 }
             }
 
@@ -139,12 +142,14 @@ namespace SeaAngel.Web.Controllers
             {
                 //Actualizar cantidad de habitaciones existente
                 item.CantidadPasajeros += cantidad;
+                item.Precio += (decimal)FechaHabitacion.Precio; ;
             }
             else
             {
                 detReservaDTO.Idhabitacion = Habitacion.ID;
                 detReservaDTO.CantidadPasajeros = cantidad;
                 detReservaDTO.NombreHabitacion = Habitacion.Nombre;
+                detReservaDTO.Precio = (decimal)FechaHabitacion.Precio;
 
                 //Agregar al carrito de compras
                 lista.Add(detReservaDTO);

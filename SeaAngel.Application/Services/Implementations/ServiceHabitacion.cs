@@ -83,6 +83,17 @@ namespace SeaAngel.Application.Services.Implementations
             return collection;
 
         }
+
+        public async Task<ICollection<HabitacionDTO>> FindByNameAndFechaAsync(string nombre , int fechaInicio)
+        {
+            var list = await _repository.FindByNameAndFechaAsync(nombre , fechaInicio);
+
+            var collection = _mapper.Map<ICollection<HabitacionDTO>>(list);
+
+            return collection;
+
+        }
+
         public async Task<int> GetNextNumber()
         {
             int nextReceipt = await _repository.GetNextNumber();

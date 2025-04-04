@@ -13,6 +13,7 @@ namespace SeaAngel.Infraestructure.Repository.Interfaces
         Task<ICollection<Habitacion>> ListAsync();
         Task<Habitacion> FindByIdAsync(int id);
         Task<ICollection<Habitacion>> FindByNameAsync(string nombre);
+        Task<ICollection<Habitacion>> FindByNameAndFechaAsync(string nombre, int fechaInicio);
         Task<int> AddAsync(Habitacion entity);
         Task UpdateAsync(Habitacion entity);
         Task<int> GetNextNumber();

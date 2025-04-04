@@ -33,6 +33,7 @@ builder.Services.AddTransient<IRepositoryCrucero, RepositoryCrucero>();
 builder.Services.AddTransient<IRepositoryPuerto, RepositoryPuerto>();
 builder.Services.AddTransient<IRepositoryFecha, RepositoryFecha>();
 builder.Services.AddTransient<IRepositoryUsuario, RepositoryUsuario>();
+builder.Services.AddTransient<IRepositoryFechaHabitacion, RepositoryFechaHabitacion>();
 //Services
 builder.Services.AddTransient<IServiceBarco, ServiceBarco>();
 builder.Services.AddTransient<IServiceHabitacion, ServiceHabitacion>();
@@ -41,6 +42,7 @@ builder.Services.AddTransient<IServiceCrucero, ServiceCrucero>();
 builder.Services.AddTransient<IServicePuerto, ServicePuerto>();
 builder.Services.AddTransient<IServiceFecha, ServiceFecha>();
 builder.Services.AddTransient<IServiceUsuario, ServiceUsuario>();
+builder.Services.AddTransient<IServiceFechaHabitacion, ServiceFechaHabitacion>();
 
 //Seguridad
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

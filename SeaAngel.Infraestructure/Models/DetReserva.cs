@@ -11,6 +11,8 @@ public partial class DetReserva
 
     public int? CantidadPasajeros { get; set; }
 
+    public decimal? Precio { get; set; }
+
     public virtual EncReserva IdencReservaNavigation { get; set; } = null!;
 
     public virtual Habitacion IdhabitacionNavigation { get; set; } = null!;

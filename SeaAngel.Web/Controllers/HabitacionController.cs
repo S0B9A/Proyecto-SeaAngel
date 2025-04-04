@@ -22,6 +22,13 @@ namespace SeaAngel.Web.Controllers
             return Json(collection);
 
         }
+        public async Task<IActionResult> GetHabitacionByNameAndFecha(string filtro , int fechaId)
+        {
+
+            var collection = await _serviceHabitacion.FindByNameAndFechaAsync(filtro , fechaId);
+            return Json(collection);
+
+        }
 
         // GET: HabitacionController
         [HttpGet]

@@ -47,6 +47,19 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
                                          .ToListAsync();
             return collection;
         }
+
+        public async Task<ICollection<Habitacion>> FindByNameAndFechaAsync(string nombre, int fechaInicio)
+        {
+            var collection = await _context
+                .Set<Habitacion>()
+                .Include(h => h.FechaHabitacion) // Incluimos la relación
+                .Where(h => h.Nombre.Contains(nombre) &&
+                            h.FechaHabitacion.Any(f => f.Idfecha == fechaInicio)) // Filtramos por la fecha
+                .ToListAsync();
+
+            return collection;
+        }
+
         public async Task<int> AddAsync(Habitacion entity)
         {
 
