@@ -11,6 +11,8 @@ public partial class FechaHabitacion
 
     public decimal? Precio { get; set; }
 
+    public int? CantDisponible { get; set; }
+
     public virtual Fecha IdfechaNavigation { get; set; } = null!;
 
     public virtual Habitacion IdhabitacionNavigation { get; set; } = null!;

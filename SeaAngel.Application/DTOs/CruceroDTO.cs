@@ -28,7 +28,7 @@ namespace SeaAngel.Application.DTOs
 
         [Display(Name = "Barco")]
         [Required(ErrorMessage = "{0} es un dato requerido")]
-        public int? Idbarco { get; set; }
+        public int Idbarco { get; set; }
 
         [ValidateNever]
         public virtual List<EncReservaDTO> EncReserva { get; set; } = null!;

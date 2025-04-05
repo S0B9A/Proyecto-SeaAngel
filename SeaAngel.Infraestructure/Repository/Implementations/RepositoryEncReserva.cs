@@ -62,6 +62,19 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
                 // Agregar el barco a la base de datos
                 await _context.Set<EncReserva>().AddAsync(entity);
 
+
+                // Actualizar inventario
+                foreach (var item in entity.DetReserva)
+                {
+                    //Buscar fechaHabitacion
+                    var fechaHabitacion = await _context.Set<FechaHabitacion>().FindAsync(item.Idhabitacion, entity.Idfecha);
+                    //Actualizar cantidad en stock
+                    fechaHabitacion!.CantDisponible = fechaHabitacion.CantDisponible - 1;
+                    //Actualizar libro
+                    _context.Set<FechaHabitacion>().Update(fechaHabitacion);
+                }
+
+
                 // Guardar cambios en la base de datos
                 await _context.SaveChangesAsync();
 

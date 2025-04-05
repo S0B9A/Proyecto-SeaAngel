@@ -10,25 +10,22 @@ using SeaAngel.Infraestructure.Repository.Interfaces;
 
 namespace SeaAngel.Application.Services.Implementations
 {
-    public class ServiceFechaHabitacion : IServiceFechaHabitacion
+    public class ServiceBarcoHabitacion : IServiceBarcoHabitacion
     {
-
-        private readonly IRepositoryFechaHabitacion _repository;
+        private readonly IRepositoryBarcoHabitacion _repository;
         private readonly IMapper _mapper;
 
-        public ServiceFechaHabitacion(IRepositoryFechaHabitacion repository, IMapper mapper)
+        public ServiceBarcoHabitacion(IRepositoryBarcoHabitacion repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
 
-
-        public async Task<FechaHabitacionDTO> FindByIdHabitacionAsync(int idhabitacion, int idfecha)
+        public async Task<BarcoHabitacionDTO> FindByIdAsync(int idbarco , int idhabitacion)
         {
-            var @object = await _repository.FindByIdHabitacionAsync(idhabitacion, idfecha);
-            var objectMapped = _mapper.Map<FechaHabitacionDTO>(@object);
+            var @object = await _repository.FindByIdAsync(idbarco, idhabitacion);
+            var objectMapped = _mapper.Map<BarcoHabitacionDTO>(@object);
             return objectMapped;
         }
-
     }
 }

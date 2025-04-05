@@ -127,7 +127,7 @@
                                             @Html.DisplayFor(modelItem => item.Precio)
                                         </td>
                                         <td align="center">
-                                            <button type="button" class="btn btn-danger" onclick="deleteHabitacion(@item.Idhabitacion)">
+                                            <button type="button" class="btn btn-danger" onclick="deleteHabitacion(@item.Idhabitacion, @item.CantidadPasajeros)">
                                                 <i class="fas fa-trash-alt mr-1"></i> Eliminar
                                             </button>
                                         </td>

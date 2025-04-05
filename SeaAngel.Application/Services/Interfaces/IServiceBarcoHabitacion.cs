@@ -7,8 +7,8 @@ using SeaAngel.Application.DTOs;
 
 namespace SeaAngel.Application.Services.Interfaces
 {
-    public interface IServiceFechaHabitacion
+    public interface IServiceBarcoHabitacion
     {
-        Task<FechaHabitacionDTO> FindByIdHabitacionAsync(int idhabitacion , int idfecha);
+        Task<BarcoHabitacionDTO> FindByIdAsync(int idbarco, int idhabitacion);
     }
 }

@@ -90,6 +90,27 @@ namespace SeaAngel.Web.Controllers
 
                 var lista = JsonSerializer.Deserialize<List<DetReservaDTO>>(json!)!;
 
+
+                // Convalidaciones esenciales
+                if (lista.Count > 0)
+                {
+                    // Si la lista de habitaciones supera la cantidad digitada, devolvemos el error
+                    if (lista.Count > Convert.ToInt32(dto.CantidadDeCamarotes))
+                    {
+                        // Keep Cache data
+                        TempData.Keep();
+                        return BadRequest($"Tu cantidad de habitaciones supera la cantidad digitada.");
+                    }
+
+                    // Si el contador es menor a la cantidad digitada, devolvemos el error
+                    if (lista.Count < Convert.ToInt32(dto.CantidadDeCamarotes)){
+                        // Keep Cache data
+                        TempData.Keep();
+                        return BadRequest($"Tu cantidad de habitaciones es menor a la cantidad digitada.");
+                    }
+                }
+
+
                 //Agregar datos faltantes a la reserva
                 dto.Id = 0;
                 dto.Idusuario = 1;
@@ -109,58 +130,105 @@ namespace SeaAngel.Web.Controllers
         }
 
 
-        public async Task<IActionResult> AddHabitacion(int id, int cantidad)
+        public async Task<IActionResult> AddHabitacion(int id, int cantidad, int idfecha)
+        {
+            try
+            {
+                var lista = new List<DetReservaDTO>();
+                var listaDeVerificaciones = new List<DetReservaDTO>();
+                string json = "";
+                var habitacion = await _serviceHabitacion.FindByIdAsync(id);
+                var fechaHabitacion = await _serviceFechaHabitacion.FindByIdHabitacionAsync(habitacion.ID, idfecha);
+
+                //Convalidaciones esenciales
+
+
+
+                if (TempData["CartHabitacion"] != null)
+                {
+                    json = (string)TempData["CartHabitacion"]!;
+                    lista = JsonSerializer.Deserialize<List<DetReservaDTO>>(json!)!;
+                    listaDeVerificaciones = JsonSerializer.Deserialize<List<DetReservaDTO>>(json!)!;
+                }
+
+
+                var nuevoItem = new DetReservaDTO
+                {
+                    Idhabitacion = habitacion.ID,
+                    NombreHabitacion = habitacion.Nombre,
+                    CantidadPasajeros = cantidad,
+                    Precio = (decimal)fechaHabitacion.Precio
+                };
+
+                listaDeVerificaciones.Add(nuevoItem);
+
+                // Convalidaciones esenciales
+                if (listaDeVerificaciones.Count > 0)
+                {
+                    var contador = 0;
+
+                    foreach (var habitacionDisponible in listaDeVerificaciones)
+                    {
+                        if (habitacionDisponible.Idhabitacion == habitacion.ID)
+                        {
+                            contador++;
+                            // Si el contador supera la cantidad disponible, devolvemos el error
+                            if (contador > fechaHabitacion.CantDisponible)
+                            {
+                                // Keep Cache data
+                                TempData.Keep();
+                                return BadRequest($"Tu cantidad de habitaciones: {habitacion.Nombre} supera la cantidad disponible.");
+                            }
+                        }
+                    }
+                }
+
+                lista.Add(nuevoItem);
+
+
+                // Guardar carrito actualizado
+                TempData["CartHabitacion"] = JsonSerializer.Serialize(lista);
+                TempData.Keep();
+
+                return PartialView("_DetailDetReserva", lista);
+
+            }
+            catch (Exception ex)
+            {
+                // Keep Cache data
+                TempData.Keep();
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        public IActionResult DeleteHabitacion(int idHabitacion, int cantidadPasajeros)
         {
             DetReservaDTO detReservaDTO = new DetReservaDTO();
-            var lista = new List<DetReservaDTO>();
+            List<DetReservaDTO> lista = new List<DetReservaDTO>();
             string json = "";
-
-            var Habitacion = await _serviceHabitacion.FindByIdAsync(id);
-            var FechaHabitacion = await _serviceFechaHabitacion.FindByIdHabitacionAsync(Habitacion.ID);
-
-            DetReservaDTO item = new DetReservaDTO();
-
-            //Cantidad de item a guardar
-            detReservaDTO.CantidadPasajeros = cantidad;
-            detReservaDTO.Precio = (decimal)FechaHabitacion.Precio;
 
             if (TempData["CartHabitacion"] != null)
             {
                 json = (string)TempData["CartHabitacion"]!;
                 lista = JsonSerializer.Deserialize<List<DetReservaDTO>>(json!)!;
 
-                //Buscar si existe en la lista de habitaciones
-                item = lista.FirstOrDefault(o => o.Idhabitacion == id);
-                if (item != null)
+                //Eliminar de la lista segun el indice
+                int idx = lista.FindIndex(p => p.Idhabitacion == idHabitacion && p.CantidadPasajeros == cantidadPasajeros);
+                if (idx != -1)
                 {
-                    detReservaDTO.CantidadPasajeros += cantidad;
-                    detReservaDTO.Precio += (decimal)FechaHabitacion.Precio;
+                    lista.RemoveAt(idx);
                 }
+
+                json = JsonSerializer.Serialize(lista);
+                TempData["CartHabitacion"] = json;
             }
 
-            if (item != null && item.CantidadPasajeros != 0)
-            {
-                //Actualizar cantidad de habitaciones existente
-                item.CantidadPasajeros += cantidad;
-                item.Precio += (decimal)FechaHabitacion.Precio; ;
-            }
-            else
-            {
-                detReservaDTO.Idhabitacion = Habitacion.ID;
-                detReservaDTO.CantidadPasajeros = cantidad;
-                detReservaDTO.NombreHabitacion = Habitacion.Nombre;
-                detReservaDTO.Precio = (decimal)FechaHabitacion.Precio;
-
-                //Agregar al carrito de compras
-                lista.Add(detReservaDTO);
-
-            }
-
-            json = JsonSerializer.Serialize(lista);
-            TempData["CartHabitacion"] = json;
             TempData.Keep();
 
+            // return Content("Ok");
             return PartialView("_DetailDetReserva", lista);
+
         }
 
     }

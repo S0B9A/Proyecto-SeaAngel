@@ -1,4 +1,5 @@
-﻿@model SeaAngel.Application.DTOs.EncReservaDTO
+﻿@using SeaAngel.Web.ViewModels
+@model SeaAngel.Application.DTOs.EncReservaDTO
 
 @{
 	ViewData["Title"] = "Create";
@@ -112,7 +113,8 @@
 									   style="height: 50px;" readonly value="@ViewBag.fecha.FechaInicio.ToString("dd-MM-yyyy")">
 
 								<!-- Fecha de inicio id oculto -->
-								<input asp-for="Idfecha" class="form-control rounded-3 border-0 shadow-sm" type="hidden" id="idfecha" name="idfecha" value="@ViewBag.fecha.Id">
+								<input asp-for="Idfecha" class="form-control rounded-3 border-0 shadow-sm" type="hidden" id="idfecha" value="@ViewBag.fecha.Id" />
+
 							</div>
 
 							<div class="form-group mb-3">
@@ -227,7 +229,12 @@
 @section Scripts {
 	<script>
 
-				$(document).ready(function () {
+				$('#myModal').on('show.bs.modal', function () {
+			let idfecha = $('#idfecha').val(); // obtiene el valor del input del formulario principal
+			$('#idfechaModal').val(idfecha);   // lo pasa al input del modal
+		});
+
+			$(document).ready(function () {
 			function actualizarResumen() {
 				var cantidadPasajeros = $("#CantidadDePasajeros").val();
 				var cantidadCamarotes = $("#CantidadDeCamarotes").val();
@@ -293,9 +300,39 @@
 			}
 		});
 
-			function addHabitacion() {
+		// 	function addHabitacion() {
+		// 	let IdhabitacionModal = $("#IdhabitacionModal").val();
+		// 	let CantidadPasajerosModal = $("#CantidadPasajerosModal").val();
+		// 	let idfechaModal = $("#idfecha").val();
+		// 	let divDetReserva = $("#detReservaView");
+
+		// 	if (!$.isNumeric(IdhabitacionModal) || !$.isNumeric(CantidadPasajerosModal) || parseInt(CantidadPasajerosModal) <= 0) {
+		// 		Swal.fire({
+		// 			title: "Error!",
+		// 			text: "Ingrese un código y una cantidad válida.",
+		// 			icon: "error"
+		// 		});
+		// 		return;
+		// 	}
+
+		// 	const myRequest = '@Url.Action("AddHabitacion", "EncReserva")';
+		// 	fetch(myRequest + "?id=" + IdhabitacionModal + "&cantidad=" + CantidadPasajerosModal +"&idfecha=" + idfechaModal)
+		// 		.then(response => response.text())
+		// 		.then(text => divDetReserva.html(text))
+		// 		.catch(error => Swal.fire({ title: "Error", text: error, icon: "error" }));
+
+		// 	$("#IdhabitacionModal").val("");
+		// 	$("#CantidadPasajerosModal").val("");
+		// 	$("#HabitacionSelect").html("");
+		// 	$("#DescripcionSelect").html("");
+		// 	$("#ImgHabitacion").attr("src", "/Images/Logo2.png");
+		// }
+
+
+				function addHabitacion() {
 			let IdhabitacionModal = $("#IdhabitacionModal").val();
 			let CantidadPasajerosModal = $("#CantidadPasajerosModal").val();
+			let idfechaModal = $("#idfecha").val();
 			let divDetReserva = $("#detReservaView");
 
 			if (!$.isNumeric(IdhabitacionModal) || !$.isNumeric(CantidadPasajerosModal) || parseInt(CantidadPasajerosModal) <= 0) {
@@ -308,10 +345,24 @@
 			}
 
 			const myRequest = '@Url.Action("AddHabitacion", "EncReserva")';
-			fetch(myRequest + "?id=" + IdhabitacionModal + "&cantidad=" + CantidadPasajerosModal)
-				.then(response => response.text())
+			fetch(myRequest + "?id=" + IdhabitacionModal + "&cantidad=" + CantidadPasajerosModal + "&idfecha=" + idfechaModal)
+				.then(response => {
+					if (!response.ok) {
+						// Si la respuesta no es OK (200-299), leemos el mensaje de error
+						return response.text().then(text => {
+							throw new Error(text || 'Error desconocido');
+						});
+					}
+					return response.text();
+				})
 				.then(text => divDetReserva.html(text))
-				.catch(error => Swal.fire({ title: "Error", text: error, icon: "error" }));
+				.catch(error => {
+					Swal.fire({
+						title: "Error",
+						text: error.message,
+						icon: "error"
+					});
+				});
 
 			$("#IdhabitacionModal").val("");
 			$("#CantidadPasajerosModal").val("");
@@ -319,6 +370,18 @@
 			$("#DescripcionSelect").html("");
 			$("#ImgHabitacion").attr("src", "/Images/Logo2.png");
 		}
+
+			function deleteHabitacion(idhabitacion, cantidadPasajeros) {
+			const divBarco = $("#detReservaView");
+			const myRequest = '@Url.Action("DeleteHabitacion", "EncReserva")';
+
+			fetch(myRequest + "?idHabitacion=" + idhabitacion + "&cantidadPasajeros=" + cantidadPasajeros)
+				.then(response => response.text())
+				.then(text => divBarco.html(text))
+				.catch(error => Swal.fire({ title: "Error", text: error, icon: "error" }));
+		}
+
+
 
 		function onBegin() { console.log("onBegin"); }
 		function onFailure(response) { Swal.fire({ title: "Error!", text: response.responseText, icon: "error" }); }

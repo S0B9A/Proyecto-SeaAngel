@@ -10,24 +10,22 @@ using SeaAngel.Infraestructure.Repository.Interfaces;
 
 namespace SeaAngel.Infraestructure.Repository.Implementations
 {
-    public class RepositoryFechaHabitacion : IRepositoryFechaHabitacion
+    public class RepositoryBarcoHabitacion : IRepositoryBarcoHabitacion
     {
-
         private readonly SeanAngelContext _context;
 
-        public RepositoryFechaHabitacion(SeanAngelContext context)
+        public RepositoryBarcoHabitacion(SeanAngelContext context)
         {
             _context = context;
         }
 
-        public async Task<FechaHabitacion> FindByIdHabitacionAsync(int idhabitacion, int idfecha)
+        public async Task<BarcoHabitacion> FindByIdAsync(int idBarco, int idHabitacion)
         {
-            var @object = await _context.Set<FechaHabitacion>()
-                .Include(a => a.IdfechaNavigation)
-                .Include(a => a.IdhabitacionNavigation)
-                .Where(x => x.Idhabitacion == idhabitacion && x.Idfecha == idfecha)
+            var @object = await _context.Set<BarcoHabitacion>()
+                .Include(Barco => Barco.IdbarcoNavigation)
+                .Include(Habitacion => Habitacion.IdhabitacionNavigation)
+                .Where(x => x.Idhabitacion == idHabitacion && x.Idbarco == idBarco)
                 .FirstOrDefaultAsync();
-
             return @object!;
         }
     }

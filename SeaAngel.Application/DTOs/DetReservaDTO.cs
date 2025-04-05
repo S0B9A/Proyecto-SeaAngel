@@ -12,6 +12,10 @@ namespace SeaAngel.Application.DTOs
     public class DetReservaDTO
     {
 
+        [JsonIgnore]
+        [Display(Name = "Identificador DetReserva")]
+        public int Id { get; set; }
+
         public int IdencReserva { get; set; }
 
         [Display(Name = "Codigo Habitación")]

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SeaAngel.Infraestructure.Models;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace SeaAngel.Application.DTOs
 {
@@ -19,6 +20,10 @@ namespace SeaAngel.Application.DTOs
         public string NombreHabitacion { get; set; } = default!;
 
         public decimal? Precio { get; set; }
+
+        [ValidateNever]
+        public int CantDisponible { get; set; }
+
         [JsonIgnore]
         public virtual FechaDTO IdfechaNavigation { get; set; } = null!;
         [JsonIgnore]

@@ -5,6 +5,8 @@ namespace SeaAngel.Infraestructure.Models;
 
 public partial class DetReserva
 {
+    public int Id { get; set; }
+
     public int IdencReserva { get; set; }
 
     public int Idhabitacion { get; set; }

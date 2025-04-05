@@ -13,12 +13,15 @@ namespace SeaAngel.Web.Controllers
         private readonly IServiceBarco _serviceBarco;
         private readonly IServiceCrucero _serviceCrucero;
         private readonly IServiceHabitacion _serviceHabitacion;
-        public FechaController(IServiceFecha serviceFecha, IServiceBarco serviceBarco, IServiceCrucero serviceCrucero, IServiceHabitacion serviceHabitacion)
+        private readonly IServiceBarcoHabitacion _serviceBarcoHabitacion;
+        public FechaController(IServiceFecha serviceFecha, IServiceBarco serviceBarco,
+            IServiceCrucero serviceCrucero, IServiceHabitacion serviceHabitacion, IServiceBarcoHabitacion serviceBarcoHabitacion)
         {
             _serviceFecha = serviceFecha;
             _serviceBarco = serviceBarco;
             _serviceCrucero = serviceCrucero;
             _serviceHabitacion = serviceHabitacion;
+            _serviceBarcoHabitacion = serviceBarcoHabitacion;
         }
 
         public async Task<IActionResult> Create()
@@ -67,14 +70,26 @@ namespace SeaAngel.Web.Controllers
                 var IDCrucero = await _serviceCrucero.GetNextNumber();
                 var objeto = await _serviceCrucero.FindByIdAsync(IDCrucero);
                 var lista2= await _serviceBarco.ListHabitaciones((int)objeto.Idbarco);
+
                 if (lista.Count<lista2.Count)
                 {
                     TempData.Keep();
                     return BadRequest("Debe asignarle un precio a todas las habitaciones");
                 }
+
+                //Asignarle la cantidad disponible a las habitaciones en la tabla fechahabitacion para el stock
+                foreach (var item in lista)
+                {
+                    var BarcoID = objeto.Idbarco;
+                    var HabitacionID = item.Idhabitacion;
+
+                    var Habitacion = await _serviceBarcoHabitacion.FindByIdAsync(BarcoID, HabitacionID);
+
+                    item.CantDisponible = Habitacion.CantDisponible;
+                }
+
                 dto.Id = 0;
                 dto.Idcrucero = IDCrucero;
-
                 dto.FechaHabitacion = lista;
 
                 await _serviceFecha.AddAsync(dto);
@@ -125,6 +140,7 @@ namespace SeaAngel.Web.Controllers
                 fechaHabitacionDTO.Idhabitacion = Habitacion.ID;
                 fechaHabitacionDTO.Precio = precio;
                 fechaHabitacionDTO.NombreHabitacion = Habitacion.Nombre;
+
 
                 //Agregar al carrito de compras
                 lista.Add(fechaHabitacionDTO);

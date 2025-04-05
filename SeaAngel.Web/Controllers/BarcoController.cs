@@ -291,5 +291,7 @@ namespace SeaAngel.Web.Controllers
             return PartialView("_DetailBarcoHabitacion", lista);
 
         }
+
+
     }
 }

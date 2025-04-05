@@ -7,8 +7,8 @@ using SeaAngel.Infraestructure.Models;
 
 namespace SeaAngel.Infraestructure.Repository.Interfaces
 {
-    public interface IRepositoryFechaHabitacion
+    public interface IRepositoryBarcoHabitacion
     {
-        Task<FechaHabitacion> FindByIdHabitacionAsync(int idhabitacion, int idfecha);
+        Task<BarcoHabitacion> FindByIdAsync(int idBarco, int idHabitacion);
     }
 }

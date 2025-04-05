@@ -35,7 +35,7 @@ namespace SeaAngel.Application.DTOs
 
         [Required(ErrorMessage = "{0} es un dato requerido")]
         [RegularExpression(@"^\d+$", ErrorMessage = "Cantidad de habitaciones deber númerico")]
-        public string? CantidadDeCamarotes { get; set; }
+        public string CantidadDeCamarotes { get; set; }
 
 
         [ValidateNever]
