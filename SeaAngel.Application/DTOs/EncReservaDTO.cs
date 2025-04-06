@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,7 +53,9 @@ namespace SeaAngel.Application.DTOs
 
         [ValidateNever]
         public string? PrecioTotal { get; set; }
-     
+        [ValidateNever]
+        public string? PrecioPendiente { get; set; }
+
         public virtual List<DetPasajeroDTO> DetPasajero { get; set; } = null!;
 
         public virtual List<DetReservaDTO> DetReserva { get; set; } = null!;
@@ -64,9 +67,12 @@ namespace SeaAngel.Application.DTOs
         public virtual UsuarioDTO? IdusuarioNavigation { get; set; }
 
         [ValidateNever]
-        public virtual List<Pago> Pago { get; set; } = new List<Pago>(); //Hacer DTO de Pago
+        public virtual List<PagoDTO> Pago { get; set; } = new List<PagoDTO>(); //Hacer DTO de Pago
 
         [ValidateNever]
         public virtual List<ReservaComplementosDTO> ReservaComplementos { get; set; } = null!;
+
+        [NotMapped] // Solo si usás Entity Framework y no querés mapearlo a DB
+        public PagoDTO NuevoPago { get; set; } = new PagoDTO();
     }
 }

@@ -28,6 +28,7 @@ public partial class EncReserva
     public string? Impuesto { get; set; }
 
     public string? PrecioTotal { get; set; }
+    public string? PrecioPendiente { get; set; }
 
     public virtual ICollection<DetPasajero> DetPasajero { get; set; } = new List<DetPasajero>();
 

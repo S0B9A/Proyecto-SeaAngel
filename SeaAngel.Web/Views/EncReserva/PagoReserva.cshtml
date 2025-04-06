@@ -1,0 +1,241 @@
+﻿@model SeaAngel.Application.DTOs.EncReservaDTO
+
+@{
+    ViewData["Title"] = "Pago de Reserva";
+    int pasajeros = int.Parse(Model.CantidadDePasajeros);
+}
+<style>
+    :root {
+        --primary-color: #011E4B;
+        --secondary-color: #92692A;
+        --white: #ffffff;
+    }
+
+    .text-primary {
+        color: var(--primary-color) !important;
+    }
+
+    .text-secondary {
+        color: var(--secondary-color) !important;
+    }
+
+    .bg-primary {
+        background-color: var(--primary-color) !important;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+        .btn-primary:hover {
+            background-color: #033066;
+            border-color: #033066;
+        }
+
+    .btn-secondary {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+    }
+
+        .btn-secondary:hover {
+            background-color: #a57930;
+            border-color: #a57930;
+        }
+
+    .card-header {
+        background-color: var(--primary-color) !important;
+        color: var(--white) !important;
+    }
+
+    .payment-option {
+        border: 2px solid var(--secondary-color) !important;
+    }
+</style>
+<div class="container" style="padding-top: 120px; padding-bottom: 24px;">
+    <div class="mb-4 text-center">
+        <h1 class="text-primary fw-bold">Pago de Reserva</h1>
+        <p class="text-muted">Complete el proceso de pago para confirmar su reserva</p>
+    </div>
+
+    <div class="row g-4" style="padding:0 120px;">
+        <!-- Reservation Summary -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Resumen de Reserva</h5>
+                    <p class="card-text small mb-0">Propietario: @Model.IdusuarioNavigation.Nombre</p>
+                    <p class="card-text small mb-0">Correo: @Model.IdusuarioNavigation.CorreoElectronico</p>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <div class="row mb-2">
+                            <div class="col-6 fw-medium small">Fecha de Creación:</div>
+                            <div class="col-6 small">@Model.FechaCreacion</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6 fw-medium small">Estado:</div>
+                            <div class="col-6 small">@Model.Estado</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6 fw-medium small">Pasajeros:</div>
+                            <div class="col-6 small">@Model.CantidadDePasajeros</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6 fw-medium small">Camarotes:</div>
+                            <div class="col-6 small">@Model.CantidadDeCamarotes</div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Precio Camarotes:</span>
+                            <span>$@Model.PrecioTotalCamorotes</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <span>$@Model.Subtotal</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Impuesto:</span>
+                            <span>$@Model.Impuesto</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between fw-bold mb-2">
+                            <span>Total:</span>
+                            <span>$@Model.PrecioTotal</span>
+                        </div>
+                        <div class="d-flex justify-content-between small text-secondary">
+                            <span>Depósito mínimo por persona:</span>
+                            <span>$100.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Form -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Opciones de Pago</h5>
+                    <p class="card-text small mb-0">Seleccione su método de pago preferido</p>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" id="habitacionForm" data-ajax="true" data-ajax-method="POST" data-ajax-begin="onBegin"
+                          data-ajax-failure="onFailure" data-ajax-success="onSuccess" data-ajax-complete="onComplete" asp-antiforgery="true">
+
+                        <!-- Payment Options -->
+                        <div class="mb-4">
+                            <h5 class="fw-medium mb-3">Seleccione una opción de pago:</h5>
+
+                            <div class="form-check payment-option border rounded p-3 mb-3">
+                                <input class="form-check-input" type="radio" name="paymentOption" id="fullPayment" value="full" checked>
+                                <label class="form-check-label ms-2" for="fullPayment">
+                                    <div class="fw-medium">Pagar saldo total</div>
+                                    <p class="text-muted small mb-0">
+                                        Pague el monto completo de $@Model.PrecioTotal
+                                    </p>
+                                </label>
+                            </div>
+
+                            <div class="form-check payment-option border rounded p-3">
+                                <input class="form-check-input" type="radio" name="paymentOption" id="depositPayment" value="deposit">
+                                <label class="form-check-label ms-2" for="depositPayment">
+                                    <div class="fw-medium">Pagar depósito mínimo</div>
+                                    <p class="text-muted small mb-0">
+                                        Pague el depósito mínimo de $@(pasajeros * 100)
+                                        ($100.00 por persona)
+                                    </p>
+                                    <p class="small text-secondary fw-medium mb-0">
+                                        Fecha límite para completar el pago: 15/05/2023
+                                    </p>
+                                </label>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- Credit Card Information -->
+                        <div class="mb-4">
+                            <h5 class="fw-medium mb-3">Información de Tarjeta de Crédito</h5>
+
+                            <div class="mb-3">
+                                <<label asp-for="NuevoPago.TitularTarjeta" class="form-label">Nombre del Titular</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input asp-for="NuevoPago.TitularTarjeta" type="text" class="form-control" id="cardholderName" name="cardholderName"
+                                           placeholder="Nombre como aparece en la tarjeta" required>
+                                    <span asp-validation-for="NuevoPago.TitularTarjeta" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="NuevoPago.NumeroTarjeta" class="form-label">Número de Tarjeta</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-credit-card"></i></span>
+                                    <input asp-for="NuevoPago.NumeroTarjeta" type="text" class="form-control" id="cardNumber" name="cardNumber"
+                                           placeholder="1234 5678 9012 3456" required>
+                                    <span asp-validation-for="NuevoPago.NumeroTarjeta" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="NuevoPago.FechaExpiracion" class="form-label">Fecha de Caducidad</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                                        <input asp-for="NuevoPago.FechaExpiracion" type="month" class="form-control" id="expiryDate" required />
+                                    </div>
+                                    <span asp-validation-for="NuevoPago.FechaExpiracion" class="text-danger"></span>
+                                </div>
+
+
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="NuevoPago.Cvv" class="form-label">Código CVV</label>
+                                    <input asp-for="NuevoPago.Cvv" type="text" class="form-control" id="cvv" name="cvv"
+                                           placeholder="123" maxlength="4" required>
+                                    <span asp-validation-for="NuevoPago.Cvv" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-column flex-sm-row justify-content-between gap-3 mt-4">
+                            <a href="@Url.Action("Index", "EncReserva")" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Volver
+                            </a>
+
+                            <button type="submit" value="Guardar" class="btn btn-secondary">
+                                Pagar Saldo
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        function onBegin() { console.log("Inicio de edición"); }
+        function onFailure(response) { Swal.fire({ title: "Error!", text: response.responseText, icon: "error" }); }
+        function onSuccess(response) {
+            Swal.fire({
+                icon: "success",
+                title: "Pago de reserva hecho",
+                showConfirmButton: true
+            }).then(() => {
+                setTimeout(() => {
+                    window.location.href = '@Url.Action("Index", "EncReserva")';
+                }, 2000);
+            });
+        }
+        function onComplete() { console.log("Edición completada"); }
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

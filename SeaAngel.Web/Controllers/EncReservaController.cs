@@ -15,14 +15,16 @@ namespace SeaAngel.Web.Controllers
         private readonly IServiceFecha _serviceFecha;
         private readonly IServiceHabitacion _serviceHabitacion;
         private readonly IServiceFechaHabitacion _serviceFechaHabitacion;
+        private readonly IServicePago _servicePago;
 
-        public EncReservaController(IServiceEncReserva serviceEncReserva, IServiceCrucero serviceCrucero, IServiceFecha serviceFecha, IServiceHabitacion serviceHabitacion, IServiceFechaHabitacion serviceFechaHabitacion)
+        public EncReservaController(IServiceEncReserva serviceEncReserva, IServiceCrucero serviceCrucero, IServiceFecha serviceFecha, IServiceHabitacion serviceHabitacion, IServiceFechaHabitacion serviceFechaHabitacion, IServicePago servicePago)
         {
             _serviceEncReserva = serviceEncReserva;
             _serviceCrucero = serviceCrucero;
             _serviceFecha = serviceFecha;
             _serviceHabitacion = serviceHabitacion;
             _serviceFechaHabitacion = serviceFechaHabitacion;
+            _servicePago = servicePago;
         }
 
         // GET:EncReservaController
@@ -291,5 +293,44 @@ namespace SeaAngel.Web.Controllers
             }
         }
 
+        public async Task<ActionResult> PagoReserva()
+        {
+            try
+            {
+                var @numero = await _serviceEncReserva.GetNextNumberReserva();
+                var @object = await _serviceEncReserva.FindByIdAsync(8);
+
+                if (@object == null)
+                {
+                    throw new Exception("Reserva no existente");
+
+                }
+                return View(@object);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        // POST: HabitacionController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EncReservaDTO dto)
+        {
+            var @id = await _serviceEncReserva.GetNextNumberReserva();
+            EncReservaDTO @object = await _serviceEncReserva.FindByIdAsync(8);
+
+            try
+            {
+                await _serviceEncReserva.UpdateAsync(8, @object);
+                return RedirectToAction("Index");
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -35,6 +35,7 @@ builder.Services.AddTransient<IRepositoryFecha, RepositoryFecha>();
 builder.Services.AddTransient<IRepositoryUsuario, RepositoryUsuario>();
 builder.Services.AddTransient<IRepositoryFechaHabitacion, RepositoryFechaHabitacion>();
 builder.Services.AddTransient<IRepositoryBarcoHabitacion, RepositoryBarcoHabitacion>();
+builder.Services.AddTransient<IRepositoryPago, RepositoryPago>();
 //Services
 builder.Services.AddTransient<IServiceBarco, ServiceBarco>();
 builder.Services.AddTransient<IServiceHabitacion, ServiceHabitacion>();
@@ -45,7 +46,7 @@ builder.Services.AddTransient<IServiceFecha, ServiceFecha>();
 builder.Services.AddTransient<IServiceUsuario, ServiceUsuario>();
 builder.Services.AddTransient<IServiceFechaHabitacion, ServiceFechaHabitacion>();
 builder.Services.AddTransient<IServiceBarcoHabitacion, ServiceBarcoHabitacion>();
-
+builder.Services.AddTransient<IServicePago, ServicePago>();
 //Seguridad
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -86,6 +87,7 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<FechaProfile>();
     config.AddProfile<FechaHabitacionProfile>();
     config.AddProfile<DetPasajeroProfile>();
+    config.AddProfile<PagoProfile>();
 });
 
 // Configuar Conexión a la Base de Datos SQL

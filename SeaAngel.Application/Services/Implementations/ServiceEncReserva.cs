@@ -51,6 +51,45 @@ namespace SeaAngel.Application.Services.Implementations
             }
 
         }
+
+        public async Task<int> GetNextNumberReserva()
+        {
+            int nextReceipt = await _repository.GetNextNumberReserva();
+            return nextReceipt;
+        }
+
+        public async Task UpdateAsync(int id, EncReservaDTO dto)
+        {
+            try
+            {
+                var @object = await _repository.FindByIdAsync(id);    //Obtenga el modelo original a actualizar
+                @object.Estado = "Pagado";
+                decimal precio = Convert.ToDecimal(@object.PrecioTotal);
+
+                var nuevoPago = new Pago
+                {
+                    Id=0,
+                    IdencReserva= id,
+                    Monto= precio,
+                    FechaPago = DateTime.Today,
+                    MetodoPago = "Tarjeta",
+                    NumeroTarjeta = dto.NuevoPago.NumeroTarjeta,
+                    FechaExpiracion = dto.NuevoPago.FechaExpiracion,
+                    Cvv= dto.NuevoPago.Cvv,
+                    TitularTarjeta= dto.NuevoPago.TitularTarjeta,
+                    IdencReservaNavigation= dto.NuevoPago.IdencReservaNavigation
+                };
+
+                @object.Pago.Add(nuevoPago);
+
+                await _repository.UpdateAsync(@object);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
     }
 
 }
