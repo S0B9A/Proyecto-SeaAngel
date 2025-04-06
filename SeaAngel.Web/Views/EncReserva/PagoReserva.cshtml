@@ -57,7 +57,7 @@
         <h1 class="text-primary fw-bold">Pago de Reserva</h1>
         <p class="text-muted">Complete el proceso de pago para confirmar su reserva</p>
     </div>
-    
+
     <div class="row g-4" style="padding:0 120px;">
         <!-- Reservation Summary -->
         <div class="col-lg-4">
@@ -124,6 +124,8 @@
                     <p class="card-text small mb-0">Seleccione su método de pago preferido</p>
                 </div>
                 <div class="card-body">
+                    <form asp-action="Edit" id="habitacionForm" data-ajax="true" data-ajax-method="POST" data-ajax-begin="onBegin"
+                          data-ajax-failure="onFailure" data-ajax-success="onSuccess" data-ajax-complete="onComplete" asp-antiforgery="true">
 
                         <!-- Payment Options -->
                         <div class="mb-4">
@@ -161,16 +163,20 @@
                             <h5 class="fw-medium mb-3">Información de Tarjeta de Crédito</h5>
 
                             <div class="mb-3">
+                                <<label asp-for="NuevoPago.TitularTarjeta" class="form-label">Nombre del Titular</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input asp-for="NuevoPago.TitularTarjeta" type="text" class="form-control" id="cardholderName" name="cardholderName"
                                            placeholder="Nombre como aparece en la tarjeta" required>
                                     <span asp-validation-for="NuevoPago.TitularTarjeta" class="text-danger"></span>
                                 </div>
                             </div>
 
                             <div class="mb-3">
+                                <label asp-for="NuevoPago.NumeroTarjeta" class="form-label">Número de Tarjeta</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-credit-card"></i></span>
+                                    <input asp-for="NuevoPago.NumeroTarjeta" type="text" class="form-control" id="cardNumber" name="cardNumber"
                                            placeholder="1234 5678 9012 3456" required>
                                     <span asp-validation-for="NuevoPago.NumeroTarjeta" class="text-danger"></span>
                                 </div>
@@ -178,14 +184,18 @@
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
+                                    <label asp-for="NuevoPago.FechaExpiracion" class="form-label">Fecha de Caducidad</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                                        <input asp-for="NuevoPago.FechaExpiracion" type="month" class="form-control" id="expiryDate" required />
                                     </div>
                                     <span asp-validation-for="NuevoPago.FechaExpiracion" class="text-danger"></span>
                                 </div>
 
 
                                 <div class="col-md-6 mb-3">
+                                    <label asp-for="NuevoPago.Cvv" class="form-label">Código CVV</label>
+                                    <input asp-for="NuevoPago.Cvv" type="text" class="form-control" id="cvv" name="cvv"
                                            placeholder="123" maxlength="4" required>
                                     <span asp-validation-for="NuevoPago.Cvv" class="text-danger"></span>
                                 </div>
@@ -197,6 +207,8 @@
                                 <i class="bi bi-arrow-left me-2"></i>Volver
                             </a>
 
+                            <button type="submit" value="Guardar" class="btn btn-secondary">
+                                Pagar Saldo
                             </button>
                         </div>
                     </form>

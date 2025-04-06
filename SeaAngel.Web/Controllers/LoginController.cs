@@ -60,9 +60,7 @@ namespace SeaAngel.Web.Controllers
             List<Claim> claims = new List<Claim>() {
 
                 new Claim(ClaimTypes.Name, usuarioDTO.Nombre),
-                new Claim(ClaimTypes.Role, usuarioDTO.Rol!),
-                new Claim(ClaimTypes.Email, usuarioDTO.CorreoElectronico!)
-
+                new Claim(ClaimTypes.Role, usuarioDTO.Rol!)
             };
 
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
