@@ -36,10 +36,22 @@
 
             <!-- Opciones de usuario y configuración -->
             <ul class="navbar-nav mx-2">
-                <li class="nav-item">
+                @* <li class="nav-item">
                     <a href="@Url.Action("Perfil", "Usuario")" class="nav-link">
                         <i class="bi bi-person-circle fs-4"></i> <!-- Ícono de usuario -->
                     </a>
+                </li> *@
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle fs-4"></i> <!-- Ícono de usuario -->
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><span class="dropdown-item-text fw-bold">@User.Identity!.Name</span></li>
+                        <li><span class="dropdown-item-text">@User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value</span></li>
+                        <li><span class="dropdown-item-text">@User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value</span></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" asp-area="" asp-controller="Login" asp-action="LogOff">Cerrar sesión</a></li>
+                    </ul>
                 </li>
                 @if (User.IsInRole("Administrador") == true)
                 {
