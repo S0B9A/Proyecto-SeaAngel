@@ -120,7 +120,7 @@ namespace SeaAngel.Web.Controllers
                     }
 
                     // Si el contador es menor a la cantidad digitada, devolvemos el error
-                    if (lista.Count < Convert.ToInt32(dto.CantidadDeCamarotes)) {
+                    if (lista.Count < Convert.ToInt32(dto.CantidadDeCamarotes)){
                         // Keep Cache data
                         TempData.Keep();
                         return BadRequest($"Tu cantidad de habitaciones es menor a la cantidad digitada.");
@@ -256,7 +256,7 @@ namespace SeaAngel.Web.Controllers
             {
                 var lista = new List<DetPasajeroDTO>();
                 string json = "";
-
+       
 
                 if (TempData["CartPasajero"] != null)
                 {
@@ -332,7 +332,28 @@ namespace SeaAngel.Web.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
     }
-    
+
+        public async Task<ActionResult> PagoReserva()
+        {
+            try
+            {
+                var @numero = await _serviceEncReserva.GetNextNumberReserva();
+                var @object = await _serviceEncReserva.FindByIdAsync(@numero);
+
+                if (@object == null)
+                {
+
+
+                    throw new Exception("Reserva no existente");
+
+                }
+                return View(@object);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+    }
 }
