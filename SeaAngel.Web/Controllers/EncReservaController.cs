@@ -66,6 +66,7 @@ namespace SeaAngel.Web.Controllers
 
             // Clear CarShopping
             TempData["CartHabitacion"] = null;
+            TempData["CartPasajero"] = null;
             TempData.Keep();
 
             return View();
@@ -78,9 +79,11 @@ namespace SeaAngel.Web.Controllers
         public async Task<IActionResult> Create(EncReservaDTO dto)
         {
             string json;
+            string jsonPasajero;
 
             try
             {
+                //Habitacion
                 json = (string)TempData["CartHabitacion"]!;
 
                 if (string.IsNullOrEmpty(json) || json.Trim() == "[]")
@@ -88,7 +91,19 @@ namespace SeaAngel.Web.Controllers
                     return BadRequest("No hay habitaciones por agregar en la reserva");
                 }
 
+                jsonPasajero = (string)TempData["CartPasajero"]!;
+
+                //Pasajero
+                if (string.IsNullOrEmpty(jsonPasajero) || jsonPasajero.Trim() == "[]")
+                {
+                    return BadRequest("No hay pasajeros por agregar en la reserva");
+                }
+
+                //Habitacion
                 var lista = JsonSerializer.Deserialize<List<DetReservaDTO>>(json!)!;
+
+                //Pasajero
+                var listaPasajero = JsonSerializer.Deserialize<List<DetPasajeroDTO>>(jsonPasajero!)!;
 
 
                 // Convalidaciones esenciales
@@ -116,6 +131,7 @@ namespace SeaAngel.Web.Controllers
                 dto.Idusuario = 1;
                 dto.FechaCreacion = DateTime.Today;
                 dto.DetReserva = lista;
+                dto.DetPasajero = listaPasajero;
 
                 await _serviceEncReserva.AddAsync(dto);
 
@@ -229,6 +245,50 @@ namespace SeaAngel.Web.Controllers
             // return Content("Ok");
             return PartialView("_DetailDetReserva", lista);
 
+        }
+
+
+        public async Task<IActionResult> AddPasajero(string Nombre, string Apelldio, string DocumentoIdentidad, string Email, string Telefono)
+        {
+            try
+            {
+                var lista = new List<DetPasajeroDTO>();
+                string json = "";
+       
+
+                if (TempData["CartPasajero"] != null)
+                {
+                    json = (string)TempData["CartPasajero"]!;
+                    lista = JsonSerializer.Deserialize<List<DetPasajeroDTO>>(json!)!;
+                }
+
+
+                var nuevoItem = new DetPasajeroDTO
+                {
+                    Nombre = Nombre,
+                    Apelldio = Apelldio,
+                    DocumentoIdentidad = DocumentoIdentidad,
+                    Email = Email,
+                    Telefono = Telefono,
+                    Edad = 20
+                };
+
+                lista.Add(nuevoItem);
+
+
+                // Guardar carrito actualizado
+                TempData["CartPasajero"] = JsonSerializer.Serialize(lista);
+                TempData.Keep();
+
+                return PartialView("_DetailDetPasajero", lista);
+
+            }
+            catch (Exception ex)
+            {
+                // Keep Cache data
+                TempData.Keep();
+                return BadRequest(ex.Message);
+            }
         }
 
     }

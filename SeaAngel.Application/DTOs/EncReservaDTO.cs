@@ -52,10 +52,8 @@ namespace SeaAngel.Application.DTOs
 
         [ValidateNever]
         public string? PrecioTotal { get; set; }
-
-
-        [ValidateNever]
-        public virtual List<DetPasajero> DetPasajero { get; set; } = null!; //Hacer DTO de DetPasajero
+     
+        public virtual List<DetPasajeroDTO> DetPasajero { get; set; } = null!;
 
         public virtual List<DetReservaDTO> DetReserva { get; set; } = null!;
 

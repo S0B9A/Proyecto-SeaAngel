@@ -156,6 +156,21 @@
 							</div>
 						</div>
 
+						<div class="d-flex align-items-center gap-3 mb-4 mt-3">
+							<button type="button" class="btn btn-primary py-3 px-4 rounded-3 shadow" data-bs-toggle="modal" data-bs-target="#myModalPasajero">
+								<i class="fas fa-plus-circle me-2"></i>Agregar Pasajeros
+							</button>
+
+							<span class="text-muted fst-italic">Añada Pasajeros para tu reserva</span>
+						</div>
+
+						<div class="card shadow-sm rounded-3 border-0">
+							<div class="card-body p-0">
+								<div class="mt-2" id="detPasajeroView">
+									@await Html.PartialAsync("_DetailDetPasajero")
+								</div>
+							</div>
+						</div>
 
 						<!-- Resto de campos del formulario -->
 						<!-- ... -->
@@ -226,13 +241,33 @@
 	</div>
 </div>
 
+<!-- Modal Pasajeros -->
+<div class="modal fade" id="myModalPasajero" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content shadow-lg">
+			<div class="modal-header card-header-blue py-3">
+				<h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">
+					<i class="fas fa-bed me-2"></i>Reserva de Pasajeros
+				</h1>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body p-4">
+				<div id="mostrar"></div>
+				<div class="p-4 rounded-3 shadow-sm" style="background: #f8f9fa;">
+					@await Html.PartialAsync("_AddPasajero")
+				</div>
+			</div>
+			<div class="modal-footer py-3">
+				<button type="button" class="btn btn-secondary rounded-3 py-2 px-4" data-bs-dismiss="modal">
+					<i class="fas fa-times me-2"></i>Cerrar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 @section Scripts {
 	<script>
-
-				$('#myModal').on('show.bs.modal', function () {
-			let idfecha = $('#idfecha').val(); // obtiene el valor del input del formulario principal
-			$('#idfechaModal').val(idfecha);   // lo pasa al input del modal
-		});
 
 			$(document).ready(function () {
 			function actualizarResumen() {
@@ -300,36 +335,9 @@
 			}
 		});
 
-		// 	function addHabitacion() {
-		// 	let IdhabitacionModal = $("#IdhabitacionModal").val();
-		// 	let CantidadPasajerosModal = $("#CantidadPasajerosModal").val();
-		// 	let idfechaModal = $("#idfecha").val();
-		// 	let divDetReserva = $("#detReservaView");
 
-		// 	if (!$.isNumeric(IdhabitacionModal) || !$.isNumeric(CantidadPasajerosModal) || parseInt(CantidadPasajerosModal) <= 0) {
-		// 		Swal.fire({
-		// 			title: "Error!",
-		// 			text: "Ingrese un código y una cantidad válida.",
-		// 			icon: "error"
-		// 		});
-		// 		return;
-		// 	}
-
-		// 	const myRequest = '@Url.Action("AddHabitacion", "EncReserva")';
-		// 	fetch(myRequest + "?id=" + IdhabitacionModal + "&cantidad=" + CantidadPasajerosModal +"&idfecha=" + idfechaModal)
-		// 		.then(response => response.text())
-		// 		.then(text => divDetReserva.html(text))
-		// 		.catch(error => Swal.fire({ title: "Error", text: error, icon: "error" }));
-
-		// 	$("#IdhabitacionModal").val("");
-		// 	$("#CantidadPasajerosModal").val("");
-		// 	$("#HabitacionSelect").html("");
-		// 	$("#DescripcionSelect").html("");
-		// 	$("#ImgHabitacion").attr("src", "/Images/Logo2.png");
-		// }
-
-
-				function addHabitacion() {
+		//Habitacion
+			function addHabitacion() {
 			let IdhabitacionModal = $("#IdhabitacionModal").val();
 			let CantidadPasajerosModal = $("#CantidadPasajerosModal").val();
 			let idfechaModal = $("#idfecha").val();
@@ -381,6 +389,56 @@
 				.catch(error => Swal.fire({ title: "Error", text: error, icon: "error" }));
 		}
 
+		//Pasajero
+
+				function AddPasajero() {
+			let NombrePasajero = $("#NombrePasajeroModal").val();
+			let ApellidoPasajero = $("#ApelldioPasajeroModal").val();
+			let DocumentoIdentidad = $("#DocumentoIdentidadModal").val();
+			let Email = $("#EmailModal").val();
+			let Telefono = $("#TelefonoModal").val();
+			let divDetReserva = $("#detPasajeroView");
+
+			// Validación básica
+			if (!NombrePasajero || !ApellidoPasajero || !DocumentoIdentidad || !Email || !Telefono) {
+				Swal.fire({
+					title: "Error!",
+					text: "Por favor complete todos los campos requeridos.",
+					icon: "error"
+				});
+				return;
+			}
+
+			const myRequest = '@Url.Action("AddPasajero", "EncReserva")';
+			fetch(myRequest + "?Nombre=" + NombrePasajero +
+							  "&Apelldio=" + ApellidoPasajero +
+							  "&DocumentoIdentidad=" + DocumentoIdentidad +
+							  "&Email=" + Email +
+							  "&Telefono=" + Telefono)
+				.then(response => {
+					if (!response.ok) {
+						return response.text().then(text => {
+							throw new Error(text || 'Error desconocido');
+						});
+					}
+					return response.text();
+				})
+				.then(text => divDetReserva.html(text))
+				.catch(error => {
+					Swal.fire({
+						title: "Error",
+						text: error.message,
+						icon: "error"
+					});
+				});
+
+			// Limpiar campos después de agregar
+			$("#NombrePasajeroModal").val("");
+			$("#ApelldioPasajeroModal").val("");
+			$("#DocumentoIdentidadModal").val("");
+			$("#EmailModal").val("");
+			$("#TelefonoModal").val("");
+		}
 
 
 		function onBegin() { console.log("onBegin"); }

@@ -85,6 +85,7 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<ReservaComplementosProfile>();
     config.AddProfile<FechaProfile>();
     config.AddProfile<FechaHabitacionProfile>();
+    config.AddProfile<DetPasajeroProfile>();
 });
 
 // Configuar Conexión a la Base de Datos SQL

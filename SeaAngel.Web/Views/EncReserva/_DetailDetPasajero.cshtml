@@ -1,0 +1,150 @@
+﻿@model IEnumerable<SeaAngel.Application.DTOs.DetPasajeroDTO>
+
+<style>
+    .pasajeros-container {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .pasajero-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+    }
+
+        .pasajero-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+    .card-header-Pasajeros {
+        background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
+        color: white;
+        padding: 15px;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .pasajero-number {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 3px 10px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .info-row {
+        display: flex;
+        margin-bottom: 12px;
+        align-items: center;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #555;
+        min-width: 120px;
+        font-size: 0.9rem;
+    }
+
+    .info-value {
+        flex: 1;
+        color: #333;
+    }
+
+    .btn-eliminar {
+        background-color: #e53935;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 15px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+        .btn-eliminar:hover {
+            background-color: #c62828;
+        }
+
+        .btn-eliminar i {
+            margin-right: 5px;
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+        grid-column: 1 / -1;
+    }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #ddd;
+            margin-bottom: 15px;
+        }
+</style>
+
+<div class="pasajeros-container">
+    @if (Model != null && Model.Any())
+    {
+        var counter = 1;
+        foreach (var item in Model)
+        {
+            <div class="pasajero-card">
+                <div class="card-header card-header-Pasajeros">
+                    <div>
+                        <i class="fas fa-user mr-2"></i> Pasajero
+                    </div>
+                    <span class="pasajero-number">#@counter</span>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <span class="info-label">Nombre:</span>
+                        <span class="info-value">@item.Nombre</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Apellido:</span>
+                        <span class="info-value">@item.Apelldio</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Documento:</span>
+                        <span class="info-value">@item.DocumentoIdentidad</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value">@item.Email</span>
+                    </div>
+                    <button type="button" class="btn-eliminar" onclick="deletePasajero('@item.DocumentoIdentidad')">
+                        <i class="fas fa-trash-alt"></i> Eliminar
+                    </button>
+                </div>
+            </div>
+            counter++;
+        }
+    }
+    else
+    {
+        <div class="empty-state">
+            <i class="fas fa-users-slash"></i>
+            <h3>No hay pasajeros registrados</h3>
+            <p>Agrega pasajeros para verlos listados aquí</p>
+        </div>
+    }
+</div>
