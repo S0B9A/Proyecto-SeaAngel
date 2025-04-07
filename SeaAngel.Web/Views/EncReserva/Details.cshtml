@@ -128,9 +128,7 @@
 
 		<!-- BOTÓN PARA IMPRIMIR -->
 		<div class="text-center mt-4">
-			<button class="btn btn-lg btn-primary" onclick="window.print()">
-				<i class="bi bi-printer"></i> Imprimir Factura
-			</button>
+			<a class="btn btn-primary" asp-action="GenerarPDF" asp-route-id="@Model.Id">Descargar factura PDF</a>
 		</div>
 	</div>
 </div>

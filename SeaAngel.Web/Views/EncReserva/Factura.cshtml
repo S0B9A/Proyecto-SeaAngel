@@ -1,0 +1,364 @@
+﻿@model SeaAngel.Application.DTOs.EncReservaDTO
+@{
+    ViewData["Title"] = "Factura";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Factura @Model.Id</title>
+    <style type="text/css">
+        /* ESTILOS COMPATIBLES CON ROTATIVA */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            line-height: 1.4;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            margin-bottom: 20px;
+            border-bottom: 2px solid #005f73;
+            padding-bottom: 10px;
+        }
+
+            .header h1 {
+                color: #005f73;
+                margin: 0;
+                padding: 0;
+                font-size: 24px;
+            }
+
+        .company-info {
+            float: right;
+            text-align: right;
+        }
+
+        .invoice-info {
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .client-box, .invoice-box {
+            width: 48%;
+            float: left;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .invoice-box {
+            float: right;
+        }
+
+        .box-title {
+            background-color: #005f73;
+            color: white;
+            padding: 5px 10px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .info-row {
+            margin-bottom: 5px;
+            clear: both;
+        }
+
+        .info-label {
+            float: left;
+            width: 120px;
+            font-weight: bold;
+        }
+
+        .info-value {
+            margin-left: 120px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 2px 8px;
+            background-color: #f39c12;
+            color: white;
+            font-weight: bold;
+            border-radius: 3px;
+            font-size: 11px;
+        }
+
+            .status.paid {
+                background-color: #27ae60;
+            }
+
+        .alert {
+            background-color: #fff3cd;
+            padding: 5px 10px;
+            margin-top: 5px;
+            border-left: 3px solid #f39c12;
+            font-size: 11px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+            page-break-inside: avoid;
+        }
+
+        .section-title {
+            background-color: #005f73;
+            color: white;
+            padding: 5px 10px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+            table th {
+                background-color: #005f73;
+                color: white;
+                padding: 5px 8px;
+                text-align: left;
+                font-weight: bold;
+                font-size: 12px;
+            }
+
+            table td {
+                padding: 6px 8px;
+                border-bottom: 1px solid #ddd;
+                vertical-align: top;
+            }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .total-section {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+        }
+
+        .total-row {
+            margin-bottom: 5px;
+            overflow: hidden;
+        }
+
+        .total-label {
+            float: left;
+            font-weight: bold;
+        }
+
+        .total-value {
+            float: right;
+            font-weight: bold;
+        }
+
+        .grand-total {
+            font-size: 16px;
+            color: #005f73;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+        }
+
+        /* EVITAR SALTO DE PÁGINA EN ELEMENTOS IMPORTANTES */
+        .no-break {
+            page-break-inside: avoid;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>FACTURA #@Model.Id</h1>
+            <div class="company-info">
+                <strong>SeaAngel Cruceros</strong><br>
+                Documento generado: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+            </div>
+        </div>
+
+        <div class="invoice-info no-break">
+            <div class="client-box">
+                <div class="box-title">DATOS DEL CLIENTE</div>
+                <div class="info-row">
+                    <div class="info-label">Nombre:</div>
+                    <div class="info-value">@Model.IdusuarioNavigation.Nombre</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Teléfono:</div>
+                    <div class="info-value">@Model.IdusuarioNavigation.Telefono</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Correo:</div>
+                    <div class="info-value">@Model.IdusuarioNavigation.CorreoElectronico</div>
+                </div>
+            </div>
+
+            <div class="invoice-box">
+                <div class="box-title">DETALLES DE FACTURA</div>
+                <div class="info-row">
+                    <div class="info-label">Fecha:</div>
+                    <div class="info-value">@(Model.FechaCreacion?.ToString("dd/MM/yyyy") ?? "N/A")</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Estado:</div>
+                    <div class="info-value">
+                        @if (Model.Estado == "Pendiente")
+                        {
+                            <span class="status">PENDIENTE</span>
+                            <div class="alert">
+                                Fecha límite: @(Model.FechaPago?.ToString("dd/MM/yyyy") ?? "N/A")
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="status paid">@Model.Estado.ToUpper()</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section no-break">
+            <div class="section-title">DATOS DEL CRUCERO</div>
+            <div class="info-row">
+                <div class="info-label">Nombre:</div>
+                <div class="info-value">@Model.IdfechaNavigation.IdcruceroNavigation.Nombre</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Fecha Inicio:</div>
+                <div class="info-value">@Model.IdfechaNavigation.FechaInicio?.ToString("dd/MM/yyyy")</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Duración:</div>
+                <div class="info-value">@Model.IdfechaNavigation.IdcruceroNavigation.CantDias días</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Fecha Fin:</div>
+                <div class="info-value">@(Model.IdfechaNavigation.FechaInicio?.AddDays(Model.IdfechaNavigation.IdcruceroNavigation.CantDias).ToString("dd/MM/yyyy") ?? "N/A")</div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Día</th>
+                        <th>Puerto</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var itinerario in Model.IdfechaNavigation.IdcruceroNavigation.Itinerario)
+                    {
+                        <tr>
+                            <td>@itinerario.Dia</td>
+                            <td>@itinerario.IdpuertoNavigation.Nombre</td>
+                            <td>@itinerario.Descripcion</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section no-break">
+            <div class="section-title">COMPLEMENTOS RESERVADOS</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th class="text-right">Precio Unitario</th>
+                        <th class="text-center">Cantidad</th>
+                        <th class="text-right">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var complemento in Model.ReservaComplementos)
+                    {
+                        <tr>
+                            <td>@complemento.IdcomplementoNavigation.Nombre</td>
+                            <td class="text-right">$@complemento.Precio.ToString("N2")</td>
+                            <td class="text-center">@complemento.Cantidad</td>
+                            <td class="text-right">$@((complemento.Precio * complemento.Cantidad).ToString("N2"))</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section no-break">
+            <div class="section-title">DETALLES DEL PAGO</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Concepto</th>
+                        <th class="text-center">Cantidad</th>
+                        <th class="text-right">Precio Unitario</th>
+                        <th class="text-right">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Camarotes</td>
+                        <td class="text-center">@Model.CantidadDeCamarotes</td>
+                        <td class="text-right">$@Model.PrecioTotalCamorotes.ToString()</td>
+                        <td class="text-right">$@Model.Subtotal.ToString()</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-right"><strong>Impuestos (18%)</strong></td>
+                        <td class="text-right">$@Model.Impuesto.ToString()</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="total-section no-break">
+                <div class="total-row">
+                    <div class="total-label">Subtotal:</div>
+                    <div class="total-value">$@Model.Subtotal.ToString()</div>
+                </div>
+                <div class="total-row">
+                    <div class="total-label">Impuestos:</div>
+                    <div class="total-value">$@Model.Impuesto.ToString()</div>
+                </div>
+                <div class="total-row grand-total">
+                    <div class="total-label">TOTAL A PAGAR:</div>
+                    <div class="total-value">$@Model.PrecioTotal.ToString()</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Gracias por elegir SeaAngel Cruceros</p>
+            <p>Para cualquier consulta, contacte con nuestro servicio al cliente: clientes@seaangel.com | Teléfono: +1 (800) 555-1234</p>
+            <p>Documento válido como factura electrónica según normativa vigente</p>
+        </div>
+    </div>
+</body>
+</html>

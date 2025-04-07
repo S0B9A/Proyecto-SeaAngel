@@ -103,6 +103,10 @@ builder.Services.AddDbContext<SeanAngelContext>(options =>
         options.EnableSensitiveDataLogging();
 });
 
+
+// ?? Aquí configuras Rotativa
+Rotativa.AspNetCore.RotativaConfiguration.Setup("wwwroot", "Rotativa");
+
 //***************
 
 

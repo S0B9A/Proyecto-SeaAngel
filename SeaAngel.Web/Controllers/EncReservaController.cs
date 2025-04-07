@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using Rotativa.AspNetCore;
 using SeaAngel.Application.DTOs;
 using SeaAngel.Application.Services.Implementations;
 using SeaAngel.Application.Services.Interfaces;
@@ -38,6 +39,18 @@ namespace SeaAngel.Web.Controllers
             return Json(collection);
 
         }
+
+
+        public async Task<IActionResult> GenerarPDF(int id)
+        {
+            var reserva = await _serviceEncReserva.FindByIdAsync(id);
+
+            return new ViewAsPdf("Factura", reserva)  // "Factura" es la vista para el PDF
+            {
+                FileName = $"Factura_Reserva_{id}.pdf"
+            };
+        }
+
 
         // GET:EncReservaController
         [HttpGet]
