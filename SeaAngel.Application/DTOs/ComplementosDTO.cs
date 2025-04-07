@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,14 +12,19 @@ namespace SeaAngel.Application.DTOs
     {
         public int Id { get; set; }
 
+        [Required(ErrorMessage = "{0} es un dato requerido")]
         public string Nombre { get; set; } = null!;
 
-        public string? Descripcion { get; set; }
+        [Required(ErrorMessage = "{0} es un dato requerido")]
+        public string Descripcion { get; set; }
 
+        [Required(ErrorMessage = "{0} es un dato requerido")]
+        [Range(1, int.MaxValue, ErrorMessage = "{0} debe ser un número positivo")]
         public decimal Precio { get; set; }
 
+        [Required(ErrorMessage = "{0} es un dato requerido")]
         public string Aplicacion { get; set; } = null!;
 
-        public virtual ICollection<ReservaComplementosDTO> ReservaComplementos { get; set; }
+        public virtual List<ReservaComplementosDTO> ReservaComplementos { get; set; } = null!;
     }
 }

@@ -67,7 +67,7 @@ namespace SeaAngel.Application.DTOs
         public virtual UsuarioDTO? IdusuarioNavigation { get; set; }
 
         [ValidateNever]
-        public virtual List<PagoDTO> Pago { get; set; } = new List<PagoDTO>(); //Hacer DTO de Pago
+        public virtual List<PagoDTO> Pago { get; set; } = new List<PagoDTO>(); 
 
         [ValidateNever]
         public virtual List<ReservaComplementosDTO> ReservaComplementos { get; set; } = null!;

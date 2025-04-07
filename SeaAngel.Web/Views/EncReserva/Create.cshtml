@@ -140,7 +140,7 @@
 							</div>
 						</div>
 
-						<div class="d-flex align-items-center gap-3 mb-4">
+						<div class="d-flex align-items-center gap-3 mb-5 mt-5">
 							<button type="button" class="btn btn-primary py-3 px-4 rounded-3 shadow" data-bs-toggle="modal" data-bs-target="#myModal">
 								<i class="fas fa-plus-circle me-2"></i>Agregar Habitación
 							</button>
@@ -156,7 +156,7 @@
 							</div>
 						</div>
 
-						<div class="d-flex align-items-center gap-3 mb-4 mt-3">
+						<div class="d-flex align-items-center gap-3 mb-5 mt-5">
 							<button type="button" class="btn btn-primary py-3 px-4 rounded-3 shadow" data-bs-toggle="modal" data-bs-target="#myModalPasajero">
 								<i class="fas fa-plus-circle me-2"></i>Agregar Pasajeros
 							</button>
@@ -172,9 +172,23 @@
 							</div>
 						</div>
 
+						<div class="d-flex align-items-center gap-3 mb-5 mt-5">
+							<button type="button" class="btn btn-primary py-3 px-4 rounded-3 shadow" data-bs-toggle="modal" data-bs-target="#myModalComplemento">
+								<i class="fas fa-plus-circle me-2"></i>Agregar Complementos
+							</button>
+
+							<span class="text-muted fst-italic">Añada Complementos para tu reserva</span>
+						</div>
+
+						<div class="card shadow-sm rounded-3 border-0">
+							<div class="card-body p-0">
+								<div class="mt-2" id="detComplementoView">
+									@await Html.PartialAsync("_DetailReservaComplemento")
+								</div>
+							</div>
+						</div>
 						<!-- Resto de campos del formulario -->
 						<!-- ... -->
-
 
 
 						<div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
@@ -255,6 +269,31 @@
 				<div id="mostrar"></div>
 				<div class="p-4 rounded-3 shadow-sm" style="background: #f8f9fa;">
 					@await Html.PartialAsync("_AddPasajero")
+				</div>
+			</div>
+			<div class="modal-footer py-3">
+				<button type="button" class="btn btn-secondary rounded-3 py-2 px-4" data-bs-dismiss="modal">
+					<i class="fas fa-times me-2"></i>Cerrar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal Complementos -->
+<div class="modal fade" id="myModalComplemento" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+		<div class="modal-content shadow-lg">
+			<div class="modal-header card-header-blue py-3">
+				<h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">
+					<i class="fas fa-bed me-2"></i>Reserva de complementos
+				</h1>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body p-4">
+				<div id="mostrar"></div>
+				<div class="p-4 rounded-3 shadow-sm" style="background: #f8f9fa;">
+					@await Html.PartialAsync("_AddComplemento")
 				</div>
 			</div>
 			<div class="modal-footer py-3">
@@ -380,24 +419,24 @@
 		}
 
 			function deleteHabitacion(idhabitacion, cantidadPasajeros) {
-			const divBarco = $("#detReservaView");
+			const divReserva = $("#detReservaView");
 			const myRequest = '@Url.Action("DeleteHabitacion", "EncReserva")';
 
 			fetch(myRequest + "?idHabitacion=" + idhabitacion + "&cantidadPasajeros=" + cantidadPasajeros)
 				.then(response => response.text())
-				.then(text => divBarco.html(text))
+				.then(text => divReserva.html(text))
 				.catch(error => Swal.fire({ title: "Error", text: error, icon: "error" }));
 		}
 
 		//Pasajero
 
-				function AddPasajero() {
+			function AddPasajero() {
 			let NombrePasajero = $("#NombrePasajeroModal").val();
 			let ApellidoPasajero = $("#ApelldioPasajeroModal").val();
 			let DocumentoIdentidad = $("#DocumentoIdentidadModal").val();
 			let Email = $("#EmailModal").val();
 			let Telefono = $("#TelefonoModal").val();
-			let divDetReserva = $("#detPasajeroView");
+			let divDetPasajero = $("#detPasajeroView");
 
 			// Validación básica
 			if (!NombrePasajero || !ApellidoPasajero || !DocumentoIdentidad || !Email || !Telefono) {
@@ -423,7 +462,7 @@
 					}
 					return response.text();
 				})
-				.then(text => divDetReserva.html(text))
+				.then(text => divDetPasajero.html(text))
 				.catch(error => {
 					Swal.fire({
 						title: "Error",
@@ -439,6 +478,109 @@
 			$("#EmailModal").val("");
 			$("#TelefonoModal").val("");
 		}
+
+
+		function DeletePasajero(DocumentoIdentidad) {
+		const divDetPasajero = $("#detPasajeroView");
+		const myRequest = '@Url.Action("DeletePasajero", "EncReserva")';
+
+		fetch(myRequest + "?DocumentoIdentidad=" + DocumentoIdentidad)
+			.then(response => response.text())
+			.then(text => divDetPasajero.html(text))
+			.catch(error => Swal.fire({ title: "Error", text: error, icon: "error" }));
+		}
+
+				//Complemento
+
+		$("#IdComplementoModal").autocomplete({
+			source: function (request, response) {
+				$.ajax({
+					type: "GET",
+					url: '@Url.Action("GetComplementoByName", "EncReserva")',
+					dataType: "json",
+					data: {
+						filtro: $("#IdComplementoModal").val()
+					},
+					success: function (data) {
+						console.log("Datos recibidos:", data);
+						response($.map(data, function (item) {
+							return { label: item.nombre, value: item.id, data: item };
+							
+						}));
+					},
+					error: function (xhr, status, error) {
+						console.log(error);
+					}
+				});
+			},
+			select: function (event, ui) {
+				$("#IdComplementoModal").val(ui.item.data.id);
+				$("#ComplementoSelect").html("Complemento: " + ui.item.data.nombre);
+				$("#AplicacionSelect").html("Aplicación: " + ui.item.data.aplicacion);
+				$("#PrecioSelect").html("Descripción: " + ui.item.data.descripcion);
+
+				return false;
+			}
+		});
+
+
+		function addComplemento() {
+			let IdComplementoModal = $("#IdComplementoModal").val();
+			let CantidadModal = $("#CantidadModal").val();
+			let divReservaComplemento = $("#detComplementoView");
+
+			if (!$.isNumeric(IdComplementoModal) || !$.isNumeric(CantidadModal) || parseInt(CantidadModal) <= 0) {
+				Swal.fire({
+					title: "Error!",
+					text: "Ingrese un código y una cantidad válida.",
+					icon: "error"
+				});
+				return;
+			}
+
+			const myRequest = '@Url.Action("AddComplemento", "EncReserva")';
+			fetch(myRequest + "?id=" + IdComplementoModal + "&cantidad=" + CantidadModal)
+				.then(response => {
+					if (!response.ok) {
+						return response.text().then(text => {
+							throw new Error(text || 'Error desconocido');
+						});
+					}
+					return response.text();
+				})
+				.then(text => divReservaComplemento.html(text))
+				.catch(error => {
+					Swal.fire({
+						title: "Error",
+						text: error.message,
+						icon: "error"
+					});
+				});
+
+			$("#IdComplementoModal").val("");
+			$("#CantidadModal").val("");
+			$("#ComplementoSelect").html("");
+			$("#DescripcionSelect").html("");
+			$("#AplicacionSelect").html("");
+		}
+
+
+		function DeleteComplemento(idComplemento) {
+			const divReservaComplemento = $("#detComplementoView");
+			const myRequest = '@Url.Action("DeleteComplemento", "EncReserva")';
+
+			fetch(myRequest + "?idComplemento=" + idComplemento)
+				.then(response => response.text())
+				.then(text => divReservaComplemento.html(text))
+				.catch(error =>
+					Swal.fire({
+						title: "Error",
+						text: error,
+						icon: "error"
+					})
+				);
+		} 
+
 
 
 		function onBegin() { console.log("onBegin"); }

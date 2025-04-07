@@ -6,7 +6,7 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 20px;
-        padding: 20px;
+        padding-right: 20px;
     }
 
     .pasajero-card {
@@ -131,7 +131,7 @@
                         <span class="info-label">Email:</span>
                         <span class="info-value">@item.Email</span>
                     </div>
-                    <button type="button" class="btn-eliminar" onclick="deletePasajero('@item.DocumentoIdentidad')">
+                    <button type="button" class="btn-eliminar" onclick="DeletePasajero('@item.DocumentoIdentidad')">
                         <i class="fas fa-trash-alt"></i> Eliminar
                     </button>
                 </div>
