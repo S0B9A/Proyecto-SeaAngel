@@ -174,9 +174,9 @@
                         <tr>
                             <td class="text-center">@Model.CantidadDePasajeros</td>
                             <td class="text-center">@Model.CantidadDeCamarotes</td>
-                            <td class="text-end">$@Model.PrecioTotalCamorotes.ToString()</td>
-                            <td class="text-end">$@Model.Subtotal.ToString()</td>
-                            <td class="text-end">$@Model.Impuesto.ToString()</td>
+                            <td class="text-end">$@(Model.PrecioTotalCamorotes?.ToString() ?? "0")</td>
+                            <td class="text-end">$@(Model.Subtotal?.ToString() ?? "0")</td>
+                            <td class="text-end">$@(Model.Impuesto?.ToString() ?? "0")</td>
                         </tr>
                     </tbody>
                 </table>
@@ -186,7 +186,7 @@
         <!-- SECCIÓN DEL TOTAL FINAL - MEJORADA -->
         <div class="total-section text-center my-5 p-4 bg-light rounded">
             <h4 class="fw-bold text-uppercase mb-3">Total a Pagar</h4>
-            <p class="display-5 fw-bold text-primary">$@Model.PrecioTotal.ToString()</p>
+            <p class="display-5 fw-bold text-primary">$@(Model.PrecioTotal?.ToString() ?? "0")</p>
             @if (Model.Estado == "Pendiente")
             {
                 <p class="text-muted mt-2">
