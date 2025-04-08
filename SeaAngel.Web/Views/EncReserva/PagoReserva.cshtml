@@ -132,7 +132,7 @@
                             <h5 class="fw-medium mb-3">Seleccione una opción de pago:</h5>
 
                             <div class="form-check payment-option border rounded p-3 mb-3">
-                                <input class="form-check-input" type="radio" name="paymentOption" id="fullPayment" value="full" checked>
+                                <<input asp-for="NuevoPago.Monto" class="form-check-input" type="radio" id="depositPayment" value="@Model.PrecioTotal">
                                 <label class="form-check-label ms-2" for="fullPayment">
                                     <div class="fw-medium">Pagar saldo total</div>
                                     <p class="text-muted small mb-0">
@@ -142,7 +142,7 @@
                             </div>
 
                             <div class="form-check payment-option border rounded p-3">
-                                <input class="form-check-input" type="radio" name="paymentOption" id="depositPayment" value="deposit">
+                                <<input asp-for="NuevoPago.Monto" class="form-check-input" type="radio" id="depositPayment" value="@(pasajeros * 100)">
                                 <label class="form-check-label ms-2" for="depositPayment">
                                     <div class="fw-medium">Pagar depósito mínimo</div>
                                     <p class="text-muted small mb-0">
@@ -154,6 +154,8 @@
                                     </p>
                                 </label>
                             </div>
+
+
                         </div>
 
                         <hr>
@@ -234,7 +236,6 @@
         }
         function onComplete() { console.log("Edición completada"); }
     </script>
-
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

@@ -28,5 +28,6 @@ namespace SeaAngel.Application.DTOs
         public string TitularTarjeta { get; set; } = null!;
 
         public virtual EncReserva? IdencReservaNavigation { get; set; }
+
     }
 }

@@ -62,15 +62,26 @@ namespace SeaAngel.Application.Services.Implementations
         {
             try
             {
-                var @object = await _repository.FindByIdAsync(id);    //Obtenga el modelo original a actualizar
-                @object.Estado = "Pagado";
-                decimal precio = Convert.ToDecimal(@object.PrecioTotal);
+                var @object = await _repository.FindByIdAsync(id);
+
+                var precioPendiente = Convert.ToInt32(@object.PrecioPendiente);
+                var precioTotal= Convert.ToInt32(@object.PrecioTotal);
+
+                if (precioPendiente == 0)
+                {
+                    @object.Estado = "Pagado";
+                }
+                else {
+                    @object.Estado = "Pendiente";
+                }
+                
+                decimal monto = Convert.ToInt32(@object.PrecioTotal);
 
                 var nuevoPago = new Pago
                 {
                     Id=0,
                     IdencReserva= id,
-                    Monto= precio,
+                    Monto= monto,
                     FechaPago = DateTime.Today,
                     MetodoPago = "Tarjeta de Crédito",
                     NumeroTarjeta = dto.NuevoPago.NumeroTarjeta,
@@ -82,6 +93,7 @@ namespace SeaAngel.Application.Services.Implementations
 
                 @object.Pago.Add(nuevoPago);
 
+                @object.PrecioPendiente = (precioPendiente - monto).ToString();
                 await _repository.UpdateAsync(@object);
             }
             catch (Exception ex)
