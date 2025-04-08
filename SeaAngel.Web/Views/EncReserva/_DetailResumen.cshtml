@@ -1,0 +1,182 @@
+﻿@model SeaAngel.Application.DTOs.EncReservaDTO
+
+<style>
+    #myList {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        border-radius: 8px;
+        margin: 10px 0;
+        background-color: #f8f9fa;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        padding: 12px;
+        font-size: 0.8rem;
+    }
+
+    .list-header {
+        background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
+        color: white;
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding: 8px;
+        border-radius: 6px;
+        text-align: center;
+        margin-bottom: 12px;
+    }
+
+    .section-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #0d47a1;
+        margin: 10px 0 8px 0;
+        padding-bottom: 4px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .list-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 10px;
+        margin-bottom: 6px;
+        background-color: white;
+        border-radius: 6px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+        .list-item:hover {
+            background-color: rgba(30, 136, 229, 0.03);
+        }
+
+    .item-name {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: #0d47a1;
+    }
+
+    .item-price {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #e96c12;
+    }
+
+    .total {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #0d47a1;
+        margin-top: 15px;
+        padding-top: 10px;
+        border-top: 1px dashed #ccc;
+    }
+
+        .total div {
+            margin-bottom: 5px;
+        }
+
+    .taxes {
+        font-size: 0.8rem;
+        color: #666;
+        margin-top: 10px;
+        padding-top: 8px;
+        border-top: 1px dotted #ddd;
+    }
+
+    .grand-total {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #1e88e5;
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid #1e88e5;
+    }
+</style>
+
+<div id="myList">
+    <div class="list-header">
+        <i class="fas fa-list-alt"></i> Detalle de Reserva
+    </div>
+
+    <!-- Habitaciones -->
+    <div>
+        <div class="section-title">Habitaciones</div>
+        @if (Model.DetReserva != null && Model.DetReserva.Any())
+        {
+            @foreach (var item in Model.DetReserva)
+            {
+                <div class="list-item">
+                    <span class="item-name">@item.NombreHabitacion</span>
+                    <span class="item-price">₡@item.Precio.ToString("N2")</span>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="list-item">
+                <span class="item-name">No hay habitaciones seleccionadas</span>
+                <span class="item-price">₡0.00</span>
+            </div>
+        }
+    </div>
+
+    <!-- Complementos -->
+    <div>
+        <div class="section-title">Complementos</div>
+        @if (Model.ReservaComplementos != null && Model.ReservaComplementos.Any())
+        {
+            @foreach (var item in Model.ReservaComplementos)
+            {
+                <div class="list-item">
+                    <span class="item-name">@item.NombreComplemento</span>
+                    <span class="item-price">₡@item.Precio.ToString("N2")</span>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="list-item">
+                <span class="item-name">No hay complementos seleccionados</span>
+                <span class="item-price">₡0.00</span>
+            </div>
+        }
+    </div>
+
+    @{
+        // Cálculos
+        var totalHabitaciones = Model.DetReserva?.Sum(x => x.Precio) ?? 0;
+        var totalComplementos = Model.ReservaComplementos?.Sum(x => x.Precio) ?? 0;
+        var subtotal = totalHabitaciones + totalComplementos;
+        var impuestos = subtotal * 0.13m; // 13% de impuestos
+        var tasasPortuarias = subtotal * 0.02m; // 2% de tasas portuarias (ajustable)
+        var totalGeneral = subtotal + impuestos + tasasPortuarias;
+    }
+
+    <!-- Subtotal -->
+    <div class="total">
+        <div>
+            <strong>Subtotal Habitaciones:</strong> ₡@totalHabitaciones.ToString("N2")
+        </div>
+        <div>
+            <strong>Subtotal Complementos:</strong> ₡@totalComplementos.ToString("N2")
+        </div>
+        <div>
+            <strong>Subtotal:</strong> ₡@subtotal.ToString("N2")
+        </div>
+    </div>
+
+    <!-- Impuestos y tasas -->
+    <div class="taxes">
+        <div class="list-item">
+            <span class="item-name">Impuestos (13%)</span>
+            <span class="item-price">₡@impuestos.ToString("N2")</span>
+        </div>
+        <div class="list-item">
+            <span class="item-name">Tasas portuarias (2%)</span>
+            <span class="item-price">₡@tasasPortuarias.ToString("N2")</span>
+        </div>
+    </div>
+
+    <!-- Total General -->
+    <div class="grand-total">
+        <div class="list-item">
+            <span class="item-name">PRECIO TOTAL:</span>
+            <span class="item-price">₡@totalGeneral.ToString("N2")</span>
+        </div>
+    </div>
+</div>

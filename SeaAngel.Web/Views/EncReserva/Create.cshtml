@@ -222,6 +222,36 @@
 							<i class="fas fa-calendar-day me-2"></i> Fecha de inicio:
 							<span class="fw-bold">@ViewBag.fecha.FechaInicio.ToString("dd-MM-yyyy")</span>
 						</p>
+
+						<!-- Fecha de fin -->
+						<p class="mb-0 text-muted">
+							<i class="fas fa-calendar-day me-2"></i> Fecha fin:
+							<span class="fw-bold">@(ViewBag.fecha.FechaInicio?.AddDays(@ViewBag.Crucero.CantDias).ToString("dd-MM-yyyy") ?? "N/A")</span>
+						</p>
+
+
+						<!-- Puerto de inicio -->
+						<p class="mb-0 text-muted">
+							<i class="fas fa-calendar-day me-2"></i> Puerto de inicio:
+							<span class="fw-bold"> @ViewBag.PrimerPuerto.IdpuertoNavigation.Nombre</span>
+						</p>
+
+						<!-- Puerto de salida -->
+						<p class="mb-0 text-muted">
+							<i class="fas fa-calendar-day me-2"></i> Puerto de salida:
+							<span class="fw-bold"> @ViewBag.UltimoPuerto.IdpuertoNavigation.Nombre</span>
+						</p>
+					</div>
+					<div class="card shadow-sm rounded-3 border-0 alert alert-light border rounded-3 p-3">
+						<div class="card-body p-0">
+							<div class="mt-2" id="ResumenView">
+								@await Html.PartialAsync("_DetailResumen", new SeaAngel.Application.DTOs.EncReservaDTO
+   {
+	   DetReserva = new List<SeaAngel.Application.DTOs.DetReservaDTO>(),
+	   ReservaComplementos = new List<SeaAngel.Application.DTOs.ReservaComplementosDTO>()
+   })
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -308,8 +338,9 @@
 @section Scripts {
 	<script>
 
-			$(document).ready(function () {
+					$(document).ready(function () {
 			function actualizarResumen() {
+				// Obtener los valores de los campos
 				var cantidadPasajeros = $("#CantidadDePasajeros").val();
 				var cantidadCamarotes = $("#CantidadDeCamarotes").val();
 
@@ -317,15 +348,38 @@
 				cantidadPasajeros = cantidadPasajeros ? cantidadPasajeros : 0;
 				cantidadCamarotes = cantidadCamarotes ? cantidadCamarotes : 0;
 
+				// Obtener valores desde ViewBag usando Razor
+				var nombreCrucero = "@ViewBag.Crucero.Nombre";
+				var fechaInicio = "@ViewBag.fecha.FechaInicio.ToString("dd-MM-yyyy")";
+				var fechaFin = "@(ViewBag.fecha.FechaInicio?.AddDays(ViewBag.Crucero.CantDias).ToString("dd-MM-yyyy") ?? "N/A")";
+				var puertoInicio = "@ViewBag.PrimerPuerto.IdpuertoNavigation.Nombre";
+				var puertoSalida = "@ViewBag.UltimoPuerto.IdpuertoNavigation.Nombre";
+
 				// Crear el HTML del resumen actualizado
 				var resumenHTML = `
 					<h6 class="fw-bold text-dark mb-2">
-						<i class="fas fa-ship me-2"></i> ${"@ViewBag.Crucero.Nombre"}
+						<i class="fas fa-ship me-2"></i> ${nombreCrucero}
 					</h6>
 					<p class="mb-0 text-muted">
 						<i class="fas fa-calendar-day me-2"></i> Fecha de inicio:
-						<span class="fw-bold">${"@ViewBag.fecha.FechaInicio.ToString("dd-MM-yyyy")"}</span>
+						<span class="fw-bold">${fechaInicio}</span>
 					</p>
+
+					<p class="mb-0 text-muted">
+						<i class="fas fa-calendar-day me-2"></i> Fecha fin:
+						<span class="fw-bold">${fechaFin}</span>
+					</p>
+
+					<p class="mb-0 text-muted">
+						<i class="fas fa-calendar-day me-2"></i> Puerto de inicio:
+						<span class="fw-bold">${puertoInicio}</span>
+					</p>
+
+					<p class="mb-0 text-muted">
+						<i class="fas fa-calendar-day me-2"></i> Puerto de salida:
+						<span class="fw-bold">${puertoSalida}</span>
+					</p>
+
 					<p class="mb-0 text-muted">
 						<i class="fas fa-users me-2"></i> Pasajeros:
 						<span class="fw-bold">${cantidadPasajeros}</span>
@@ -333,16 +387,20 @@
 					<p class="mb-0 text-muted">
 						<i class="fas fa-bed me-2"></i> Habitaciones:
 						<span class="fw-bold">${cantidadCamarotes}</span>
-					</p>`;
+					</p>
+					
+				`;
 
+				// Actualizar el contenedor con el HTML generado
 				$("#resumen-crucero-container").html(resumenHTML);
 			}
 
-			// Detectar cambios en los campos de entrada
+			// Detectar cambios en los campos de entrada y actualizar el resumen
 			$("#CantidadDePasajeros, #CantidadDeCamarotes").on("input", function () {
 				actualizarResumen();
 			});
 		});
+
 
 
 			$("#IdhabitacionModal").autocomplete({
@@ -381,6 +439,8 @@
 			let CantidadPasajerosModal = $("#CantidadPasajerosModal").val();
 			let idfechaModal = $("#idfecha").val();
 			let divDetReserva = $("#detReservaView");
+			let divResumen = $("#ResumenView");
+
 
 			if (!$.isNumeric(IdhabitacionModal) || !$.isNumeric(CantidadPasajerosModal) || parseInt(CantidadPasajerosModal) <= 0) {
 				Swal.fire({
@@ -391,25 +451,42 @@
 				return;
 			}
 
-			const myRequest = '@Url.Action("AddHabitacion", "EncReserva")';
-			fetch(myRequest + "?id=" + IdhabitacionModal + "&cantidad=" + CantidadPasajerosModal + "&idfecha=" + idfechaModal)
-				.then(response => {
-					if (!response.ok) {
-						// Si la respuesta no es OK (200-299), leemos el mensaje de error
-						return response.text().then(text => {
-							throw new Error(text || 'Error desconocido');
-						});
-					}
-					return response.text();
-				})
-				.then(text => divDetReserva.html(text))
-				.catch(error => {
-					Swal.fire({
-						title: "Error",
-						text: error.message,
-						icon: "error"
-					});
+		const myRequest = '@Url.Action("AddHabitacion", "EncReserva")';
+
+
+		fetch(myRequest + "?id=" + IdhabitacionModal + "&cantidad=" + CantidadPasajerosModal + "&idfecha=" + idfechaModal)
+		.then(response => {
+			if (!response.ok) {
+				// Si la respuesta no es OK (200-299), leemos el mensaje de error
+				return response.text().then(text => {
+					throw new Error(text || 'Error desconocido');
 				});
+			}
+			return response.text();
+		})
+		.then(text => {
+			divDetReserva.html(text);
+			// Solo si el primer fetch tuvo éxito, ejecutamos el segundo
+			const myRequest2 = '@Url.Action("Resumen", "EncReserva")';
+			return fetch(myRequest2);
+		})
+		.then(response => {
+			if (!response.ok) {
+				return response.text().then(text => {
+					throw new Error(text || 'Error desconocido');
+				});
+			}
+			return response.text();
+		})
+		.then(text => divResumen.html(text))
+		.catch(error => {
+			Swal.fire({
+				title: "Error",
+				text: error.message,
+				icon: "error"
+			});
+		});
+
 
 			$("#IdhabitacionModal").val("");
 			$("#CantidadPasajerosModal").val("");
@@ -418,15 +495,40 @@
 			$("#ImgHabitacion").attr("src", "/Images/Logo2.png");
 		}
 
+
 			function deleteHabitacion(idhabitacion, cantidadPasajeros) {
 			const divReserva = $("#detReservaView");
+			const divResumen = $("#ResumenView");
 			const myRequest = '@Url.Action("DeleteHabitacion", "EncReserva")';
 
 			fetch(myRequest + "?idHabitacion=" + idhabitacion + "&cantidadPasajeros=" + cantidadPasajeros)
 				.then(response => response.text())
-				.then(text => divReserva.html(text))
-				.catch(error => Swal.fire({ title: "Error", text: error, icon: "error" }));
+				.then(text => {
+					divReserva.html(text);
+
+					// Después de que se actualiza la reserva, hacemos la segunda solicitud
+					const myRequest2 = '@Url.Action("Resumen", "EncReserva")';
+					return fetch(myRequest2);
+				})
+				.then(response => {
+					if (!response.ok) {
+						return response.text().then(text => {
+							throw new Error(text || 'Error desconocido');
+						});
+					}
+					return response.text();
+				})
+				.then(text => divResumen.html(text))
+				.catch(error => {
+					Swal.fire({
+						title: "Error",
+						text: error.message || error,
+						icon: "error"
+					});
+				});
 		}
+
+
 
 		//Pasajero
 
@@ -505,7 +607,7 @@
 						console.log("Datos recibidos:", data);
 						response($.map(data, function (item) {
 							return { label: item.nombre, value: item.id, data: item };
-							
+
 						}));
 					},
 					error: function (xhr, status, error) {
@@ -524,10 +626,11 @@
 		});
 
 
-		function addComplemento() {
+			function addComplemento() {
 			let IdComplementoModal = $("#IdComplementoModal").val();
 			let CantidadModal = $("#CantidadModal").val();
 			let divReservaComplemento = $("#detComplementoView");
+			const divResumen = $("#ResumenView");
 
 			if (!$.isNumeric(IdComplementoModal) || !$.isNumeric(CantidadModal) || parseInt(CantidadModal) <= 0) {
 				Swal.fire({
@@ -548,11 +651,26 @@
 					}
 					return response.text();
 				})
-				.then(text => divReservaComplemento.html(text))
+				.then(text => {
+					divReservaComplemento.html(text);
+
+					// Después de la primera solicitud, realizamos la segunda
+					const myRequest2 = '@Url.Action("Resumen", "EncReserva")';
+					return fetch(myRequest2);
+				})
+				.then(response => {
+					if (!response.ok) {
+						return response.text().then(text => {
+							throw new Error(text || 'Error desconocido');
+						});
+					}
+					return response.text();
+				})
+				.then(text => divResumen.html(text))
 				.catch(error => {
 					Swal.fire({
 						title: "Error",
-						text: error.message,
+						text: error.message || error,
 						icon: "error"
 					});
 				});
@@ -564,22 +682,38 @@
 			$("#AplicacionSelect").html("");
 		}
 
-
 		function DeleteComplemento(idComplemento) {
 			const divReservaComplemento = $("#detComplementoView");
+			const divResumen = $("#ResumenView");
 			const myRequest = '@Url.Action("DeleteComplemento", "EncReserva")';
 
 			fetch(myRequest + "?idComplemento=" + idComplemento)
 				.then(response => response.text())
-				.then(text => divReservaComplemento.html(text))
-				.catch(error =>
+				.then(text => {
+					divReservaComplemento.html(text);
+
+					// Después de la primera solicitud, realizamos la segunda
+					const myRequest2 = '@Url.Action("Resumen", "EncReserva")';
+					return fetch(myRequest2);
+				})
+				.then(response => {
+					if (!response.ok) {
+						return response.text().then(text => {
+							throw new Error(text || 'Error desconocido');
+						});
+					}
+					return response.text();
+				})
+				.then(text => divResumen.html(text))
+				.catch(error => {
 					Swal.fire({
 						title: "Error",
-						text: error,
+						text: error.message || error,
 						icon: "error"
-					})
-				);
-		} 
+					});
+				});
+		}
+
 
 
 

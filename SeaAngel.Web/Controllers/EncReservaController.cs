@@ -92,6 +92,18 @@ namespace SeaAngel.Web.Controllers
             ViewBag.ListComplemento = await _serviceComplementos.ListAsync();
 
 
+            // Ordenar la lista del itinerario por día
+            var crucero = await _serviceCrucero.FindByIdAsync(idcrucero);
+            var itinerarioOrdenado = crucero.Itinerario.OrderBy(i => i.Dia).ToList();
+            // Obtener el primer y el último puerto
+            var primerPuerto = itinerarioOrdenado.FirstOrDefault();
+            var ultimoPuerto = itinerarioOrdenado.LastOrDefault();
+            // Guardar la información en el ViewBag
+            ViewBag.PrimerPuerto = primerPuerto;
+            ViewBag.UltimoPuerto = ultimoPuerto;
+
+
+
             // Clear CarShopping
             TempData["CartHabitacion"] = null;
             TempData["CartPasajero"] = null;
@@ -222,6 +234,39 @@ namespace SeaAngel.Web.Controllers
             {
                 // Keep Cache data
                 TempData.Keep();
+                return BadRequest(ex.Message);
+            }
+        }
+
+        public async Task<IActionResult> Resumen()
+        {
+            try
+            {
+                EncReservaDTO dto = new EncReservaDTO();
+                var listaHabitaciones = new List<DetReservaDTO>();
+                var listaComplementos = new List<ReservaComplementosDTO>();
+
+                if (TempData["CartHabitacion"] != null)
+                {
+                    var json = (string)TempData["CartHabitacion"];
+                    listaHabitaciones = JsonSerializer.Deserialize<List<DetReservaDTO>>(json) ?? new List<DetReservaDTO>();
+                    TempData.Keep("CartHabitacion"); // <- Aquí se conserva para la siguiente petición
+                }
+
+                if (TempData["CartComplemento"] != null)
+                {
+                    var json = (string)TempData["CartComplemento"];
+                    listaComplementos = JsonSerializer.Deserialize<List<ReservaComplementosDTO>>(json) ?? new List<ReservaComplementosDTO>();
+                    TempData.Keep("CartComplemento"); // <- Aquí se conserva para la siguiente petición
+                }
+
+                dto.DetReserva = listaHabitaciones;
+                dto.ReservaComplementos = listaComplementos;
+
+                return PartialView("_DetailResumen", dto);
+            }
+            catch (Exception ex)
+            {
                 return BadRequest(ex.Message);
             }
         }
@@ -524,5 +569,8 @@ namespace SeaAngel.Web.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
+
     }
 }
