@@ -231,13 +231,14 @@ namespace SeaAngel.Web.Controllers
                 dto.PrecioTotalCamorotes = precioCamarotes.ToString();
 
                 var subtotal = precioCamarotes + precioComplementos;
-                dto.Subtotal= subtotal.ToString();
 
-                dto.Impuesto = (subtotal * 0.13).ToString();
-                dto.PrecioTotal=(subtotal + (subtotal * 0.13)).ToString();
-                dto.PrecioPendiente = (precioCamarotes + (precioCamarotes * 0.13)).ToString();
+                dto.Subtotal = subtotal.ToString("F2");
+                dto.Impuesto = (subtotal * 0.13).ToString("F2");
+                dto.PrecioTotal = (subtotal + (subtotal * 0.13)).ToString("F2");
+                dto.PrecioPendiente = (precioCamarotes + (precioCamarotes * 0.13)).ToString("F2");
 
                 dto.DetPasajero = listaPasajero;
+                dto.DetReserva = lista;
 
                 if(listaComplemento.Count > 0){
                     dto.ReservaComplementos = listaComplemento;
