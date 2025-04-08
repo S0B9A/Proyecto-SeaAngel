@@ -515,7 +515,7 @@ namespace SeaAngel.Web.Controllers
 
             try
             {
-                await _serviceEncReserva.UpdateAsync(8, @object);
+                await _serviceEncReserva.UpdateAsync(8, dto);
                 return RedirectToAction("Index");
 
             }

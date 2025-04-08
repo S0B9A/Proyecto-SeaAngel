@@ -72,7 +72,7 @@ namespace SeaAngel.Application.Services.Implementations
                     IdencReserva= id,
                     Monto= precio,
                     FechaPago = DateTime.Today,
-                    MetodoPago = "Tarjeta",
+                    MetodoPago = "Tarjeta de Crédito",
                     NumeroTarjeta = dto.NuevoPago.NumeroTarjeta,
                     FechaExpiracion = dto.NuevoPago.FechaExpiracion,
                     Cvv= dto.NuevoPago.Cvv,
