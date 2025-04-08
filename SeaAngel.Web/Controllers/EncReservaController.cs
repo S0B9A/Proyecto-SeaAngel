@@ -122,6 +122,9 @@ namespace SeaAngel.Web.Controllers
             string jsonPasajero;
             string jsonComplemento;
 
+            var precioCamarotes = 0;
+            var precioComplementos = 0;
+
             try
             {
                 //Habitacion
@@ -200,9 +203,15 @@ namespace SeaAngel.Web.Controllers
 
                     var contadorPasajeros = 0;
 
+                    foreach (var complemento in listaComplemento)
+                    {
+                        precioComplementos += Convert.ToInt32(complemento.Precio)*complemento.Cantidad;
+                    }
+
                     foreach (var habitacion in lista)
                     {
                         contadorPasajeros = contadorPasajeros + Convert.ToInt32(habitacion.CantidadPasajeros);
+                        precioCamarotes+= Convert.ToInt32(habitacion.Precio);
                     }
 
                     if (contadorPasajeros != Convert.ToInt32(dto.CantidadDePasajeros))
@@ -218,7 +227,16 @@ namespace SeaAngel.Web.Controllers
                 dto.Id = 0;
                 dto.Idusuario = 1;
                 dto.FechaCreacion = DateTime.Today;
-                dto.DetReserva = lista;
+
+                dto.PrecioTotalCamorotes = precioCamarotes.ToString();
+
+                var subtotal = precioCamarotes + precioComplementos;
+                dto.Subtotal= subtotal.ToString();
+
+                dto.Impuesto = (subtotal * 0.13).ToString();
+                dto.PrecioTotal=(subtotal + (subtotal * 0.13)).ToString();
+                dto.PrecioPendiente = (precioCamarotes + (precioCamarotes * 0.13)).ToString();
+
                 dto.DetPasajero = listaPasajero;
 
                 if(listaComplemento.Count > 0){
@@ -535,8 +553,8 @@ namespace SeaAngel.Web.Controllers
             try
             {
                 var @numero = await _serviceEncReserva.GetNextNumberReserva();
-                var @object = await _serviceEncReserva.FindByIdAsync(8);
-
+                var @object = await _serviceEncReserva.FindByIdAsync(@numero);
+                
                 if (@object == null)
                 {
                     throw new Exception("Reserva no existente");
@@ -556,11 +574,10 @@ namespace SeaAngel.Web.Controllers
         public async Task<IActionResult> Edit(EncReservaDTO dto)
         {
             var @id = await _serviceEncReserva.GetNextNumberReserva();
-            EncReservaDTO @object = await _serviceEncReserva.FindByIdAsync(8);
 
             try
             {
-                await _serviceEncReserva.UpdateAsync(8, dto);
+                await _serviceEncReserva.UpdateAsync(@id, dto);
                 return RedirectToAction("Index");
 
             }
