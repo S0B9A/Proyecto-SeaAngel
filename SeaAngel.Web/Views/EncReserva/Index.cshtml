@@ -3,202 +3,527 @@
     ViewData["Title"] = "Cruise Reservations";
 }
 
+
+<!-- Scripts y estilos adicionales -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+
+<!-- Contenedor principal con fondo blanco -->
+<div class="main-background">
+    <div class="container py-5">
+        <!-- Encabezado con animación y decoración naval -->
+
+        <div class="header-section mb-5 mt-5 animate__animated animate__fadeIn">
+            <div class="d-flex align-items-center justify-content-center mb-2">
+                <div class="anchor-decoration"><i class="fas fa-clipboard-list"></i></div>
+                <h1 class="text-center mx-4 mb-0">Reservaciones</h1>
+                <div class="anchor-decoration"><i class="fas fa-clipboard-list"></i></div>
+            </div>
+            <div class="compass-divider">
+                <i class="fas fa-compass compass-icon"></i>
+            </div>
+        </div>
+
+        <div class="stats-container mb-5 animate__animated animate__fadeInUp">
+            <div class="stat-box">
+                <div class="stat-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 class="stat-count">@Model.Count()</h3>
+                    <p class="stat-label">Total de reservas</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row barcos-container mx-5" id="barcosGrid">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-6 mb-4 barco-item" data-nombre="@item.IdusuarioNavigation.Nombre.ToLower()">
+                    <div class="card barco-card">
+                        <div class="card-wave"></div>
+                        <div class="card-header">
+                            <div class="header-icon">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            <h5 class="card-title">@item.IdusuarioNavigation.Nombre</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="info-row">
+                                <div class="info-label"><i class="fas fa-info-circle"></i> Estado:</div>
+                                <div class="info-value">@item.Estado</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label"><i class="fas fa-users"></i> Cantidad de pasajeros:</div>
+                                <div class="info-value capacity-badge">@item.CantidadDePasajeros pasajeros</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label"><i class="fas fa-users"></i> Fecha de creacion:</div>
+                                <div class="info-value capacity-badge">
+                                    @(item.FechaCreacion.HasValue
+                                        ? item.FechaCreacion.Value.ToString("dd/MM/yyyy")
+                                        : "N/A")
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label"><i class="fas fa-ruler-combined"></i> Fecha de pago:</div>
+                                <div class="info-value capacity-badge">
+                                    @(item.FechaPago.HasValue
+                                        ? item.FechaPago.Value.ToString("dd/MM/yyyy")
+                                        : "N/A")
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn-card btn-details">
+                                    <i class="fas fa-eye"></i>
+                                    <span>Detalles</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
 <style>
+    /* Estilos base y variables */
     :root {
         --primary-color: #00346b;
         --secondary-color: #0062cc;
-        --text-color: #333;
-        --background-color: #F4F7F9;
+        --accent-color: #ff6b35;
+        --light-blue: #e6f7ff;
+        --dark-blue: #001f3f;
+        --white: #ffffff;
+        --gradient-blue: linear-gradient(135deg, #0062cc, #003366);
     }
 
-    .reservations-container {
-        margin-top: 5% !important;
-        max-width: 1200px;
-        margin: 2rem auto;
-        padding: 2rem;
-        background-color: white;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        overflow-x: hidden;
+        background-color: #ffffff;
     }
 
-    .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 2rem;
-        border-bottom: 2px solid var(--primary-color);
-        padding-bottom: 0.5rem;
+    /* Fondo principal blanco */
+    .main-background {
+        position: relative;
+        background: #ffffff;
+        min-height: 100vh;
+        padding: 40px 0;
+        overflow: hidden;
     }
 
-    .page-title {
+    /* Encabezado y decoración */
+    .header-section {
+        position: relative;
+        z-index: 10;
+    }
+
+    h1 {
         color: var(--primary-color);
-        text-align: center;
-        margin: 0;
-        font-weight: 300;
+        font-weight: 700;
+        font-size: 2.5rem;
     }
 
-    .btn-create-reservation {
-        background-color: var(--primary-color);
-        color: white;
-        border: none;
-        padding: 0.625rem 1.25rem;
-        border-radius: 4px;
-        text-decoration: none;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        transition: all 0.3s ease;
+    .anchor-decoration {
+        font-size: 2rem;
+        color: var(--accent-color);
+        text-shadow: 0 0 10px rgba(255, 107, 53, 0.2);
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .compass-divider {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        justify-content: center;
+        margin: 15px auto;
+        width: 50%;
+        position: relative;
     }
 
-        .btn-create-reservation:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-3px);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        .compass-divider::before,
+        .compass-divider::after {
+            content: "";
+            height: 2px;
+            background: rgba(0, 52, 107, 0.2);
+            flex-grow: 1;
         }
 
-        .btn-create-reservation i {
-            margin-right: 0.5rem;
-        }
+    .compass-icon {
+        font-size: 1.5rem;
+        margin: 0 15px;
+        color: var(--primary-color);
+        animation: rotate 10s linear infinite;
+    }
 
-    .reservation-card {
-        border: 1px solid #E0E0E0;
-        border-radius: 8px;
-        margin-bottom: 1.5rem;
+    /* Panel de acciones */
+    .action-panel {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        position: relative;
+        z-index: 10;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    /* Botón crear con efecto ripple */
+    .btn-create {
+        background: var(--accent-color);
+        color: var(--white);
+        border: none;
+        padding: 15px 30px;
+        border-radius: 30px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        box-shadow: 0 6px 15px rgba(255, 107, 53, 0.4);
+        position: relative;
+        overflow: hidden;
         transition: all 0.3s ease;
+        transform-style: preserve-3d;
     }
 
-        .reservation-card:hover {
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transform: translateY(-5px);
+        .btn-create:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.5);
+            color: var(--white);
         }
 
-    .reservation-header {
-        background-color: var(--primary-color);
-        color: white;
-        padding: 1rem;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
+    .btn-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .btn-ripple {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        transform: scale(0);
+        animation: ripple 1s linear;
+        transform-origin: center;
+    }
+
+    {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+
+    }
+
+    /* Contenedor de estadísticas */
+    .stats-container {
         display: flex;
         justify-content: space-between;
+        margin-bottom: 30px;
+        z-index: 10;
+        position: relative;
+    }
+
+    .stat-box {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 20px;
+        flex: 1;
+        margin: 0 10px;
+        display: flex;
         align-items: center;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
     }
 
-    .reservation-body {
-        padding: 1.5rem;
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+        }
+
+    .stat-icon {
+        background: var(--accent-color);
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 1.4rem;
+        color: var(--white);
+        box-shadow: 0 4px 10px rgba(255, 107, 53, 0.4);
     }
 
-    .reservation-details {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
+    .stat-info {
+        flex: 1;
     }
 
-    .detail-item {
+    .stat-count {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin: 0;
+    }
+
+    .stat-label {
+        color: #6c757d;
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    /* Tarjetas de Barcos */
+    .barcos-container {
+        position: relative;
+        z-index: 10;
+    }
+
+    .barco-card {
+        background: var(--white);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        border: none;
+        height: 100%;
+    }
+
+        .barco-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+    .card-wave {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 8px;
+        background: var(--gradient-blue);
+    }
+
+    .card-header {
+        background: var(--light-blue);
+        padding: 20px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .header-icon {
+        background: var(--gradient-blue);
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 1.2rem;
+        color: var(--white);
+        box-shadow: 0 4px 10px rgba(0, 98, 204, 0.3);
+    }
+
+    .card-title {
+        font-size: 1.4rem;
+        color: var(--primary-color);
+        margin: 0;
+        font-weight: 700;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .info-row {
+        margin-bottom: 15px;
         display: flex;
         flex-direction: column;
     }
 
-    .detail-label {
+    .info-label {
+        font-size: 0.9rem;
+        color: var(--primary-color);
+        opacity: 0.8;
+        margin-bottom: 5px;
         font-weight: 600;
-        color: var(--secondary-color);
-        margin-bottom: 0.25rem;
     }
 
-    .detail-value {
-        color: var(--text-color);
+        .info-label i {
+            margin-right: 5px;
+            color: var(--secondary-color);
+        }
+
+    .info-value {
+        font-size: 1rem;
+        color: var(--dark-blue);
+        padding-left: 25px;
     }
 
-    .reservation-status {
+    .capacity-badge {
         display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.8rem;
+        background: var(--primary-color);
+        color: var(--white);
+        border-radius: 30px;
+        padding: 4px 12px;
+        font-size: 0.9rem;
         font-weight: 600;
-        background-color: var(--secondary-color);
-        color: white;
     }
 
-    .reservation-actions {
+    .card-actions {
         display: flex;
-        justify-content: flex-end;
-        margin-top: 1rem;
+        justify-content: space-between;
+        margin-top: 20px;
+        gap: 10px;
     }
+
+    .btn-card {
+        flex: 1;
+        text-align: center;
+        padding: 10px 15px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+        .btn-card i {
+            margin-right: 8px;
+        }
+
+    .btn-edit {
+        background: var(--accent-color);
+        box-shadow: 0 4px 8px rgba(255, 107, 53, 0.3);
+    }
+
+        .btn-edit:hover {
+            background: #e55a20;
+            transform: translateY(-3px);
+            color: var(--white);
+        }
 
     .btn-details {
-        background-color: var(--primary-color);
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        text-decoration: none;
-        transition: background-color 0.3s ease;
+        background: var(--secondary-color);
+        box-shadow: 0 4px 8px rgba(0, 98, 204, 0.3);
     }
 
         .btn-details:hover {
-            background-color: var(--secondary-color);
+            background: #0052a8;
+            transform: translateY(-3px);
+            color: var(--white);
         }
+
+    .card-actions {
+        display: flex;
+        justify-content: flex-end; /* Alinear a la derecha */
+        margin-top: 20px;
+        gap: 15px; /* Aumentar separación entre botones */
+    }
+
+    .btn-card {
+        width: 40px; /* Tamaño fijo para botones circulares */
+        height: 40px;
+        border-radius: 50%; /* Hacer botones circulares */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        padding: 0; /* Eliminar padding */
+        flex: initial; /* Quitar flex:1 para que no se expandan */
+    }
+
+        .btn-card i {
+            margin-right: 0; /* Quitar margen del icono */
+            font-size: 1rem; /* Ajustar tamaño del icono */
+        }
+
+        .btn-card span {
+            display: none; /* Ocultar el texto */
+        }
+
+    .btn-edit {
+        background: var(--accent-color);
+        box-shadow: 0 4px 8px rgba(255, 107, 53, 0.3);
+    }
+
+        .btn-edit:hover {
+            background: #e55a20;
+            transform: translateY(-3px) scale(1.05);
+            color: var(--white);
+        }
+
+    .btn-details {
+        background: var(--secondary-color);
+        box-shadow: 0 4px 8px rgba(0, 98, 204, 0.3);
+    }
+
+        .btn-details:hover {
+            background: #0052a8;
+            transform: translateY(-3px) scale(1.05);
+            color: var(--white);
+        }
+
 </style>
 
-<div class="reservations-container">
-    <div class="page-header">
-        <h1 class="page-title">Reservaciones de Cruceros</h1>
-    </div>
-
-    <div class="row g-4">
-        @foreach (var reservation in Model)
-        {
-            <div class="col-12 col-md-6 col-lg-4">
-                <div class="reservation-card">
-                    <div class="reservation-header">
-                        <h5 class="mb-0">@reservation.IdusuarioNavigation.Nombre</h5>
-                        <span class="reservation-status">@reservation.Estado</span>
-                    </div>
-
-                    <div class="reservation-body">
-                        <div class="reservation-details">
-                            <div class="detail-item">
-                                <span class="detail-label">Passengers</span>
-                                <span class="detail-value">@reservation.CantidadDePasajeros</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Creation Date</span>
-                                <span class="detail-value">
-                                    @(reservation.FechaCreacion.HasValue
-                                        ? reservation.FechaCreacion.Value.ToString("dd/MM/yyyy")
-                                        : "N/A")
-                                </span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Payment Date</span>
-                                <span class="detail-value">
-                                    @(reservation.FechaPago.HasValue
-                                        ? reservation.FechaPago.Value.ToString("dd/MM/yyyy")
-                                        : "N/A")
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="reservation-actions">
-                            <a asp-action="Details" asp-route-id="@reservation.Id" class="btn-details">
-                                View Details
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
-</div>
-
 <script>
-    // Optional: Add FontAwesome for the icon (if not already included in your project)
-    document.addEventListener('DOMContentLoaded', function() {
-        var link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css';
-        document.head.appendChild(link);
+    $(document).ready(function() {
+        // Trigger animation when scrolling to elements
+        $('.barco-item').waypoint(function() {
+            $(this.element).addClass('animate__animated animate__fadeInUp');
+        }, {
+            offset: '75%'
+        });
+
+        // Ripple effect on button click
+        $('.btn-create').on('click', function(e) {
+            const x = e.pageX - $(this).offset().left;
+            const y = e.pageY - $(this).offset().top;
+
+            const ripples = document.createElement('div');
+            ripples.classList.add('btn-ripple');
+            ripples.style.left = x + 'px';
+            ripples.style.top = y + 'px';
+
+            this.appendChild(ripples);
+
+            setTimeout(() => {
+                ripples.remove();
+            }, 1000);
+        });
+
+        // Contador animado para las estadísticas
+        $('.stat-count').each(function() {
+            const $this = $(this);
+            const countTo = parseInt($this.text());
+
+            $({ countNum: 0 }).animate({
+                countNum: countTo
+            }, {
+                duration: 1500,
+                easing: 'swing',
+                step: function() {
+                    if (Number.isInteger(countTo)) {
+                        $this.text(Math.floor(this.countNum));
+                    } else {
+                        $this.text(this.countNum.toFixed(1));
+                    }
+                },
+                complete: function() {
+                    $this.text(countTo);
+                }
+            });
+        });
     });
 </script>

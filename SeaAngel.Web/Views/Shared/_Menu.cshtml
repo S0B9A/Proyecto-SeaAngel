@@ -1,75 +1,68 @@
-﻿<nav class="navbar navbar-expand-lg navbar-dark bg-white-custom fixed-top">
-    <div class="container">
-        <a class="navbar-brand mx-2" href="@Url.Action("Index", "Home")">
-            <!-- Logo a la izquierda -->
-            <img src="@Url.Content("~/Images/Logo2.png")" alt="Logo SeaAngel" class="logo-img d-none d-lg-inline-block">
-            <!-- Texto más grande para SeaAngel -->
-            <span class="text-navy display-3">SeaAngel</span>
-            <!-- Texto dorado oscuro para Company Cruises -->
-            <span class="text-dark-gold small">Cruise</span>
-            <span class="text-dark-gold small">Company</span>
+﻿<nav class="navbar navbar-expand-lg navbar-light bg-white-custom fixed-top">
+    <div class="container-fluid px-4">
+        <!-- Logo a la izquierda -->
+        <a class="navbar-brand me-auto d-flex align-items-center" href="@Url.Action("Index", "Home")">
+            <img src="@Url.Content("~/Images/Logo2.png")" alt="Logo SeaAngel" class="logo-img d-none d-lg-inline-block me-2" style="width: 50px; height: auto;">
+            <div class="d-flex flex-column">
+                <span class="text-navy display-5 fw-bold">SEAANGEL</span>
+                <div class="d-flex">
+                    <span class="text-dark-gold small fw-bold text-uppercase letter-spacing-1">Cruise</span>
+                    <span class="text-navy small mx-1">•</span>
+                    <span class="text-dark-gold small fw-bold text-uppercase letter-spacing-1">Company</span>
+                </div>
+            </div>
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarS"
-        aria-controls="navbarS" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+        <!-- Botón móvil -->
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarS"
+                aria-controls="navbarS" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon text-navy"></span>
         </button>
 
+        <!-- Menú alineado a la derecha (todos los items a la misma altura) -->
         <div class="collapse navbar-collapse" id="navbarS">
-            <ul class="navbar-nav mx-2 mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a href="@Url.Action("Index", "Home")" class="nav-link itemPag">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a href="@Url.Action("Index", "Crucero")" class="nav-link itemPag">Cruceros</a>
-                </li>
-                <li class="nav-item">
-                    <a href="@Url.Action("Index", "Barco")" class="nav-link itemPag">Barcos</a>
-                </li>
-                <li class="nav-item">
-                    <a href="@Url.Action("Index", "Habitacion")" class="nav-link itemPag">Habitaciones</a>
-                </li>
-                <li class="nav-item">
-                    <a href="@Url.Action("Index", "EncReserva")" class="nav-link itemPag">Reservas</a>
-                </li>
-            </ul>
+            <div class="navbar-nav ms-auto align-items-center">
+                <!-- align-items-center para alineación vertical -->
+                <a href="@Url.Action("Index", "Home")" class="nav-link itemPag px-2 py-1 position-relative">Inicio</a>
+                <a href="@Url.Action("Index", "Crucero")" class="nav-link itemPag px-2 py-1 position-relative">Cruceros</a>
+                <a href="@Url.Action("Index", "Barco")" class="nav-link itemPag px-2 py-1 position-relative">Barcos</a>
+                <a href="@Url.Action("Index", "Habitacion")" class="nav-link itemPag px-2 py-1 position-relative">Habitaciones</a>
+                <a href="@Url.Action("Index", "EncReserva")" class="nav-link itemPag px-2 py-1 position-relative">Reservas</a>
 
-            <!-- Opciones de usuario y configuración -->
-            <ul class="navbar-nav mx-2">
-                <li class="nav-item">
-                    <a href="@Url.Action("Perfil", "Usuario")" class="nav-link">
-                        <i class="bi bi-person-circle fs-4"></i> <!-- Ícono de usuario -->
-                    </a>
-                </li>
+                <!-- Iconos de usuario y mantenimiento (también alineados) -->
+                <a href="@Url.Action("Perfil", "Usuario")" class="nav-link p-2 rounded-circle user-icon-hover" title="Perfil">
+                    <i class="bi bi-person-circle fs-4 text-navy"></i>
+                </a>
                 @if (User.IsInRole("Administrador") == true)
                 {
-                    <!-- Menú desplegable de configuración -->
-                    <li class="nav-item dropdown mx-2">
-                        <a href="#" class="nav-link dropdown-toggle" id="configDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-gear-fill fs-4 text-dark-blue"></i> <!-- Ícono de configuración -->
+                    <div class="dropdown">
+                        <a href="#" class="nav-link p-2 rounded-circle dropdown-toggle config-icon-hover"
+                           id="configDropdown" role="button" data-bs-toggle="dropdown"
+                           aria-expanded="false" title="Configuración">
+                            <i class="bi bi-gear-fill fs-4 text-navy"></i>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="configDropdown">
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="configDropdown">
+                            <li><h6 class="dropdown-header text-dark-gold fw-bold">MANTENIMIENTO</h6></li>
+                            <li><hr class="dropdown-divider my-1"></li>
                             <li>
-                                <a class="dropdown-item" href="@Url.Action("Mantenimiento", "Barco")">
-                                    Mantenimiento Barco
+                                <a class="dropdown-item d-flex align-items-center py-2" href="@Url.Action("Mantenimiento", "Barco")">
+                                    <i class="bi bi-ship me-2 text-dark-gold"></i> Barco
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="@Url.Action("Mantenimiento", "Habitacion")">
-                                    Mantenimiento Habitación
+                                <a class="dropdown-item d-flex align-items-center py-2" href="@Url.Action("Mantenimiento", "Habitacion")">
+                                    <i class="bi bi-door-open me-2 text-dark-gold"></i> Habitación
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="@Url.Action("Mantenimiento", "Crucero")">
-                                    Mantenimiento Crucero
+                                <a class="dropdown-item d-flex align-items-center py-2" href="@Url.Action("Mantenimiento", "Crucero")">
+                                    <i class="bi bi-passport me-2 text-dark-gold"></i> Crucero
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </div>
                 }
-
-            </ul>
-
+            </div>
         </div>
     </div>
 </nav>
