@@ -9,7 +9,8 @@ namespace SeaAngel.Application.Services.Interfaces
 {
     public interface IServiceUsuario
     {
-        Task<ICollection<UsuarioDTO>> FindByDescriptionAsync(string description);
+        Task<ICollection<UsuarioDTO>> FindByDescriptionList(string description);
+        Task<UsuarioDTO> FindByDescription(string description);
         Task<ICollection<UsuarioDTO>> ListAsync();
         Task<UsuarioDTO> FindByIdAsync(string id);
         Task<UsuarioDTO> LoginAsync(string id, string password);

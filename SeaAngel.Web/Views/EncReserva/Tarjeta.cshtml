@@ -1,0 +1,595 @@
+﻿@model SeaAngel.Application.DTOs.EncReservaDTO
+
+@{
+    ViewData["Title"] = "Tarjeta";
+    int pasajeros = int.Parse(Model.CantidadDePasajeros);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+        /* Custom Styles from your original CSS */
+        .card-container {
+            margin-top: 40%;
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto; /* Centra la tarjeta */
+            margin-bottom: 30px; /* Ajusta el margen según sea necesario */
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+        }
+
+            .card-container .front,
+            .card-container .back {
+                transition: transform 0.6s;
+                transform-style: preserve-3d;
+                position: relative;
+                width: 100%;
+                height: 50%;
+                color: white; /* Texto blanco para contraste */
+                background-image: url('@Url.Content("~/Images/Tarjeta/background-473805_1280.webp")'); /* Ruta de la imagen */
+            }
+
+        .front {
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+
+        .card-container .back {
+            transform: rotateY(180deg);
+        }
+
+        .card-container .card-number-box,
+        .card-container .card-holder-name,
+        .card-container .expiration,
+        .card-container .cvv-box {
+            font-size: 1.2rem;
+        }
+
+        .form-container {
+            position: relative;
+            z-index: 2; /* Se sitúa encima de la tarjeta */
+            padding-top: 20px;
+        }
+
+            .form-container form {
+                margin: 0 auto;
+                max-width: 500px;
+            }
+
+        .back {
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+
+        .imagen-tipoDeTarjeta-Back {
+            width: 10%;
+        }
+
+        .imagen-tipoDeTarjeta-Front {
+            width: 12%;
+        }
+
+        .imagen-chip-Front {
+            width: 9%;
+        }
+
+        /* Estilo para el select */
+        .form-control {
+            border: 2px solid #ced4da;
+            border-radius: 8px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background-color: #ffffff;
+            color: #333;
+        }
+
+            .form-control:focus,
+            .form-control:focus-visible {
+                border-color: #E96C12;
+                box-shadow: 0 0 5px rgba(233, 108, 18, 0.5);
+                outline: none;
+            }
+
+            .form-control option:hover {
+                background-color: #F7C6A0;
+                color: #333;
+            }
+
+            .form-control option:checked {
+                background-color: #E96C12;
+                color: #fff;
+            }
+
+        .card-holder-name,
+        .exp-month,
+        .exp-year,
+        .cvv-box {
+            font-weight: bold;
+            font-size: 0.8rem !important;
+        }
+
+        .tarjeta {
+            margin-top: 10%;
+        }
+
+        #loading-overlay {
+            z-index: 1050;
+        }
+
+        :root {
+            --primary-color: #011E4B;
+            --secondary-color: #92692A;
+            --white: #ffffff;
+        }
+
+        .text-primary {
+            color: var(--primary-color) !important;
+        }
+
+        .text-secondary {
+            color: var(--secondary-color) !important;
+        }
+
+        .bg-primary {
+            background-color: var(--primary-color) !important;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+            .btn-primary:hover {
+                background-color: #033066;
+                border-color: #033066;
+            }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+            .btn-secondary:hover {
+                background-color: #a57930;
+                border-color: #a57930;
+            }
+
+        .card-header {
+            background-color: var(--primary-color) !important;
+            color: var(--white) !important;
+        }
+
+        .payment-option {
+            border: 2px solid var(--secondary-color) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="padding-top: 120px; padding-bottom: 24px;">
+        <div class="mb-4 text-center">
+            <h1 class="text-primary fw-bold">Pago de Reserva</h1>
+            <p class="text-muted">Complete el proceso de pago para confirmar su reserva</p>
+        </div>
+
+        <div class="row g-4" style="padding:0 120px;">
+            <!-- Reservation Summary -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Resumen de Reserva</h5>
+                        <p class="card-text small mb-0">Propietario: @Model.IdusuarioNavigation.Nombre</p>
+                        <p class="card-text small mb-0">Correo: @Model.IdusuarioNavigation.CorreoElectronico</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <div class="row mb-2">
+                                <div class="col-6 fw-medium small">Fecha de Creación:</div>
+                                <div class="col-6 small">@Model.FechaCreacion</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6 fw-medium small">Estado:</div>
+                                <div class="col-6 small">@Model.Estado</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6 fw-medium small">Pasajeros:</div>
+                                <div class="col-6 small">@Model.CantidadDePasajeros</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6 fw-medium small">Camarotes:</div>
+                                <div class="col-6 small">@Model.CantidadDeCamarotes</div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Precio Camarotes:</span>
+                                <span>$@Model.PrecioTotalCamorotes</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Subtotal:</span>
+                                <span>$@Model.Subtotal</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Impuesto:</span>
+                                <span>$@Model.Impuesto</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between fw-bold mb-2">
+                                <span>Total:</span>
+                                <span>$@Model.PrecioTotal</span>
+                            </div>
+                            <div class="d-flex justify-content-between small text-secondary">
+                                <span>Depósito mínimo por persona:</span>
+                                <span>$100.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Form -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Opciones de Pago</h5>
+                        <p class="card-text small mb-0">Seleccione su método de pago preferido</p>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Edit" id="habitacionForm" data-ajax="true" data-ajax-method="POST" data-ajax-begin="onBegin"
+                              data-ajax-failure="onFailure" data-ajax-success="onSuccess" data-ajax-complete="onComplete" asp-antiforgery="true">
+
+                            <!-- Payment Options -->
+                            <div class="mb-4">
+                                <h5 class="fw-medium mb-3">Seleccione una opción de pago:</h5>
+
+                                <div class="form-check payment-option border rounded p-3 mb-3">
+                                    <<input asp-for="NuevoPago.Monto" class="form-check-input" type="radio" id="depositPayment" value="@Model.PrecioTotal">
+                                    <label class="form-check-label ms-2" for="fullPayment">
+                                        <div class="fw-medium">Pagar saldo total</div>
+                                        <p class="text-muted small mb-0">
+                                            Pague el monto completo de $@Model.PrecioTotal
+                                        </p>
+                                    </label>
+                                </div>
+
+                                <div class="form-check payment-option border rounded p-3">
+                                    <<input asp-for="NuevoPago.Monto" class="form-check-input" type="radio" id="depositPayment" value="@(pasajeros * 100)">
+                                    <label class="form-check-label ms-2" for="depositPayment">
+                                        <div class="fw-medium">Pagar depósito mínimo</div>
+                                        <p class="text-muted small mb-0">
+                                            Pague el depósito mínimo de $@(pasajeros * 100)
+                                            ($100.00 por persona)
+                                        </p>
+                                        <p class="small text-secondary fw-medium mb-0">
+                                            Fecha límite para completar el pago: 15/05/2023
+                                        </p>
+                                    </label>
+                                </div>
+
+
+                            </div>
+
+                            <hr>
+
+                            <!-- Credit Card Information -->
+                            <div class="mb-4">
+                                <h5 class="fw-medium mb-3">Información de Tarjeta de Crédito</h5>
+
+                                <div class="mb-3">
+                                    <<label asp-for="NuevoPago.TitularTarjeta" class="form-label">Nombre del Titular</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                        <input asp-for="NuevoPago.TitularTarjeta" type="text" class="form-control" id="cardholderName"
+                                               placeholder="Nombre como aparece en la tarjeta" required>
+                                        <span asp-validation-for="NuevoPago.TitularTarjeta" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="NuevoPago.NumeroTarjeta" class="form-label">Número de Tarjeta</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-credit-card"></i></span>
+                                        <input asp-for="NuevoPago.NumeroTarjeta" type="text" class="form-control" id="cardNumber"
+                                               placeholder="1234 5678 9012 3456" required>
+                                        <span asp-validation-for="NuevoPago.NumeroTarjeta" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="NuevoPago.FechaExpiracion" class="form-label">Fecha de Caducidad</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                                            <input asp-for="NuevoPago.FechaExpiracion" type="month" class="form-control" id="expiryDate" required />
+                                        </div>
+                                        <span asp-validation-for="NuevoPago.FechaExpiracion" class="text-danger"></span>
+                                    </div>
+
+
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="NuevoPago.Cvv" class="form-label">Código CVV</label>
+                                        <input asp-for="NuevoPago.Cvv" type="text" class="form-control" id="cvv"
+                                               placeholder="123" maxlength="4" required>
+                                        <span asp-validation-for="NuevoPago.Cvv" class="text-danger"></span>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="col-md-6 order-md-2 mb-4 tarjeta" data-aos="fade-down" data-aos-delay="250">
+                                    <div class="card-container mb-4">
+                                        <div class="front bg-light p-4">
+                                            <div class="image mb-3">
+                                                <img src="@Url.Content("~/Images/Tarjeta/chip.png")" alt="Chip" class="mr-2 imagen-chip-Front">
+                                                <img src="@Url.Content("~/Images/Tarjeta/visa.png")" alt="" class="imagen-tipoDeTarjeta-Front">
+                                            </div>
+                                            <div class="card-number-box mb-4">################</div>
+                                            <div class="d-flex justify-content-between">
+                                                <div class="box">
+                                                    <span>card holder</span>
+                                                    <div class="card-holder-name">full name</div>
+                                                </div>
+                                                <div class="box">
+                                                    <span>expires</span>
+                                                    <div class="expiration">
+                                                        <span class="exp-month">mm</span>
+                                                        <span class="exp-year">yy</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="back text-light p-1">
+                                            <div class="stripe mb-2"></div>
+                                            <div class="box">
+                                                <span class="cvv-box">cvv</span>
+                                                <img src="@Url.Content("~/Images/Tarjeta/visa.png")" alt="" class="imagen-tipoDeTarjeta-Back">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="d-flex flex-column flex-sm-row justify-content-between gap-3 mt-4">
+                                <a href="@Url.Action("Index", "EncReserva")" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left me-2"></i>Volver
+                                </a>
+
+                                <button type="submit" value="Guardar" class="btn btn-secondary">
+                                    Pagar Saldo
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="container">
+        <div class="row">
+            <!-- Form Section -->
+            <div class="col-md-6 order-md-1" data-aos="fade-down" data-aos-delay="150">
+                <div class="form-container p-3" style="background-color: #e7e7e7; border-radius: 10px; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);">
+                    <form action="">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <h5 class="text-center" style="color: #333; font-size: 1.2rem;">Pago</h5>
+                            </div>
+                            <div class="col-12 mb-2">
+                                <label for="accepted-cards" style="font-weight: 600; font-size: 0.8rem;">Tarjetas Aceptadas</label>
+                                <div>
+                                    <img src="@Url.Content("~/Images/Tarjeta/Mastercard-logo.1.png")" alt="MasterCard" style="height: 20px; margin-right: 5px;">
+                                    <img src="@Url.Content("~/Images/Tarjeta/Visa-Logo-2.png")" alt="Visa" style="height: 20px; margin-right: 5px;">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="card-holder" style="font-weight: 600; font-size: 0.8rem;">Nombre en la Tarjeta</label>
+                                <input type="text" class="form-control form-control-sm card-holder-input" id="card-holder" placeholder="Ingresa el nombre del titular">
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="card-number" style="font-weight: 600; font-size: 0.8rem;">Número de Tarjeta</label>
+                                <input type="text" maxlength="16" class="form-control form-control-sm card-number-input" id="card-number" placeholder="Número de tarjeta">
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="expiration-month" style="font-weight: 600; font-size: 0.8rem;">Mes de Expiración</label>
+                                <select id="expiration-month" class="form-control form-control-sm month-input">
+                                    <option value="month" selected disabled>Mes</option>
+                                    <option value="01">01 - Enero</option>
+                                    <option value="02">02 - Febrero</option>
+                                    <option value="03">03 - Marzo</option>
+                                    <option value="04">04 - Abril</option>
+                                    <option value="05">05 - Mayo</option>
+                                    <option value="06">06 - Junio</option>
+                                    <option value="07">07 - Julio</option>
+                                    <option value="08">08 - Agosto</option>
+                                    <option value="09">09 - Septiembre</option>
+                                    <option value="10">10 - Octubre</option>
+                                    <option value="11">11 - Noviembre</option>
+                                    <option value="12">12 - Diciembre</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="expiration-year" style="font-weight: 600; font-size: 0.8rem;">Año de Expiración</label>
+                                <select id="expiration-year" class="form-control form-control-sm year-input">
+                                    <option value="year" selected disabled>Año</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                    <option value="2027">2027</option>
+                                    <option value="2028">2028</option>
+                                    <option value="2029">2029</option>
+                                    <option value="2030">2030</option>
+                                    <option value="2031">2031</option>
+                                    <option value="2032">2032</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="cvv" style="font-weight: 600; font-size: 0.8rem;">CVV</label>
+                                <input type="text" maxlength="4" class="form-control form-control-sm cvv-input" id="cvv" placeholder="Ingresa el CVV">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3" id="Facturación">
+                            <!-- Añade aquí campos de facturación adicionales si es necesario -->
+                        </div>
+
+                        <div class="text-center mt-2">
+                            <button id="finalize-button" type="submit" class="btn btn-primary btn-sm" style="background-color: #E96C12; border-color: #E96C12; border-radius: 5px; padding: 6px 12px; font-size: 12px; font-weight: 600;">
+                                Finalizar compra
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Card Preview Section -->
+            <div class="col-md-6 order-md-2 mb-4 tarjeta" data-aos="fade-down" data-aos-delay="250">
+                <div class="card-container mb-4">
+                    <div class="front bg-light p-4">
+                        <div class="image mb-3">
+                            <img src="@Url.Content("~/Images/Tarjeta/chip.png")" alt="Chip" class="mr-2 imagen-chip-Front">
+                            <img src="@Url.Content("~/Images/Tarjeta/visa.png")" alt="" class="imagen-tipoDeTarjeta-Front">
+                        </div>
+                        <div class="card-number-box mb-4">################</div>
+                        <div class="d-flex justify-content-between">
+                            <div class="box">
+                                <span>card holder</span>
+                                <div class="card-holder-name">full name</div>
+                            </div>
+                            <div class="box">
+                                <span>expires</span>
+                                <div class="expiration">
+                                    <span class="exp-month">mm</span>
+                                    <span class="exp-year">yy</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="back text-light p-1">
+                        <div class="stripe mb-2"></div>
+                        <div class="box">
+                            <span class="cvv-box">cvv</span>
+                            <img src="@Url.Content("~/Images/Tarjeta/visa.png")" alt="" class="imagen-tipoDeTarjeta-Back">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        @section Scripts {
+            <script>
+                // Actualización en tiempo real para los campos del formulario
+                document.querySelector('.card-number-input').oninput = () => {
+                    const cardNumberInput = document.querySelector('.card-number-input').value;
+                    document.querySelector('.card-number-box').innerText = cardNumberInput || '############';
+                };
+
+                document.querySelector('.card-holder-input').oninput = () => {
+                    const cardHolderInput = document.querySelector('.card-holder-input').value;
+                    document.querySelector('.card-holder-name').innerText = cardHolderInput || 'full name';
+                };
+
+                document.querySelector('.month-input').oninput = () => {
+                    document.querySelector('.exp-month').innerText = document.querySelector('.month-input').value;
+                };
+
+                document.querySelector('.year-input').oninput = () => {
+                    document.querySelector('.exp-year').innerText = document.querySelector('.year-input').value;
+                };
+
+                document.querySelector('.cvv-input').onmouseenter = () => {
+                    document.querySelector('.front').style.transform = 'perspective(1000px) rotateY(-180deg)';
+                    document.querySelector('.back').style.transform = 'perspective(1000px) rotateY(0deg)';
+                };
+
+                document.querySelector('.cvv-input').onmouseleave = () => {
+                    document.querySelector('.front').style.transform = 'perspective(1000px) rotateY(0deg)';
+                    document.querySelector('.back').style.transform = 'perspective(1000px) rotateY(180deg)';
+                };
+
+                document.querySelector('.cvv-input').oninput = () => {
+                    document.querySelector('.cvv-box').innerText = "cvv " + document.querySelector('.cvv-input').value;
+                };
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    // Seleccionamos los elementos para actualizar el logo de la tarjeta
+                    const cardNumberInput = document.getElementById('card-number');
+                    const cardLogoFront = document.querySelector('.imagen-tipoDeTarjeta-Front');
+                    const cardLogoBack = document.querySelector('.imagen-tipoDeTarjeta-Back');
+
+                    cardNumberInput.addEventListener('input', function () {
+                        // Tomamos los primeros 8 dígitos del número ingresado
+                        const firstEightDigits = cardNumberInput.value.substring(0, 8);
+
+                        if (firstEightDigits.length === 8) {
+                            fetch(`https://data.handyapi.com/bin/${firstEightDigits}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.Status === "SUCCESS") {
+                                        if (data.Scheme === "VISA") {
+                                            cardLogoFront.src = '@Url.Content("~/Images/Tarjeta/Visa-Logo-2.png")';
+                                            cardLogoBack.src = '@Url.Content("~/Images/Tarjeta/Visa-Logo-2.png")';
+                                        } else if (data.Scheme === "MASTERCARD") {
+                                            cardLogoFront.src = '@Url.Content("~/Images/Tarjeta/Mastercard-logo.1.png")';
+                                            cardLogoBack.src = '@Url.Content("~/Images/Tarjeta/Mastercard-logo.1.png")';
+                                        } else {
+                                            cardLogoFront.src = '';
+                                            cardLogoBack.src = '';
+                                        }
+                                    }
+                                    else {
+                                        cardLogoFront.src = '';
+                                        cardLogoBack.src = '';
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching data:', error);
+                                    cardLogoFront.src = '';
+                                    cardLogoBack.src = '';
+                                });
+                        }
+                        else {
+                            cardLogoFront.src = '';
+                            cardLogoBack.src = '';
+                        }
+                    });
+                });
+            </script>
+
+
+            <script>
+                function onBegin() { console.log("Inicio de edición"); }
+                function onFailure(response) { Swal.fire({ title: "Error!", text: response.responseText, icon: "error" }); }
+                function onSuccess(response) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Pago de reserva hecho",
+                        showConfirmButton: true
+                    }).then(() => {
+                        setTimeout(() => {
+                            window.location.href = '@Url.Action("Index", "EncReserva")';
+                        }, 2000);
+                    });
+                }
+                function onComplete() { console.log("Edición completada"); }
+            </script>
+            @{
+                await Html.RenderPartialAsync("_ValidationScriptsPartial");
+            }
+        }
+    
+</body>
+</html>
+

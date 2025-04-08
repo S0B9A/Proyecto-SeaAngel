@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Security.Claims;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Rotativa.AspNetCore;
 using SeaAngel.Application.DTOs;
@@ -18,10 +19,11 @@ namespace SeaAngel.Web.Controllers
         private readonly IServiceFechaHabitacion _serviceFechaHabitacion;
         private readonly IServicePago _servicePago;
         private readonly IServiceComplementos _serviceComplementos;
-
+        private readonly IServiceUsuario _serviceUsuario;
+        
         public EncReservaController(IServiceEncReserva serviceEncReserva, IServiceCrucero serviceCrucero,
             IServiceFecha serviceFecha, IServiceHabitacion serviceHabitacion,
-            IServiceFechaHabitacion serviceFechaHabitacion, IServicePago servicePago, IServiceComplementos serviceComplementos)
+            IServiceFechaHabitacion serviceFechaHabitacion, IServicePago servicePago, IServiceComplementos serviceComplementos,IServiceUsuario serviceUsuario)
         {
             _serviceEncReserva = serviceEncReserva;
             _serviceCrucero = serviceCrucero;
@@ -30,6 +32,7 @@ namespace SeaAngel.Web.Controllers
             _serviceFechaHabitacion = serviceFechaHabitacion;
             _servicePago = servicePago;
             _serviceComplementos = serviceComplementos;
+            _serviceUsuario = serviceUsuario;
         }
 
         public async Task<IActionResult> GetComplementoByName(string filtro)
@@ -56,7 +59,14 @@ namespace SeaAngel.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            var emailUser = User.FindFirst(ClaimTypes.Email)?.Value;
+            var usuario = await _serviceUsuario.FindByDescription(emailUser.ToString());
+
             var collection = await _serviceEncReserva.ListAsync();
+            if (User.IsInRole("Administrador") == false)
+            {
+                collection= await _serviceEncReserva.ListAsyncUser(usuario.Id);
+            }
             return View(collection);
         }
 
@@ -112,6 +122,10 @@ namespace SeaAngel.Web.Controllers
 
             var precioCamarotes = 0;
             var precioComplementos = 0;
+
+            var emailUser = User.FindFirst(ClaimTypes.Email)?.Value;
+
+            var usuario = await _serviceUsuario.FindByDescription(emailUser.ToString());
 
             try
             {
@@ -213,7 +227,7 @@ namespace SeaAngel.Web.Controllers
 
                 //Agregar datos faltantes a la reserva
                 dto.Id = 0;
-                dto.Idusuario = 1;
+                dto.Idusuario = usuario.Id;
                 dto.FechaCreacion = DateTime.Today;
 
                 dto.PrecioTotalCamorotes = precioCamarotes.ToString();
@@ -523,6 +537,26 @@ namespace SeaAngel.Web.Controllers
             }
         }
 
+        public async Task<ActionResult> Tarjeta()
+        {
+            try
+            {
+                var @numero = await _serviceEncReserva.GetNextNumberReserva();
+                var @object = await _serviceEncReserva.FindByIdAsync(@numero);
+
+                if (@object == null)
+                {
+                    throw new Exception("Reserva no existente");
+
+                }
+                return View(@object);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         // POST: HabitacionController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -532,6 +566,7 @@ namespace SeaAngel.Web.Controllers
 
             try
             {
+                
                 await _serviceEncReserva.UpdateAsync(@id, dto);
                 return RedirectToAction("Index");
 

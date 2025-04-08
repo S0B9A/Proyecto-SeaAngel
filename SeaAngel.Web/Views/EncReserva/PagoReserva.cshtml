@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Pago de Reserva";
     int pasajeros = int.Parse(Model.CantidadDePasajeros);
+    decimal precio = decimal.Parse(Model.PrecioTotal);
 }
 <style>
     :root {
@@ -131,8 +132,9 @@
                         <div class="mb-4">
                             <h5 class="fw-medium mb-3">Seleccione una opción de pago:</h5>
 
-                            <div class="form-check payment-option border rounded p-3 mb-3">
-                                <<input asp-for="NuevoPago.Monto" class="form-check-input" type="radio" id="depositPayment" value="@Model.PrecioTotal">
+
+                            <div class="form-check payment-option border rounded p-3">
+                                <input asp-for="NuevoPago.Monto" class="form-check-input" type="radio" id="fullPayment" value="@precio">
                                 <label class="form-check-label ms-2" for="fullPayment">
                                     <div class="fw-medium">Pagar saldo total</div>
                                     <p class="text-muted small mb-0">
@@ -142,7 +144,7 @@
                             </div>
 
                             <div class="form-check payment-option border rounded p-3">
-                                <<input asp-for="NuevoPago.Monto" class="form-check-input" type="radio" id="depositPayment" value="@(pasajeros * 100)">
+                                <input asp-for="NuevoPago.Monto" class="form-check-input" type="radio" id="depositPayment" value="@(pasajeros * 100)">
                                 <label class="form-check-label ms-2" for="depositPayment">
                                     <div class="fw-medium">Pagar depósito mínimo</div>
                                     <p class="text-muted small mb-0">
@@ -156,6 +158,7 @@
                             </div>
 
 
+
                         </div>
 
                         <hr>
@@ -165,41 +168,65 @@
                             <h5 class="fw-medium mb-3">Información de Tarjeta de Crédito</h5>
 
                             <div class="mb-3">
-                                <<label asp-for="NuevoPago.TitularTarjeta" class="form-label">Nombre del Titular</label>
+                                <div>
+                                    <label asp-for="NuevoPago.TitularTarjeta" class="form-label">Nombre del Titular</label>
+                                </div>
+                                <div>
+                                    <span asp-validation-for="NuevoPago.TitularTarjeta" class="text-danger"></span>
+                                </div>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-person"></i></span>
                                     <input asp-for="NuevoPago.TitularTarjeta" type="text" class="form-control" id="cardholderName"
                                            placeholder="Nombre como aparece en la tarjeta" required>
-                                    <span asp-validation-for="NuevoPago.TitularTarjeta" class="text-danger"></span>
+                                    
                                 </div>
                             </div>
 
                             <div class="mb-3">
-                                <label asp-for="NuevoPago.NumeroTarjeta" class="form-label">Número de Tarjeta</label>
+                                <div>
+                                    <label asp-for="NuevoPago.NumeroTarjeta" class="form-label">Número de Tarjeta</label>
+                                </div>
+                                <div>
+                                    <span asp-validation-for="NuevoPago.NumeroTarjeta" class="text-danger"></span>
+                                </div>
+                                
+                                
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-credit-card"></i></span>
                                     <input asp-for="NuevoPago.NumeroTarjeta" type="text" class="form-control" id="cardNumber"
                                            placeholder="1234 5678 9012 3456" required>
-                                    <span asp-validation-for="NuevoPago.NumeroTarjeta" class="text-danger"></span>
+                                    
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="NuevoPago.FechaExpiracion" class="form-label">Fecha de Caducidad</label>
+                                    <div>
+                                        <label asp-for="NuevoPago.FechaExpiracion" class="form-label">Fecha de Caducidad</label>
+
+                                    </div>
+                                    <div>
+                                        <span asp-validation-for="NuevoPago.FechaExpiracion" class="text-danger"></span>
+                                    </div>
+                                    
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-calendar"></i></span>
                                         <input asp-for="NuevoPago.FechaExpiracion" type="month" class="form-control" id="expiryDate" required />
                                     </div>
-                                    <span asp-validation-for="NuevoPago.FechaExpiracion" class="text-danger"></span>
                                 </div>
 
 
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="NuevoPago.Cvv" class="form-label">Código CVV</label>
+                                    <div>
+                                        <label asp-for="NuevoPago.Cvv" class="form-label">Código CVV</label>
+
+                                    </div>
+                                    <div>
+                                        <span asp-validation-for="NuevoPago.Cvv" class="text-danger"></span>
+
+                                    </div>
                                     <input asp-for="NuevoPago.Cvv" type="text" class="form-control" id="cvv"
                                            placeholder="123" maxlength="4" required>
-                                    <span asp-validation-for="NuevoPago.Cvv" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
