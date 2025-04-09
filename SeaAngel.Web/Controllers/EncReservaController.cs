@@ -537,12 +537,12 @@ namespace SeaAngel.Web.Controllers
             }
         }
 
-        public async Task<ActionResult> Tarjeta()
+        public async Task<ActionResult> Tarjeta(int id)
         {
             try
             {
                 var @numero = await _serviceEncReserva.GetNextNumberReserva();
-                var @object = await _serviceEncReserva.FindByIdAsync(@numero);
+                var @object = await _serviceEncReserva.FindByIdAsync(id);
 
                 if (@object == null)
                 {
@@ -566,7 +566,18 @@ namespace SeaAngel.Web.Controllers
 
             try
             {
-                
+                if (dto.NuevoPago.FechaExpiracion != null)
+                {
+                    var fechaExpiracion = dto.NuevoPago.FechaExpiracion;
+                    var fechaActual = DateTime.Now;
+
+                    // Comparar solo mes y año
+                    if (fechaExpiracion.Year < fechaActual.Year ||
+                        (fechaExpiracion.Year == fechaActual.Year && fechaExpiracion.Month < fechaActual.Month))
+                    {
+                        return BadRequest($"Tarjeta con fecha de expiración expirada");
+                    }
+                }
                 await _serviceEncReserva.UpdateAsync(@id, dto);
                 return RedirectToAction("Index");
 
