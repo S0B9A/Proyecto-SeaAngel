@@ -21,8 +21,7 @@ namespace SeaAngel.Application.DTOs
         public string MetodoPago { get; set; } = null!;
 
         [Required(ErrorMessage = "{0} es un dato requerido")]
-        [StringLength(16, MinimumLength = 13, ErrorMessage = "{0} debe tener entre 13 y 16 dígitos.")]
-        [RegularExpression(@"^\d+$", ErrorMessage = "{0} solo puede contener números.")]
+        [StringLength(19, MinimumLength = 19, ErrorMessage = "{0} debe tener 16 dígitos.")]
         public string NumeroTarjeta { get; set; } = null!;
 
         [Required(ErrorMessage = "La fecha de expiración es obligatoria.")]

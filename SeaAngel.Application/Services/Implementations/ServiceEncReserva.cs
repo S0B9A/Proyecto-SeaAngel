@@ -69,7 +69,7 @@ namespace SeaAngel.Application.Services.Implementations
             {
                 var @object = await _repository.FindByIdAsync(id);
 
-                decimal monto = Convert.ToDecimal(@object.PrecioTotal);
+                decimal monto = Convert.ToDecimal(dto.NuevoPago.Monto);
 
                 var nuevoPago = new Pago
                 {
@@ -78,7 +78,7 @@ namespace SeaAngel.Application.Services.Implementations
                     Monto= monto,
                     FechaPago = DateTime.Today,
                     MetodoPago = "Tarjeta de Crédito",
-                    NumeroTarjeta = dto.NuevoPago.NumeroTarjeta,
+                    NumeroTarjeta = dto.NuevoPago.NumeroTarjeta.Replace(" ", ""),
                     FechaExpiracion = dto.NuevoPago.FechaExpiracion,
                     Cvv= dto.NuevoPago.Cvv,
                     TitularTarjeta= dto.NuevoPago.TitularTarjeta,
@@ -87,7 +87,7 @@ namespace SeaAngel.Application.Services.Implementations
 
                 @object.Pago.Add(nuevoPago);
 
-                var precioPendiente = Convert.ToDecimal(@object.PrecioPendiente);
+                var precioPendiente = Convert.ToDecimal(@object.PrecioTotal);
                 @object.PrecioPendiente = (precioPendiente - monto).ToString();
 
                 precioPendiente = Convert.ToDecimal(@object.PrecioPendiente);
@@ -95,6 +95,7 @@ namespace SeaAngel.Application.Services.Implementations
                 if (precioPendiente == 0)
                 {
                     @object.Estado = "Pagado";
+                    @object.FechaCreacion = DateTime.Today;
                 }
                 else
                 {
