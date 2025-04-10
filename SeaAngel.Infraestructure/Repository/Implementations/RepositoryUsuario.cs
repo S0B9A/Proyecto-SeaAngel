@@ -34,15 +34,22 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
             _context.SaveChanges();
         }
 
-        public async Task<ICollection<Usuario>> FindByDescriptionAsync(string description)
+        public async Task<ICollection<Usuario>> FindByDescriptionList(string description)
         {
             var collection = await _context
                                          .Set<Usuario>()
-                                         .Where(p => p.Nombre.Contains(description))
+                                         .Where(p => p.CorreoElectronico.Contains(description))
                                          .ToListAsync();
             return collection;
         }
+        public async Task<Usuario> FindByDescription(string description)
+        {
+            var @object = await _context
+                         .Set<Usuario>()
+                         .FirstOrDefaultAsync(p => p.CorreoElectronico.Contains(description));
 
+            return @object;
+        }
         public async Task<Usuario> FindByIdAsync(string id)
         {
             var @object = await _context.Set<Usuario>().FindAsync(id);

@@ -10,6 +10,7 @@ namespace SeaAngel.Application.Services.Interfaces
     public interface IServiceEncReserva
     {
         Task<ICollection<EncReservaDTO>> ListAsync();
+        Task<ICollection<EncReservaDTO>> ListAsyncUser(int id);
         Task<EncReservaDTO> FindByIdAsync(int id);
         Task<int> AddAsync(EncReservaDTO dto);
         Task<int> GetNextNumberReserva();

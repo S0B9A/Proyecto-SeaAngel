@@ -50,7 +50,21 @@ namespace SeaAngel.Infraestructure.Repository.Implementations
                                 .ToListAsync();
             return collection;
         }
-
+        public async Task<ICollection<EncReserva>> ListAsyncUser(int id)
+        {
+            var collection = await _context.Set<EncReserva>()
+                .Include(Reserva => Reserva.ReservaComplementos)
+                                .ThenInclude(Complementos => Complementos.IdcomplementoNavigation)
+                                .Include(x => x.IdusuarioNavigation)
+                                .Include(x => x.IdfechaNavigation)
+                                .ThenInclude(x => x.IdcruceroNavigation)
+                                .ThenInclude(Itinerario => Itinerario.Itinerario)
+                                .ThenInclude(puerto => puerto.IdpuertoNavigation)
+                                .Where(x => x.Idusuario == id)
+                                .AsNoTracking()
+                                .ToListAsync();
+            return collection;
+        }
         public async Task<int> AddAsync(EncReserva entity)
         {
 

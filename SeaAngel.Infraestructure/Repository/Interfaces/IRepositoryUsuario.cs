@@ -9,7 +9,8 @@ namespace SeaAngel.Infraestructure.Repository.Interfaces
 {
     public interface IRepositoryUsuario
     {
-        Task<ICollection<Usuario>> FindByDescriptionAsync(string description);
+        Task<ICollection<Usuario>> FindByDescriptionList(string description);
+        Task<Usuario> FindByDescription(string description);
         Task<ICollection<Usuario>> ListAsync();
         Task<Usuario> FindByIdAsync(string id);
 

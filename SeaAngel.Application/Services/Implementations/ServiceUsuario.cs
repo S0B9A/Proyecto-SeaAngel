@@ -46,13 +46,18 @@ namespace SeaAngel.Application.Services.Implementations
         }
 
 
-        public async Task<ICollection<UsuarioDTO>> FindByDescriptionAsync(string description)
+        public async Task<ICollection<UsuarioDTO>> FindByDescriptionList(string description)
         {
-            var list = await _repository.FindByDescriptionAsync(description);
+            var list = await _repository.FindByDescriptionList(description);
             var collection = _mapper.Map<ICollection<UsuarioDTO>>(list);
             return collection;
         }
-
+        public async Task<UsuarioDTO> FindByDescription(string description)
+        {
+            var @object = await _repository.FindByDescription(description);
+            var objectMapped = _mapper.Map<UsuarioDTO>(@object);
+            return objectMapped;
+        }
         public async Task<UsuarioDTO> FindByIdAsync(string id)
         {
             var @object = await _repository.FindByIdAsync(id);

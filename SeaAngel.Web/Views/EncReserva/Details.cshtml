@@ -1,284 +1,896 @@
 ﻿@model SeaAngel.Application.DTOs.EncReservaDTO
 
 @{
-    ViewData["Title"] = "Factura";
+    ViewData["Title"] = "Details";
 }
 
-<div class="container factura my-5">
-    <div class="invoice border rounded p-5 bg-white shadow-lg">
-        <!-- ENCABEZADO MEJORADO -->
-        <div class="text-center mb-5">
-            <div class="d-flex justify-content-center align-items-center mb-3">
-                <div class="header-line bg-primary"></div>
-                <h2 class="fw-bold text-uppercase text-primary mx-3 mb-0">Factura de Reserva</h2>
-                <div class="header-line bg-primary"></div>
+<div class="invoice-container">
+    <div class="invoice-document">
+        <!-- HEADER SECTION -->
+        <header class="invoice-header">
+            <div class="logo-container">
+                <img src="@Url.Content("~/Images/Logo-Azul.png")" alt="Logo SeaAngel" class="logo">
             </div>
-            <p class="text-muted fs-5">Gracias por elegir SeaAngel Cruceros</p>
-            <img src="https://via.placeholder.com/200x60?text=SeaAngel" alt="Logo SeaAngel" class="img-fluid mb-3" style="max-height: 60px;">
+            <div class="invoice-title">
+                <h1>Factura</h1>
+                <div class="invoice-number">#@Model.Id</div>
+            </div>
+        </header>
+
+        <!-- STATUS BAR -->
+        <div class="status-bar @(Model.Estado == "Pagado" ? "status-paid" : "status-pending")">
+            <div class="status-icon">
+                <i class="bi @(Model.Estado == "Pagado" ? "bi-check-circle-fill" : "bi-clock")"></i>
+            </div>
+            <div class="status-text">
+                <span>Estado: @Model.Estado</span>
+                @if (Model.Estado == "Pendiente")
+                {
+                    <span>Fecha límite: @(Model.IdfechaNavigation.FechaLimitePago?.ToString("dd/MM/yyyy") ?? "N/A")</span>
+                }
+            </div>
         </div>
 
-        <!-- DATOS DEL CLIENTE Y FACTURA - MEJORADO -->
-        <div class="row g-4 mb-4">
-            <div class="col-md-6">
-                <div class="card p-4 border-0 shadow-sm h-100" style="border-left: 4px solid #4b86b4;">
-                    <h5 class="fw-bold text-secondary mb-4 d-flex align-items-center">
-                        <i class="fas fa-user-circle me-2 text-primary"></i>Datos del Cliente
-                    </h5>
-                    <div class="d-flex mb-3">
-                        <span class="fw-semibold me-2" style="min-width: 100px;">Nombre:</span>
-                        <span>@Model.IdusuarioNavigation.Nombre</span>
+        <!-- MAIN CONTENT -->
+        <div class="invoice-body">
+            <!-- TWO COLUMN SECTION: CUSTOMER AND CRUISE INFO -->
+            <div class="info-columns">
+                <!-- CUSTOMER INFO -->
+                <section class="info-column">
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <i class="bi bi-person"></i>
+                            <h2>Cliente</h2>
+                        </div>
+                        <div class="info-card-body">
+                            <div class="info-item">
+                                <span class="info-label">Nombre:</span>
+                                <span class="info-value">@Model.IdusuarioNavigation.Nombre</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Teléfono:</span>
+                                <span class="info-value">@Model.IdusuarioNavigation.Telefono</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Correo:</span>
+                                <span class="info-value">@Model.IdusuarioNavigation.CorreoElectronico</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-flex mb-3">
-                        <span class="fw-semibold me-2" style="min-width: 100px;">Teléfono:</span>
-                        <span>@Model.IdusuarioNavigation.Telefono</span>
+                </section>
+
+                <!-- CRUISE INFO -->
+                <section class="info-column">
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <i class="bi bi-ship"></i>
+                            <h2>Crucero</h2>
+                        </div>
+                        <div class="info-card-body">
+                            <div class="info-item">
+                                <span class="info-label">Nombre:</span>
+                                <span class="info-value">@Model.IdfechaNavigation.IdcruceroNavigation.Nombre</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Inicio:</span>
+                                <span class="info-value">@Model.IdfechaNavigation.FechaInicio?.ToString("dd/MM/yyyy")</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Duración:</span>
+                                <span class="info-value">@Model.IdfechaNavigation.IdcruceroNavigation.CantDias días</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Fin:</span>
+                                <span class="info-value">@(Model.IdfechaNavigation.FechaInicio?.AddDays(Model.IdfechaNavigation.IdcruceroNavigation.CantDias).ToString("dd/MM/yyyy") ?? "N/A")</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="d-flex">
-                        <span class="fw-semibold me-2" style="min-width: 100px;">Correo:</span>
-                        <span>@Model.IdusuarioNavigation.CorreoElectronico</span>
-                    </div>
-                </div>
+                </section>
             </div>
-            <div class="col-md-6">
-                <div class="card p-4 border-0 shadow-sm h-100" style="border-left: 4px solid #4b86b4;">
-                    <h5 class="fw-bold text-secondary mb-4 d-flex align-items-center">
-                        <i class="fas fa-file-invoice me-2 text-primary"></i>Detalles de la Factura
-                    </h5>
-                    <div class="d-flex mb-3">
-                        <span class="fw-semibold me-2" style="min-width: 120px;">#Reserva:</span>
-                        <span class="fw-bold">@Model.Id</span>
-                    </div>
-                    <div class="d-flex mb-3">
-                        <span class="fw-semibold me-2" style="min-width: 120px;">Fecha:</span>
-                        <span>@(Model.FechaCreacion?.ToString("dd/MM/yyyy") ?? "N/A")</span>
-                    </div>
-                    @if (Model.Estado == "Pendiente")
+
+            <!-- ITINERARY SECTION -->
+            <section class="itinerary-section">
+                <div class="section-header">
+                    <i class="bi bi-map"></i>
+                    <h2>Itinerario</h2>
+                </div>
+                <div class="itinerary-timeline">
+                    @foreach (var itinerario in Model.IdfechaNavigation.IdcruceroNavigation.Itinerario)
                     {
-                        <div class="alert alert-warning mt-3 d-flex align-items-center">
-                            <i class="fas fa-exclamation-circle me-2"></i>
-                            <div>
-                                <p class="mb-1"><strong>Estado de Pago:</strong> Pendiente</p>
-                                <p class="mb-0"><strong>Fecha límite:</strong> @(Model.FechaPago?.ToString("dd/MM/yyyy") ?? "N/A")</p>
+                        <div class="timeline-item">
+                            <div class="timeline-marker">
+                                <span class="day-number">@itinerario.Dia</span>
+                            </div>
+                            <div class="timeline-content">
+                                <h3 class="port-name">@itinerario.IdpuertoNavigation.Nombre</h3>
+                                <p class="port-description">@itinerario.Descripcion</p>
                             </div>
                         </div>
                     }
-                    else
-                    {
-                        <div class="d-flex align-items-center mt-3">
-                            <span class="fw-semibold me-2" style="min-width: 120px;">Estado:</span>
-                            <span class="badge bg-success py-2 px-3">
-                                <i class="fas fa-check-circle me-1"></i>@Model.Estado
-                            </span>
-                        </div>
-                    }
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- INFORMACIÓN DEL CRUCERO - MEJORADO -->
-        <div class="card p-4 mt-4 border-0 shadow-sm" style="border-left: 4px solid #4b86b4;">
-            <h5 class="fw-bold text-secondary mb-4 d-flex align-items-center">
-                <i class="fas fa-ship me-2 text-primary"></i>Datos del Crucero
-            </h5>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="d-flex mb-3">
-                        <span class="fw-semibold me-2" style="min-width: 140px;">Nombre:</span>
-                        <span>@Model.IdfechaNavigation.IdcruceroNavigation.Nombre</span>
-                    </div>
-                    <div class="d-flex mb-3">
-                        <span class="fw-semibold me-2" style="min-width: 140px;">Fecha Inicio:</span>
-                        <span>@Model.IdfechaNavigation.FechaInicio?.ToString("dd/MM/yyyy")</span>
-                    </div>
-                    <div class="d-flex mb-3">
-                        <span class="fw-semibold me-2" style="min-width: 140px;">Duración:</span>
-                        <span>@Model.IdfechaNavigation.IdcruceroNavigation.CantDias días</span>
-                    </div>
-                    <div class="d-flex">
-                        <span class="fw-semibold me-2" style="min-width: 140px;">Fecha Fin:</span>
-                        <span>@(Model.IdfechaNavigation.FechaInicio?.AddDays(Model.IdfechaNavigation.IdcruceroNavigation.CantDias).ToString("dd/MM/yyyy") ?? "N/A")</span>
-                    </div>
+            <!-- COMPLEMENTOS SECTION -->
+            <section class="complements-section">
+                <div class="section-header">
+                    <i class="bi bi-plus-circle"></i>
+                    <h2>Complementos</h2>
                 </div>
-                <div class="col-md-6">
-                    <h5 class="fw-bold text-secondary mb-3 d-flex align-items-center">
-                        <i class="fas fa-map-marked-alt me-2 text-primary"></i>Itinerario
-                    </h5>
-                    <div class="itinerary-container">
-                        @foreach (var itinerario in Model.IdfechaNavigation.IdcruceroNavigation.Itinerario)
-                        {
-                            <div class="itinerary-item mb-3 pb-3 border-bottom">
-                                <div class="d-flex align-items-center mb-1">
-                                    <span class="badge bg-primary me-2">Día @itinerario.Dia</span>
-                                    <strong>@itinerario.IdpuertoNavigation.Nombre</strong>
-                                </div>
-                                <p class="mb-0">@itinerario.Descripcion</p>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- TABLA DE COMPLEMENTOS - MEJORADA -->
-        <div class="card p-4 mt-4 border-0 shadow-sm" style="border-left: 4px solid #4b86b4;">
-            <h5 class="fw-bold text-secondary mb-4 d-flex align-items-center">
-                <i class="fas fa-concierge-bell me-2 text-primary"></i>Complementos Adicionales
-            </h5>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="bg-primary text-white">
-                        <tr>
-                            <th class="text-start">Servicio</th>
-                            <th class="text-end">Precio Unitario</th>
-                            <th class="text-center">Cantidad</th>
-                            <th class="text-end">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                @if (Model.ReservaComplementos.Any())
+                {
+                    <div class="complements-grid">
                         @foreach (var complemento in Model.ReservaComplementos)
                         {
-                            <tr>
-                                <td class="text-start">@complemento.IdcomplementoNavigation.Nombre</td>
-                                <td class="text-end">$@complemento.Precio.ToString("N2")</td>
-                                <td class="text-center">@complemento.Cantidad</td>
-                                <td class="text-end">$@((complemento.Precio * complemento.Cantidad).ToString("N2"))</td>
-                            </tr>
+                            <div class="complement-card">
+                                <div class="complement-icon">
+                                    <i class="bi bi-star"></i>
+                                </div>
+                                <div class="complement-details">
+                                    <h3>@complemento.IdcomplementoNavigation.Nombre</h3>
+                                    <div class="complement-meta">
+                                        <span class="complement-quantity">Cantidad: @complemento.Cantidad</span>
+                                        <span class="complement-price">$@complemento.Precio.ToString("N2")</span>
+                                    </div>
+                                    <div class="complement-total">
+                                        <span>Total:</span>
+                                        <span>$@((complemento.Precio * complemento.Cantidad).ToString("N2"))</span>
+                                    </div>
+                                </div>
+                            </div>
                         }
-                        @if (!Model.ReservaComplementos.Any())
-                        {
-                            <tr>
-                                <td colspan="4" class="text-center py-4 text-muted">No se han seleccionado complementos adicionales</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="no-complements">
+                        <i class="bi bi-info-circle"></i>
+                        <p>No se han seleccionado complementos adicionales</p>
+                    </div>
+                }
+            </section>
+
+            <!-- PAYMENT DETAILS SECTION -->
+            <section class="payment-details">
+                <div class="section-header">
+                    <i class="bi bi-credit-card"></i>
+                    <h2>Detalles del Pago</h2>
+                </div>
+
+                <div class="payment-summary">
+                    <div class="summary-row">
+                        <div class="summary-item">
+                            <span class="summary-label">Pasajeros</span>
+                            <span class="summary-value">@Model.CantidadDePasajeros</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Camarotes</span>
+                            <span class="summary-value">@Model.CantidadDeCamarotes</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Precio/Camarote</span>
+                            <span class="summary-value">$@Model.PrecioTotalCamorotes.ToString()</span>
+                        </div>
+                    </div>
+
+                    <div class="calculation-row">
+                        <div class="calculation-item">
+                            <span class="calculation-label">Subtotal</span>
+                            <span class="calculation-value">$@Model.Subtotal.ToString()</span>
+                        </div>
+                        <div class="calculation-item">
+                            <span class="calculation-label">Impuesto</span>
+                            <span class="calculation-value">$@Model.Impuesto.ToString()</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
 
-        <!-- DETALLES DEL PAGO - MEJORADO -->
-        <div class="card p-4 mt-4 border-0 shadow-sm" style="border-left: 4px solid #4b86b4;">
-            <h5 class="fw-bold text-secondary mb-4 d-flex align-items-center">
-                <i class="fas fa-money-bill-wave me-2 text-primary"></i>Detalles del Pago
-            </h5>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="bg-primary text-white">
-                        <tr>
-                            <th class="text-center">Pasajeros</th>
-                            <th class="text-center">Camarotes</th>
-                            <th class="text-end">Precio/Camarote</th>
-                            <th class="text-end">Subtotal</th>
-                            <th class="text-end">Impuesto</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-center">@Model.CantidadDePasajeros</td>
-                            <td class="text-center">@Model.CantidadDeCamarotes</td>
-                            <td class="text-end">$@(Model.PrecioTotalCamorotes?.ToString() ?? "0")</td>
-                            <td class="text-end">$@(Model.Subtotal?.ToString() ?? "0")</td>
-                            <td class="text-end">$@(Model.Impuesto?.ToString() ?? "0")</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <!-- TOTAL SECTION -->
+        <div class="total-section">
+            <div class="total-container d-flex">
+                <div class="total-row me-5">
+                    <span class="total-label">Monto Total</span>
+                    <span class="total-value">$@Model.PrecioTotal.ToString()</span>
+                </div>
 
-        <!-- SECCIÓN DEL TOTAL FINAL - MEJORADA -->
-        <div class="total-section text-center my-5 p-4 bg-light rounded">
-            <h4 class="fw-bold text-uppercase mb-3">Total a Pagar</h4>
-            <p class="display-5 fw-bold text-primary">$@(Model.PrecioTotal?.ToString() ?? "0")</p>
+                <div class="total-row">
+                    <span class="total-label">Monto Pendiente</span>
+                    <span class="total-value">$@Model.PrecioPendiente.ToString()</span>
+                </div>
+            </div>
+
             @if (Model.Estado == "Pendiente")
             {
-                <p class="text-muted mt-2">
-                    <i class="fas fa-info-circle me-1"></i> El pago debe realizarse antes de la fecha límite indicada
-                </p>
+                <div class="payment-notice">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <p>El pago debe realizarse antes de la fecha límite: @Model.IdfechaNavigation.FechaLimitePago?.ToString("dd/MM/yyyy")</p>
+                </div>
             }
         </div>
 
-        <!-- BOTÓN PARA IMPRIMIR - MEJORADO -->
-        <div class="text-center mt-4">
-            <a class="btn btn-primary btn-lg px-4 py-2" asp-action="GenerarPDF" asp-route-id="@Model.Id">
-                <i class="fas fa-download me-2"></i>Descargar factura PDF
-            </a>
+        <!-- ACTIONS SECTION -->
+        <div class="actions-section">
+            @if (Model.Estado == "Pendiente")
+            {
+                <a class="action-button payment-button" asp-action="Tarjeta" asp-route-id="@Model.Id">
+                    <i class="bi bi-credit-card"></i>
+                    <span>Pagar Factura</span>
+                </a>
+            }
+            else
+            {
+                <a class="action-button download-button" asp-action="GenerarPDF" asp-route-id="@Model.Id">
+                    <i class="bi bi-download"></i>
+                    <span>Descargar PDF</span>
+                </a>
+            }
         </div>
+
+        <!-- FOOTER -->
+        <footer class="invoice-footer">
+            <div class="footer-logo">
+                <span>SeaAngel Cruceros</span>
+            </div>
+            <div class="footer-text">
+                <p>Gracias por elegir nuestros servicios</p>
+            </div>
+        </footer>
     </div>
 </div>
 
 <style>
+    :root {
+        --bs-primary: #0d6efd;
+        --bs-primary-rgb: 13, 110, 253;
+        --bs-secondary: #b45309;
+        --bs-secondary-rgb: 180, 83, 9;
+        --bs-dark-blue: #1e3a8a;
+        --bs-light-blue: #dbeafe;
+        --bs-amber: #b45309;
+        --bs-amber-light: #fef3c7;
+        --border-radius: 12px;
+        --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s ease;
+    }
+
     body {
-        background-color: #f8f9fa;
+        background-color: #f5f7fa;
         font-family: 'Poppins', sans-serif;
+        color: #333;
+        line-height: 1.6;
     }
 
-    .factura {
-        margin-top: 50px;
-    }
-
-    .invoice {
+    /* CONTAINER STYLES */
+    .invoice-container {
         max-width: 1000px;
-        margin: auto;
-        border: 1px solid #dee2e6;
+        margin: 40px auto;
+        margin-top:100px;
+        padding: 0 20px;
     }
 
-    .header-line {
-        height: 2px;
-        width: 50px;
+    .invoice-document {
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
     }
 
-    .card {
-        border-radius: 8px;
-        transition: transform 0.2s;
+    /* HEADER STYLES */
+    .invoice-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 30px;
+        background: linear-gradient(135deg, var(--bs-light-blue) 0%, white 100%);
+        border-bottom: 1px solid #eaeaea;
     }
 
-        .card:hover {
-            transform: translateY(-2px);
+    .logo-container {
+        flex: 0 0 auto;
+    }
+
+    .logo {
+        max-height: 108px;
+        transition: var(--transition);
+    }
+
+        .logo:hover {
+            transform: scale(1.05);
         }
 
-    .table th {
+    .invoice-title {
+        text-align: right;
+    }
+
+        .invoice-title h1 {
+            color: var(--bs-dark-blue);
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+    .invoice-number {
+        color: var(--bs-secondary);
+        font-size: 1.2rem;
         font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        letter-spacing: 0.5px;
     }
 
-    .badge {
-        font-size: 0.85rem;
-        font-weight: 500;
-        padding: 0.35rem 0.75rem;
+    /* STATUS BAR */
+    .status-bar {
+        display: flex;
+        align-items: center;
+        padding: 15px 30px;
+        color: white;
     }
 
-    .total-section {
-        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-        border-top: 4px solid #4b86b4;
+    .status-paid {
+        background-color: #10b981;
     }
 
-    .itinerary-container {
+    .status-pending {
+        background-color: var(--bs-amber);
+    }
+
+    .status-icon {
+        margin-right: 15px;
+        font-size: 1.5rem;
+    }
+
+    .status-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+        .status-text span:first-child {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+    /* MAIN CONTENT */
+    .invoice-body {
+        padding: 30px;
+    }
+
+    /* INFO COLUMNS */
+    .info-columns {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .info-card {
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        height: 100%;
+        transition: var(--transition);
+        border-top: 4px solid var(--bs-primary);
+    }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow);
+        }
+
+    .info-card-header {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        background-color: var(--bs-light-blue);
+        border-bottom: 1px solid #eaeaea;
+    }
+
+        .info-card-header i {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            color: var(--bs-primary);
+        }
+
+        .info-card-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: var(--bs-dark-blue);
+            font-weight: 600;
+        }
+
+    .info-card-body {
+        padding: 20px;
+    }
+
+    .info-item {
+        margin-bottom: 12px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+
+    .info-label {
+        font-weight: 600;
+        color: #666;
+        min-width: 100px;
+        margin-right: 10px;
+    }
+
+    .info-value {
+        color: #333;
+    }
+
+    /* SECTION HEADERS */
+    .section-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--bs-light-blue);
+    }
+
+        .section-header i {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            color: var(--bs-primary);
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--bs-dark-blue);
+            font-weight: 600;
+        }
+
+    /* ITINERARY SECTION */
+    .itinerary-section {
+        margin-bottom: 30px;
+        background-color: white;
+        border-radius: var(--border-radius);
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .itinerary-timeline {
+        position: relative;
         max-height: 300px;
         overflow-y: auto;
         padding-right: 10px;
     }
 
-    .itinerary-item:last-child {
-        border-bottom: none !important;
-        margin-bottom: 0 !important;
-        padding-bottom: 0 !important;
+        .itinerary-timeline::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .itinerary-timeline::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .itinerary-timeline::-webkit-scrollbar-thumb {
+            background: var(--bs-primary);
+            border-radius: 10px;
+        }
+
+    .timeline-item {
+        display: flex;
+        margin-bottom: 20px;
+        position: relative;
     }
 
-    .alert-warning {
-        background-color: rgba(255, 193, 7, 0.15);
-        border-left: 4px solid #ffc107;
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 30px;
+            bottom: -20px;
+            width: 2px;
+            background-color: var(--bs-light-blue);
+        }
+
+        .timeline-item:last-child::before {
+            display: none;
+        }
+
+    .timeline-marker {
+        flex: 0 0 30px;
+        height: 30px;
+        background-color: var(--bs-primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        z-index: 1;
     }
 
+    .day-number {
+        color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .timeline-content {
+        flex: 1;
+        background-color: var(--bs-light-blue);
+        padding: 15px;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+    }
+
+        .timeline-content:hover {
+            transform: translateX(5px);
+            background-color: #c7e1ff;
+        }
+
+    .port-name {
+        margin: 0 0 5px 0;
+        font-size: 1.1rem;
+        color: var(--bs-dark-blue);
+    }
+
+    .port-description {
+        margin: 0;
+        color: #555;
+        font-size: 0.95rem;
+    }
+
+    /* COMPLEMENTS SECTION */
+    .complements-section {
+        margin-bottom: 30px;
+        background-color: white;
+        border-radius: var(--border-radius);
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .complements-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+    }
+
+    .complement-card {
+        display: flex;
+        background-color: #f9f9f9;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        transition: var(--transition);
+    }
+
+        .complement-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+    .complement-icon {
+        flex: 0 0 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--bs-primary);
+        color: white;
+        font-size: 1.5rem;
+    }
+
+    .complement-details {
+        flex: 1;
+        padding: 15px;
+    }
+
+        .complement-details h3 {
+            margin: 0 0 10px 0;
+            font-size: 1rem;
+            color: var(--bs-dark-blue);
+        }
+
+    .complement-meta {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .complement-total {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 600;
+        color: var(--bs-secondary);
+    }
+
+    .no-complements {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 30px;
+        background-color: #f9f9f9;
+        border-radius: var(--border-radius);
+        color: #666;
+    }
+
+        .no-complements i {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            color: var(--bs-primary);
+        }
+
+    /* PAYMENT DETAILS */
+    .payment-details {
+        margin-bottom: 30px;
+        background-color: white;
+        border-radius: var(--border-radius);
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .payment-summary {
+        background-color: #f9f9f9;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+    }
+
+    .summary-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        border-bottom: 1px solid #eaeaea;
+    }
+
+    .summary-item {
+        padding: 15px;
+        text-align: center;
+        border-right: 1px solid #eaeaea;
+    }
+
+        .summary-item:last-child {
+            border-right: none;
+        }
+
+    .summary-label {
+        display: block;
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 5px;
+    }
+
+    .summary-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--bs-dark-blue);
+    }
+
+    .calculation-row {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .calculation-item {
+        padding: 15px 20px;
+        text-align: right;
+        min-width: 150px;
+    }
+
+    .calculation-label {
+        display: block;
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 5px;
+    }
+
+    .calculation-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--bs-dark-blue);
+    }
+
+    /* TOTAL SECTION */
+    .total-section {
+        background: linear-gradient(135deg, var(--bs-light-blue) 0%, white 100%);
+        padding: 30px;
+        border-top: 1px solid #eaeaea;
+        border-bottom: 1px solid #eaeaea;
+    }
+
+   
+
+    .total-row {
+        display: flex;
+        flex-direction: column; /* Para mantener el label arriba y el valor abajo */
+        justify-content: center;
+        padding: 15px;
+        width:40px;
+        border: 1px solid #eaeaea;
+        border-radius: 10px;
+        background-color: #f8f9fa;
+        flex: 1;
+    }
+
+        .total-row:last-child {
+            border-bottom: none;
+            background-color: var(--bs-light-blue);
+        }
+
+    .total-label {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--bs-dark-blue);
+    }
+
+    .total-value {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--bs-secondary);
+    }
+
+    .payment-notice {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+        padding: 10px;
+        background-color: var(--bs-amber-light);
+        border-radius: var(--border-radius);
+        color: var(--bs-amber);
+    }
+
+        .payment-notice i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+    /* ACTIONS SECTION */
+    .actions-section {
+        padding: 30px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .action-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 30px;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+        .action-button i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+    .payment-button {
+        background-color: var(--bs-primary);
+        color: white;
+    }
+
+        .payment-button:hover {
+            background-color: #0b5ed7;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(13, 110, 253, 0.3);
+        }
+
+    .download-button {
+        background-color: var(--bs-secondary);
+        color: white;
+    }
+
+        .download-button:hover {
+            background-color: #a34908;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(180, 83, 9, 0.3);
+        }
+
+    /* FOOTER */
+    .invoice-footer {
+        padding: 20px 30px;
+        background-color: var(--bs-dark-blue);
+        color: white;
+        text-align: center;
+    }
+
+    .footer-logo {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .footer-text {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+    /* RESPONSIVE STYLES */
     @@media (max-width: 768px) {
-        .invoice {
-            padding: 20px !important;
+        .invoice-header
+
+    {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .invoice-title {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .info-columns {
+        grid-template-columns: 1fr;
+    }
+
+    .complements-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-row {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-item {
+        border-right: none;
+        border-bottom: 1px solid #eaeaea;
+    }
+
+        .summary-item:last-child {
+            border-bottom: none;
         }
 
-        .display-5 {
-            font-size: 2.5rem;
-        }
+    .calculation-row {
+        flex-direction: column;
+    }
+
+    .calculation-item {
+        text-align: left;
+        padding: 10px 15px;
+    }
+
+    .total-container {
+        max-width: 100%;
+    }
+
     }
 </style>
 
-<!-- Incluir Font Awesome para los iconos -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<!-- Incluir Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+
+<!-- Script para animaciones -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animación para los elementos de la línea de tiempo
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        timelineItems.forEach((item, index) => {
+            setTimeout(() => {
+                item.style.opacity = '1';
+                item.style.transform = 'translateX(0)';
+            }, 100 * index);
+        });
+
+        // Animación para las tarjetas de complementos
+        const complementCards = document.querySelectorAll('.complement-card');
+        complementCards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100 * index);
+        });
+
+        // Animación para el logo
+        const logo = document.querySelector('.logo');
+        if (logo) {
+            setInterval(() => {
+                logo.classList.toggle('pulse');
+            }, 2000);
+        }
+    });
+</script>
