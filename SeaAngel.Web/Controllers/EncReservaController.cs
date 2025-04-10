@@ -335,6 +335,13 @@ namespace SeaAngel.Web.Controllers
 
                 listaDeVerificaciones.Add(nuevoItem);
 
+
+                if(cantidad > habitacion.CapacidadMax)
+                {
+                    TempData.Keep();
+                    return BadRequest($"Tu cantidad de habitaciones: {habitacion.Nombre} supera la cantidad maxima de la habitacion.");
+                }
+
                 // Convalidaciones esenciales
                 if (listaDeVerificaciones.Count > 0)
                 {

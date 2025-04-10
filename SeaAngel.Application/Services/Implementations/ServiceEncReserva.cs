@@ -87,7 +87,7 @@ namespace SeaAngel.Application.Services.Implementations
 
                 @object.Pago.Add(nuevoPago);
 
-                var precioPendiente = Convert.ToDecimal(@object.PrecioTotal);
+                var precioPendiente = Convert.ToDecimal(@object.PrecioPendiente);
                 @object.PrecioPendiente = (precioPendiente - monto).ToString();
 
                 precioPendiente = Convert.ToDecimal(@object.PrecioPendiente);
@@ -95,7 +95,7 @@ namespace SeaAngel.Application.Services.Implementations
                 if (precioPendiente == 0)
                 {
                     @object.Estado = "Pagado";
-                    @object.FechaCreacion = DateTime.Today;
+                    @object.FechaPago = DateTime.Today;
                 }
                 else
                 {

@@ -102,7 +102,7 @@
             {
                 <div class="list-item">
                     <span class="item-name">@item.NombreHabitacion</span>
-                    <span class="item-price">₡@item.Precio.ToString("N2")</span>
+                    <span class="item-price">$@item.Precio.ToString("N2")</span>
                 </div>
             }
         }
@@ -110,7 +110,7 @@
         {
             <div class="list-item">
                 <span class="item-name">No hay habitaciones seleccionadas</span>
-                <span class="item-price">₡0.00</span>
+                <span class="item-price">$0.00</span>
             </div>
         }
     </div>
@@ -124,7 +124,7 @@
             {
                 <div class="list-item">
                     <span class="item-name">@item.NombreComplemento</span>
-                    <span class="item-price">₡@item.Precio.ToString("N2")</span>
+                    <span class="item-price">$@item.Precio.ToString("N2")</span>
                 </div>
             }
         }
@@ -132,7 +132,7 @@
         {
             <div class="list-item">
                 <span class="item-name">No hay complementos seleccionados</span>
-                <span class="item-price">₡0.00</span>
+                <span class="item-price">$0.00</span>
             </div>
         }
     </div>
@@ -143,20 +143,19 @@
         var totalComplementos = Model.ReservaComplementos?.Sum(x => x.Precio) ?? 0;
         var subtotal = totalHabitaciones + totalComplementos;
         var impuestos = subtotal * 0.13m; // 13% de impuestos
-        var tasasPortuarias = subtotal * 0.02m; // 2% de tasas portuarias (ajustable)
-        var totalGeneral = subtotal + impuestos + tasasPortuarias;
+        var totalGeneral = subtotal + impuestos;
     }
 
     <!-- Subtotal -->
     <div class="total">
         <div>
-            <strong>Subtotal Habitaciones:</strong> ₡@totalHabitaciones.ToString("N2")
+            <strong>Subtotal Habitaciones:</strong> $@totalHabitaciones.ToString("N2")
         </div>
         <div>
-            <strong>Subtotal Complementos:</strong> ₡@totalComplementos.ToString("N2")
+            <strong>Subtotal Complementos:</strong> $@totalComplementos.ToString("N2")
         </div>
         <div>
-            <strong>Subtotal:</strong> ₡@subtotal.ToString("N2")
+            <strong>Subtotal:</strong> $@subtotal.ToString("N2")
         </div>
     </div>
 
@@ -164,11 +163,7 @@
     <div class="taxes">
         <div class="list-item">
             <span class="item-name">Impuestos (13%)</span>
-            <span class="item-price">₡@impuestos.ToString("N2")</span>
-        </div>
-        <div class="list-item">
-            <span class="item-name">Tasas portuarias (2%)</span>
-            <span class="item-price">₡@tasasPortuarias.ToString("N2")</span>
+            <span class="item-price">$@impuestos.ToString("N2")</span>
         </div>
     </div>
 
@@ -176,7 +171,7 @@
     <div class="grand-total">
         <div class="list-item">
             <span class="item-name">PRECIO TOTAL:</span>
-            <span class="item-price">₡@totalGeneral.ToString("N2")</span>
+            <span class="item-price">$@totalGeneral.ToString("N2")</span>
         </div>
     </div>
 </div>
