@@ -249,7 +249,7 @@ namespace SeaAngel.Web.Controllers
                 dto.Subtotal = subtotal.ToString("F2");
                 dto.Impuesto = (subtotal * 0.13).ToString("F2");
                 dto.PrecioTotal = (subtotal + (subtotal * 0.13)).ToString("F2");
-                dto.PrecioPendiente = (precioCamarotes + (precioCamarotes * 0.13)).ToString("F2");
+                dto.PrecioPendiente = dto.PrecioTotal;
 
                 dto.DetPasajero = listaPasajero;
                 dto.DetReserva = lista;
