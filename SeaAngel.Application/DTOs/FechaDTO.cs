@@ -12,14 +12,14 @@ namespace SeaAngel.Application.DTOs
     {
         public int Id { get; set; }
 
-        public int? Idcrucero { get; set; }
+        public int Idcrucero { get; set; }
 
         [Required(ErrorMessage = "{0} es un dato requerido")]
         public DateOnly? FechaInicio { get; set; }
         [Required(ErrorMessage = "{0} es un dato requerido")]
         public DateOnly? FechaLimitePago { get; set; }
 
-        public virtual CruceroDTO? IdcruceroNavigation { get; set; }
+        public virtual CruceroDTO IdcruceroNavigation { get; set; }
 
         public virtual List<FechaHabitacionDTO> FechaHabitacion { get; set; } = null!;
     }

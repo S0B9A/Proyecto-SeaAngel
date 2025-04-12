@@ -48,9 +48,21 @@ namespace SeaAngel.Web.Controllers
         {
             var reserva = await _serviceEncReserva.FindByIdAsync(id);
 
+            // Ordenar la lista del itinerario por día
+            var crucero = await _serviceCrucero.FindByIdAsync(reserva.IdfechaNavigation.IdcruceroNavigation.Id);
+            var itinerarioOrdenado = crucero.Itinerario.OrderBy(i => i.Dia).ToList();
+
+            // Obtener el primer y el último puerto
+            var primerPuerto = itinerarioOrdenado.FirstOrDefault();
+            var ultimoPuerto = itinerarioOrdenado.LastOrDefault();
+
+            reserva.PuertoInicio = primerPuerto;
+            reserva.PuertoFinal = ultimoPuerto;
+
             return new ViewAsPdf("Factura", reserva)  // "Factura" es la vista para el PDF
             {
-                FileName = $"Factura_Reserva_{id}.pdf"
+                FileName = $"Factura_Reserva_{id}.pdf",
+                CustomSwitches = "--footer-right \"Página [page] de [toPage]\" --footer-font-size \"10\" --footer-spacing 5"
             };
         }
 

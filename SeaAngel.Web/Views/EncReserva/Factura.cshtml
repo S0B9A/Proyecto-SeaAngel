@@ -3,6 +3,10 @@
     ViewData["Title"] = "Factura";
     Layout = null;
 }
+@{
+    decimal totalComplementos = 0;
+}
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -30,12 +34,12 @@
 
         .header {
             margin-bottom: 20px;
-            border-bottom: 2px solid #005f73;
+            border-bottom: 2px solid #0d6efd;
             padding-bottom: 10px;
         }
 
             .header h1 {
-                color: #005f73;
+                color: #0d6efd;
                 margin: 0;
                 padding: 0;
                 font-size: 24px;
@@ -63,7 +67,7 @@
         }
 
         .box-title {
-            background-color: #005f73;
+            background-color: #0d6efd;
             color: white;
             padding: 5px 10px;
             font-weight: bold;
@@ -114,7 +118,7 @@
         }
 
         .section-title {
-            background-color: #005f73;
+            background-color: #0d6efd;
             color: white;
             padding: 5px 10px;
             font-weight: bold;
@@ -129,7 +133,7 @@
         }
 
             table th {
-                background-color: #005f73;
+                background-color: #0d6efd;
                 color: white;
                 padding: 5px 8px;
                 text-align: left;
@@ -175,7 +179,7 @@
 
         .grand-total {
             font-size: 16px;
-            color: #005f73;
+            color: #0d6efd;
             margin-top: 10px;
             padding-top: 10px;
             border-top: 1px solid #ddd;
@@ -200,8 +204,10 @@
     <div class="container">
         <div class="header">
             <h1>FACTURA #@Model.Id</h1>
+            <img src="@Url.Content("~/Images/Logo-Azul.png")" alt="Logo SeaAngel" class="logo" style="width: 80px; height: auto;">
             <div class="company-info">
                 <strong>SeaAngel Cruceros</strong><br>
+                <strong>Resumen de Reserva – Crucero: @Model.IdfechaNavigation.IdcruceroNavigation.Nombre</strong><br>
                 Documento generado: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")
             </div>
         </div>
@@ -267,6 +273,15 @@
                 <div class="info-value">@(Model.IdfechaNavigation.FechaInicio?.AddDays(Model.IdfechaNavigation.IdcruceroNavigation.CantDias).ToString("dd/MM/yyyy") ?? "N/A")</div>
             </div>
 
+            <div class="info-row">
+                <div class="info-label">Puerto de inicio:</div>
+                <div class="info-value">@Model.PuertoInicio.IdpuertoNavigation.Nombre</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Puerto de salida:</div>
+                <div class="info-value">@Model.PuertoFinal.IdpuertoNavigation.Nombre</div>
+            </div>
+
             <table>
                 <thead>
                     <tr>
@@ -288,6 +303,54 @@
             </table>
         </div>
 
+
+
+        <div class="section no-break">
+            <div class="section-title">HABITACIONES RESERVADAS</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th class="text-center">Cantidad de pasajeros</th>
+                        <th class="text-right">Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var habitacion in Model.DetReserva)
+                    {
+                        <tr>
+                            <td>@habitacion.IdhabitacionNavigation.Nombre</td>
+                            <td class="text-center">@habitacion.CantidadPasajeros</td>
+                            <td class="text-right">$@habitacion.Precio.ToString("N2")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="section no-break">
+            <div class="section-title">DETALLES DEL PAGO DE HABITACIONES</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Concepto</th>
+                        <th class="text-center">Cantidad de habitaciones</th>
+                        <th class="text-right">Precio total por habitaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Habitaciones</td>
+                        <td class="text-center">@Model.CantidadDeCamarotes</td>
+                        <td class="text-right">$@Model.PrecioTotalCamorotes.ToString()</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
         <div class="section no-break">
             <div class="section-title">COMPLEMENTOS RESERVADOS</div>
             <table>
@@ -302,6 +365,9 @@
                 <tbody>
                     @foreach (var complemento in Model.ReservaComplementos)
                     {
+                        var subtotal = complemento.Precio * complemento.Cantidad;
+                        totalComplementos += subtotal;
+
                         <tr>
                             <td>@complemento.IdcomplementoNavigation.Nombre</td>
                             <td class="text-right">$@complemento.Precio.ToString("N2")</td>
@@ -309,34 +375,33 @@
                             <td class="text-right">$@((complemento.Precio * complemento.Cantidad).ToString("N2"))</td>
                         </tr>
                     }
+                    <tr>
+                    </tr>
                 </tbody>
             </table>
-        </div>
 
-        <div class="section no-break">
-            <div class="section-title">DETALLES DEL PAGO</div>
+            <div class="section-title">DETALLES DEL PAGO DE COMPLEMENTOS </div>
             <table>
                 <thead>
                     <tr>
                         <th>Concepto</th>
-                        <th class="text-center">Cantidad</th>
-                        <th class="text-right">Precio Unitario</th>
-                        <th class="text-right">Subtotal</th>
+                        <th class="text-right">Total</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <!-- Mostrar el total final -->
                     <tr>
-                        <td>Camarotes</td>
-                        <td class="text-center">@Model.CantidadDeCamarotes</td>
-                        <td class="text-right">$@Model.PrecioTotalCamorotes.ToString()</td>
-                        <td class="text-right">$@Model.Subtotal.ToString()</td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" class="text-right"><strong>Impuestos (18%)</strong></td>
-                        <td class="text-right">$@Model.Impuesto.ToString()</td>
+                        <td><strong>Complementos</strong></td>
+                        <td class="text-right"><strong>$@totalComplementos.ToString("N2")</strong></td>
                     </tr>
                 </tbody>
             </table>
+
+
+        </div>
+
+        <div class="section no-break">
+            <div class="section-title">DETALLES DEL PAGO</div>
 
             <div class="total-section no-break">
                 <div class="total-row">

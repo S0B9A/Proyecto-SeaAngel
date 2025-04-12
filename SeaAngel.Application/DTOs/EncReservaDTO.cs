@@ -61,7 +61,7 @@ namespace SeaAngel.Application.DTOs
         public virtual List<DetReservaDTO> DetReserva { get; set; } = null!;
 
         [ValidateNever]
-        public virtual FechaDTO? IdfechaNavigation { get; set; }
+        public virtual FechaDTO IdfechaNavigation { get; set; }
 
         [ValidateNever]
         public virtual UsuarioDTO? IdusuarioNavigation { get; set; }
@@ -74,5 +74,10 @@ namespace SeaAngel.Application.DTOs
 
         [NotMapped] // Solo si usás Entity Framework y no querés mapearlo a DB
         public PagoDTO NuevoPago { get; set; } = new PagoDTO();
+
+        [ValidateNever]
+        public ItinerarioDTO PuertoInicio { get; set; } = default!;
+        [ValidateNever]
+        public ItinerarioDTO PuertoFinal { get; set; } = default!;
     }
 }
