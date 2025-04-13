@@ -38,22 +38,23 @@ namespace SeaAngel.Application.DTOs
         [RegularExpression(@"^\d+$", ErrorMessage = "Cantidad de habitaciones deber númerico")]
         public string CantidadDeCamarotes { get; set; }
 
-
+        [DisplayFormat(DataFormatString = "{0:C}")]
         [ValidateNever]
         public string? PrecioTotalCamorotes { get; set; }
 
-
+        [DisplayFormat(DataFormatString = "{0:C}")]
         [ValidateNever]
         public string? Subtotal { get; set; }
 
-
+        [DisplayFormat(DataFormatString = "{0:C}")]
         [ValidateNever]
         public string? Impuesto { get; set; }
 
-
+        [DisplayFormat(DataFormatString = "{0:C}")]
         [ValidateNever]
         public string? PrecioTotal { get; set; }
         [ValidateNever]
+        [DisplayFormat(DataFormatString = "{0:C}")]
         public string? PrecioPendiente { get; set; }
 
         public virtual List<DetPasajeroDTO> DetPasajero { get; set; } = null!;

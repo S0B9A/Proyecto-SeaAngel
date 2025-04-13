@@ -20,6 +20,8 @@ namespace SeaAngel.Application.DTOs
 
         [Required(ErrorMessage = "{0} es un dato requerido")]
         [Range(1, int.MaxValue, ErrorMessage = "{0} debe ser un número positivo")]
+
+        [DisplayFormat(DataFormatString = "{0:C}")]
         public decimal Precio { get; set; }
 
         [Required(ErrorMessage = "{0} es un dato requerido")]

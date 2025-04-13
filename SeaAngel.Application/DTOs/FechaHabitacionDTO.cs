@@ -19,6 +19,7 @@ namespace SeaAngel.Application.DTOs
         [Display(Name = "Habitación")]
         public string NombreHabitacion { get; set; } = default!;
 
+        [DisplayFormat(DataFormatString = "{0:C}")]
         public decimal? Precio { get; set; }
 
         [ValidateNever]

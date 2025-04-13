@@ -24,6 +24,7 @@ namespace SeaAngel.Application.DTOs
         public int CantDisponible { get; set; }
 
         [ValidateNever]
+        [DisplayFormat(DataFormatString = "{0:C}")]
         public decimal? PrecioHabitacion { get; set; }
 
         [JsonIgnore]

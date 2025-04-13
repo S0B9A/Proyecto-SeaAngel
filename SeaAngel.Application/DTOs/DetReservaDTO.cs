@@ -28,6 +28,7 @@ namespace SeaAngel.Application.DTOs
         public int CantidadPasajeros { get; set; }
 
         [Display(Name = "Precio")]
+        [DisplayFormat(DataFormatString = "{0:C}")]
         public decimal Precio { get; set; }
 
         [JsonIgnore]
