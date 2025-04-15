@@ -67,18 +67,27 @@ namespace SeaAngel.Web.Controllers
         }
 
 
-        // GET:EncReservaController
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(DateTime? fechaInicio)
         {
             var emailUser = User.FindFirst(ClaimTypes.Email)?.Value;
             var usuario = await _serviceUsuario.FindByDescription(emailUser.ToString());
 
             var collection = await _serviceEncReserva.ListAsync();
-            if (User.IsInRole("Administrador") == false)
+
+            if (!User.IsInRole("Administrador"))
             {
-                collection= await _serviceEncReserva.ListAsyncUser(usuario.Id);
+                collection = await _serviceEncReserva.ListAsyncUser(usuario.Id);
             }
+
+            // Filtro por fecha si está presente
+            if (fechaInicio.HasValue)
+            {
+                collection = collection
+                    .Where(r => r.FechaCreacion.HasValue && r.FechaCreacion.Value.Date >= fechaInicio.Value.Date)
+                    .ToList();
+            }
+
             return View(collection);
         }
 

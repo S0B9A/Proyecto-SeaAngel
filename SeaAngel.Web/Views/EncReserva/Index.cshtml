@@ -2,6 +2,17 @@
 @{
     ViewData["Title"] = "Cruise Reservations";
 }
+@{
+    // Intentamos obtener la fecha del querystring
+    var fechaInicioRaw = Context.Request.Query["fechaInicio"].ToString();
+    string fechaInicioValor = "";
+
+    if (DateTime.TryParse(fechaInicioRaw, out DateTime fechaInicioDate))
+    {
+        // Convertimos al formato requerido por input type="date"
+        fechaInicioValor = fechaInicioDate.ToString("dd/MM/yyyy");
+    }
+}
 
 
 <!-- Scripts y estilos adicionales -->
@@ -37,6 +48,32 @@
                 </div>
             </div>
         </div>
+
+
+        <form method="get" class="fecha-filter-form">
+            <div class="fecha-filter-container">
+                <label for="fechaInicio" class="fecha-filter-label">
+                    <i class="fas fa-filter"></i> Filtrar desde:
+                </label>
+
+                <div class="fecha-input-wrapper">
+                    <i class="fas fa-calendar-alt fecha-icon"></i>
+                    <input type="text"
+                           name="fechaInicio"
+                           id="fechaInicio"
+                           class="fecha-input"
+                           placeholder="dd/mm/aaaa"
+                           value="@fechaInicioValor"
+                           pattern="\d{2}/\d{2}/\d{4}"
+                           title="Por favor ingrese una fecha en formato dd/mm/aaaa" />
+                </div>
+
+                <button type="submit" class="fecha-filter-btn">
+                    <i class="fas fa-search"></i>
+                    <span>Filtrar</span>
+                </button>
+            </div>
+        </form>
 
         <div class="row barcos-container mx-5" id="barcosGrid">
             @foreach (var item in Model)
@@ -483,9 +520,147 @@
             color: var(--white);
         }
 
+    /* Estilo base del formulario */
+    .fecha-filter-form {
+        display: flex;
+        justify-content: center;
+        margin: 2rem 0;
+    }
+
+    /* Contenedor principal */
+    .fecha-filter-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background: white;
+        padding: 10px 20px;
+        border-radius: 50px;
+        box-shadow: 0 5px 25px rgba(0, 52, 107, 0.1);
+        border: 1px solid rgba(0, 98, 204, 0.15);
+        transition: all 0.3s ease;
+    }
+
+        .fecha-filter-container:hover {
+            box-shadow: 0 8px 30px rgba(0, 52, 107, 0.15);
+            border-color: rgba(0, 98, 204, 0.25);
+        }
+
+    /* Etiqueta */
+    .fecha-filter-label {
+        margin-bottom: 0;
+        font-weight: 600;
+        color: #00346b;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.95rem;
+    }
+
+        .fecha-filter-label i {
+            color: #ff6b35;
+        }
+
+    /* Contenedor del input */
+    .fecha-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Icono del calendario */
+    .fecha-icon {
+        position: absolute;
+        left: 15px;
+        color: #0062cc;
+        font-size: 1rem;
+    }
+
+    /* Input de fecha */
+    .fecha-input {
+        padding: 10px 15px 10px 40px;
+        border: 2px solid #e6f7ff;
+        border-radius: 30px;
+        font-size: 0.95rem;
+        color: #00346b;
+        width: 150px;
+        transition: all 0.3s ease;
+        background-color: #f8fafc;
+    }
+
+        .fecha-input:focus {
+            outline: none;
+            border-color: #0062cc;
+            box-shadow: 0 0 0 3px rgba(0, 98, 204, 0.1);
+            background-color: #fff;
+        }
+
+        .fecha-input::placeholder {
+            color: #a8b6c4;
+        }
+
+    /* Botón de filtrar */
+    .fecha-filter-btn {
+        background: linear-gradient(135deg, #0062cc, #004a99);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 3px 10px rgba(0, 98, 204, 0.2);
+    }
+
+        .fecha-filter-btn:hover {
+            background: linear-gradient(135deg, #0052b3, #003d7a);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 98, 204, 0.3);
+        }
+
+        .fecha-filter-btn:active {
+            transform: translateY(0);
+        }
+
+    .ripple-effect {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        transform: scale(0);
+        animation: ripple 0.6s linear;
+        pointer-events: none;
+    }
+
 </style>
 
+
 <script>
+
+       document.getElementById('fechaInicio').addEventListener('input', function(e) {
+        // Añadir automáticamente las barras
+        var input = e.target.value.replace(/\D/g, '').substring(0, 8);
+        if(input.length > 4) {
+            input = input.substring(0, 2) + '/' + input.substring(2, 4) + '/' + input.substring(4);
+        } else if(input.length > 2) {
+            input = input.substring(0, 2) + '/' + input.substring(2);
+        }
+        e.target.value = input;
+    });
+
+    // Convertir al formato yyyy-MM-dd antes de enviar
+    document.querySelector('form').addEventListener('submit', function(e) {
+        var dateInput = document.getElementById('fechaInicio');
+        if(dateInput.value) {
+            var parts = dateInput.value.split('/');
+            if(parts.length === 3) {
+                dateInput.value = parts[2] + '-' + parts[1] + '-' + parts[0];
+            }
+        }
+    });
+
     $(document).ready(function() {
         // Trigger animation when scrolling to elements
         $('.barco-item').waypoint(function() {
