@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SeaAngel.Application.DTOs;
 using SeaAngel.Application.Services.Implementations;
 using SeaAngel.Application.Services.Interfaces;
 
@@ -45,6 +46,32 @@ namespace SeaAngel.Web.Controllers
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
+            }
+        }
+
+        // GET: ComplementosController/Create
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+
+        // POST: ComplementosController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(ComplementosDTO dto)
+        {
+            try
+            {
+                //Agregar datos faltantes al complemento
+                dto.Id = 0;
+
+                await _serviceComplementos.AddAsync(dto);
+
+                return RedirectToAction("Mantenimiento");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

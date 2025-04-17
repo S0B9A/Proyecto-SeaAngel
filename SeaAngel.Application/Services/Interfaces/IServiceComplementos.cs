@@ -12,5 +12,6 @@ namespace SeaAngel.Application.Services.Interfaces
         Task<ICollection<ComplementosDTO>> ListAsync();
         Task<ComplementosDTO> FindByIdAsync(int id);
         Task<ICollection<ComplementosDTO>> FindByNameAsync(string nombre);
+        Task<int> AddAsync(ComplementosDTO dto);
     }
 }

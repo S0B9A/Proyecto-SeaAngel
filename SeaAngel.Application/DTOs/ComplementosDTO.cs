@@ -4,12 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using SeaAngel.Infraestructure.Models;
 
 namespace SeaAngel.Application.DTOs
 {
     public class ComplementosDTO
     {
+        [ValidateNever]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "{0} es un dato requerido")]
@@ -25,6 +27,7 @@ namespace SeaAngel.Application.DTOs
         [Required(ErrorMessage = "{0} es un dato requerido")]
         public string Aplicacion { get; set; } = null!;
 
+        [ValidateNever]
         public virtual List<ReservaComplementosDTO> ReservaComplementos { get; set; } = null!;
     }
 }
