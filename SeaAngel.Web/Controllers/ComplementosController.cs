@@ -74,5 +74,35 @@ namespace SeaAngel.Web.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        // GET: ComplementosController/Edit/5
+        public async Task<IActionResult> Edit(int id)
+        {
+            var complemento = await _serviceComplementos.FindByIdAsync(id);
+
+            if (complemento == null)
+            {
+                return NotFound("El complemento no existe.");
+            }
+
+            return View(complemento);
+        }
+
+        // POST: ComplementoController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, ComplementosDTO dto)
+        {
+            try
+            {
+                await _serviceComplementos.UpdateAsync(id, dto);
+                return RedirectToAction("Mantenimiento");
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

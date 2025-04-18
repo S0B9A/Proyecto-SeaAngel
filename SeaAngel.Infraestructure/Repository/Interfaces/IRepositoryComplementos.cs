@@ -13,5 +13,6 @@ namespace SeaAngel.Infraestructure.Repository.Interfaces
         Task<Complementos> FindByIdAsync(int id);
         Task<ICollection<Complementos>> FindByNameAsync(string nombre);
         Task<int> AddAsync(Complementos entity);
+        Task UpdateAsync(Complementos entity);
     }
 }
