@@ -183,6 +183,7 @@ namespace SeaAngel.Web.Controllers
             itinerarioDTO.Idpuerto = Puerto.Id;
             itinerarioDTO.Dia = dia;
             itinerarioDTO.Descripcion = descripcion;
+            itinerarioDTO.NombrePuerto = Puerto.Nombre;
 
             //Agregar al carrito de compras
             lista.Add(itinerarioDTO);
