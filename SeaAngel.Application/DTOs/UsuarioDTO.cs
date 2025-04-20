@@ -22,6 +22,7 @@ namespace SeaAngel.Application.DTOs
         public string Pais { get; set; } = null!;
 
         public string Contraseña { get; set; } = null!;
+        public string ConfirmarContraseña { get; set; } = null!;
 
         public string Rol { get; set; } = null!;
 

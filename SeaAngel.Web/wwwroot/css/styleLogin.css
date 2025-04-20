@@ -1,0 +1,178 @@
+﻿:root {
+    --primary-color: #011E4B;
+    --secondary-color: #92692A;
+    --white: #ffffff;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    background: linear-gradient(to bottom right, var(--primary-color), var(--secondary-color), var(--primary-color));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+html, body {
+    height: 100%;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 450px;
+    padding: 30px;
+    border-radius: 10px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(30px);
+    opacity: 0.2;
+    mix-blend-mode: multiply;
+    animation: blob 7s infinite;
+}
+
+.blob-1 {
+    width: 160px;
+    height: 160px;
+    background-color: var(--primary-color);
+    top: -40px;
+    left: -40px;
+}
+
+.blob-2 {
+    width: 160px;
+    height: 160px;
+    background-color: var(--secondary-color);
+    bottom: -40px;
+    right: -40px;
+    animation-delay: 2s;
+}
+
+.blob-3 {
+    width: 160px;
+    height: 160px;
+    background-color: var(--primary-color);
+    top: 80px;
+    right: 40px;
+    animation-delay: 4s;
+}
+
+@keyframes blob {
+    0% {
+        transform: translate(0px, 0px) scale(1);
+    }
+
+    33% {
+        transform: translate(30px, -50px) scale(1.1);
+    }
+
+    66% {
+        transform: translate(-20px, 20px) scale(0.9);
+    }
+
+    100% {
+        transform: translate(0px, 0px) scale(1);
+    }
+}
+
+.card {
+    backdrop-filter: blur(8px);
+    background-color: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.card-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    height: 4px;
+    padding: 0;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+
+
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+}
+
+    .password-toggle:hover {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+.text-gold {
+    color: var(--secondary-color);
+}
+
+    .text-gold:hover {
+        color: rgba(146, 105, 42, 0.8);
+    }
+
+.spinner-border {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15em;
+}
+
+.invalid-feedback {
+    color: #ff6b6b;
+}
+
+.form-check-input {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+    .form-check-input:checked {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+    }
+
+.form-check-label {
+    color: var(--white);
+    font-size: 0.9rem;
+}
+
+.login-animation {
+    animation: pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    to {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+}

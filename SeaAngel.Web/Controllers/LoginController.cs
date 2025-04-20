@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using SeaAngel.Application.Services.Interfaces;
 using SeaAngel.Web.Util;
 using System.Security.Claims;
+using SeaAngel.Application.Services.Implementations;
+using SeaAngel.Application.DTOs;
 
 namespace SeaAngel.Web.Controllers
 {
@@ -30,6 +32,42 @@ namespace SeaAngel.Web.Controllers
             return View();
         }
 
+
+        [HttpGet]
+        public IActionResult Log()
+        {
+            if (TempData.ContainsKey("Mensaje"))
+            {
+                ViewBag.NotificationMessage = TempData["Mensaje"];
+            }
+            return View();
+        }
+
+        public async Task<IActionResult> Register()
+        {
+            return View();
+        }
+ 
+        // POST: BarcoController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(UsuarioDTO dto)
+        {
+          
+            try
+            {
+                
+                dto.Id = 0;
+
+                await _serviceUsuario.AddAsync(dto);
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
