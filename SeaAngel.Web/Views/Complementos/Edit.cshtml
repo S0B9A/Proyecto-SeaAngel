@@ -1,0 +1,160 @@
+﻿@model SeaAngel.Application.DTOs.ComplementosDTO
+@using System.Text.Json
+@using SeaAngel.Application.DTOs
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<style>
+    ul.ui-autocomplete {
+        z-index: 1100;
+    }
+
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    .card-header-blue {
+        background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
+        color: white;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
+        border: none;
+        transition: all 0.3s;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+    .custom-card {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s;
+        box-shadow: 0 10px 20px rgba(0, 51, 102, 0.1);
+    }
+
+    .form-label {
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #0d47a1;
+    }
+
+    .modal-content {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+</style>
+
+<div class="container d-flex justify-content-center align-items-center" style="margin-top: 100px; margin-bottom: 50px;">
+    <div class="card custom-card shadow-lg p-0 rounded-3" style="width: 75%;">
+        <!-- Card Header -->
+        <div class="card-header card-header-blue py-4 px-4">
+            <h3 class="mb-0 text-center fw-bold">
+                <i class="fas fa-gift me-2"></i>Registrar Nuevo Complemento
+            </h3>
+            <p class="text-center text-white-50 mb-0 mt-2">Complete los detalles para agregar un nuevo complemento</p>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body p-4">
+            <form asp-action="Edit" id="myForm" data-ajax="true" data-ajax-method="POST" data-ajax-begin="onBegin" data-ajax-failure="onFailure" data-ajax-success="onSuccess"
+                  data-ajax-complete="onComplete" asp-antiforgery="true" enctype="multipart/form-data">
+                <div class="row g-4">
+                    <!-- Columna Izquierda -->
+                    <div class="col-md-6">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3 p-3 bg-danger-subtle rounded border-start border-danger border-4"></div>
+
+                        <div class="card shadow-sm rounded-3 mb-4 border-0">
+                            <div class="card-body p-4" style="background-color: #f8f9fa;">
+                                <h5 class="card-title mb-3 pb-2 border-bottom text-primary">
+                                    <i class="fas fa-info-circle me-2"></i>Información Básica
+                                </h5>
+
+                                <div class="form-group mb-4">
+                                    <label asp-for="Nombre" class="form-label">
+                                        <i class="fas fa-tag me-1"></i>Nombre del complemento
+                                    </label>
+                                    <input asp-for="Nombre" class="form-control form-control-lg rounded-3 border-0 shadow-sm" id="Nombre" placeholder="Ingrese el nombre del complemento" style="height: 50px;" />
+                                    <span asp-validation-for="Nombre" class="text-danger mt-1 d-block"></span>
+                                </div>
+
+                                <div class="form-group mb-4">
+                                    <label asp-for="Descripcion" class="form-label">
+                                        <i class="fas fa-align-left me-1"></i>Descripción
+                                    </label>
+                                    <input asp-for="Descripcion" class="form-control rounded-3 border-0 shadow-sm" placeholder="Descripción detallada del complemento" style="height: 50px;" />
+                                    <span asp-validation-for="Descripcion" class="text-danger mt-1 d-block"></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label asp-for="Precio" class="form-label">
+                                        <i class="fas fa-money-bill-wave me-1"></i> </i>Precio
+                                    </label>
+                                    <input asp-for="Precio" class="form-control rounded-3 border-0 shadow-sm" placeholder="Precio del complemento" style="height: 50px;" />
+                                    <span asp-validation-for="Precio" class="text-danger mt-1 d-block"></span>
+                                </div>
+
+                                <div class="form-group mb-4">
+                                    <label asp-for="Aplicacion" class="form-label">
+                                        <i class="fas fa-align-left me-1"></i>Aplicación del complemento
+                                    </label>
+                                    <select asp-for="Aplicacion" class="form-control rounded-3 border-0 shadow-sm" style="height: 50px;">
+                                        <option value="Por Huésped" selected>Por Huésped</option>
+                                        <option value="Por Camarote">Por Camarote</option>
+                                    </select>
+                                    <span asp-validation-for="Aplicacion" class="text-danger mt-1 d-block"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                    <a asp-action="Mantenimineto" class="btn btn-outline-secondary rounded-3 py-2 px-4">
+                        <i class="fas fa-arrow-left me-2"></i>Regresar al listado
+                    </a>
+                    <input type="submit" value="Guardar Complemento" class="btn btn-primary rounded-3 py-2 px-4" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <script>
+        function onBegin() { console.log("onBegin"); }
+
+        function onFailure(response) { Swal.fire({ title: "Error!", text: response.responseText, icon: "error" }); }
+
+        function onSuccess(response) {
+              $("#myForm")[0].reset();
+              Swal.fire({
+                  icon: "success",
+                  title: "Complemento editado",
+                  showConfirmButton: true
+              }).then(() => {
+                  setTimeout(() => {
+                      window.location.href = '@Url.Action("Mantenimiento", "Complementos")';
+                  }, 2000); // Espera 2000 ms (2 segundos) antes de redirigir
+              });
+        }
+
+        function onComplete() { console.log("Fin del proceso");}
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

@@ -14,6 +14,9 @@
                                 @Html.DisplayNameFor(model => model.Idpuerto)
                             </th>
                             <th>
+                                @Html.DisplayNameFor(model => model.NombrePuerto)
+                            </th>
+                            <th>
                                 @Html.DisplayNameFor(model => model.Dia)
                             </th>
                             <th>
@@ -31,6 +34,9 @@
                                     <tr>
                                         <td align="center">
                                             @Html.DisplayFor(modelItem => item.Idpuerto)
+                                        </td>
+                                        <td align="left">
+                                            @Html.DisplayFor(modelItem => item.NombrePuerto)
                                         </td>
                                         <td align="left">
                                             @Html.DisplayFor(modelItem => item.Dia)

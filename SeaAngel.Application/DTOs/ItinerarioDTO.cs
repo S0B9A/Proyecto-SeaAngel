@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,11 @@ namespace SeaAngel.Application.DTOs
 
         public int Idcrucero { get; set; }
 
+        [Display(Name = "Codigo de puerto")]
         public int Idpuerto { get; set; }
+
+        [Display(Name = "Puerto")]
+        public string NombrePuerto { get; set; } = default!;
 
         public int Dia { get; set; }
 

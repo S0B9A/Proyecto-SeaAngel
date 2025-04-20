@@ -106,7 +106,7 @@ builder.Services.AddDbContext<SeanAngelContext>(options =>
 });
 
 
-// ?? Aquí configuras Rotativa
+// Aquí configuras Rotativa
 Rotativa.AspNetCore.RotativaConfiguration.Setup("wwwroot", "Rotativa");
 
 //***************

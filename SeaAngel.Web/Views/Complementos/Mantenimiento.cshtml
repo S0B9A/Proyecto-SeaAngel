@@ -1,17 +1,7 @@
-﻿@model IEnumerable<SeaAngel.Application.DTOs.EncReservaDTO>
-@{
-    ViewData["Title"] = "Cruise Reservations";
-}
-@{
-    // Intentamos obtener la fecha del querystring
-    var fechaInicioRaw = Context.Request.Query["fechaInicio"].ToString();
-    string fechaInicioValor = "";
+﻿@model IEnumerable<SeaAngel.Application.DTOs.ComplementosDTO>
 
-    if (DateTime.TryParse(fechaInicioRaw, out DateTime fechaInicioDate))
-    {
-        // Convertimos al formato requerido por input type="date"
-        fechaInicioValor = fechaInicioDate.ToString("dd/MM/yyyy");
-    }
+@{
+    ViewData["Title"] = "Mantenimiento";
 }
 
 
@@ -25,113 +15,80 @@
 <div class="main-background">
     <div class="container py-5">
         <!-- Encabezado con animación y decoración naval -->
-
         <div class="header-section mb-5 mt-5 animate__animated animate__fadeIn">
             <div class="d-flex align-items-center justify-content-center mb-2">
-                <div class="anchor-decoration"><i class="fas fa-clipboard-list"></i></div>
-                <h1 class="text-center mx-4 mb-0">Reservaciones</h1>
-                <div class="anchor-decoration"><i class="fas fa-clipboard-list"></i></div>
+                <div class="anchor-decoration"><i class="fas fa-anchor"></i></div>
+                <h1 class="text-center mx-4 mb-0">Mantenimiento de Complementos</h1>
+                <div class="anchor-decoration"><i class="fas fa-anchor"></i></div>
             </div>
             <div class="compass-divider">
                 <i class="fas fa-compass compass-icon"></i>
             </div>
         </div>
 
+        <!-- Panel de acciones con efecto flotante - Sin buscador -->
+        <div class="action-panel mb-5 animate__animated animate__fadeInUp">
+            <div class="d-flex justify-content-center align-items-center">
+                <a asp-action="Create" class="btn btn-create d-flex align-items-center">
+                    <div class="btn-content">
+                        <i class="fas fa-gift"></i>
+                        <span>Añadir Complemento</span>
+                    </div>
+                    <div class="btn-ripple"></div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Contador de estadísticas -->
         <div class="stats-container mb-5 animate__animated animate__fadeInUp">
             <div class="stat-box">
                 <div class="stat-icon">
-                    <i class="fas fa-clipboard-list"></i>
+                    <i class="fas fa-gift"></i>
                 </div>
                 <div class="stat-info">
                     <h3 class="stat-count">@Model.Count()</h3>
-                    <p class="stat-label">Total de reservas</p>
+                    <p class="stat-label">Total de complementos</p>
                 </div>
             </div>
         </div>
 
-
-        <form method="get" class="fecha-filter-form">
-            <div class="fecha-filter-container">
-                <label for="fechaInicio" class="fecha-filter-label">
-                    <i class="fas fa-filter"></i> Filtrar desde:
-                </label>
-
-                <div class="fecha-input-wrapper">
-                    <i class="fas fa-calendar-alt fecha-icon"></i>
-                    <input type="text"
-                           name="fechaInicio"
-                           id="fechaInicio"
-                           class="fecha-input"
-                           placeholder="dd/mm/aaaa"
-                           value="@fechaInicioValor"
-                           pattern="\d{2}/\d{2}/\d{4}"
-                           title="Por favor ingrese una fecha en formato dd/mm/aaaa" />
-                </div>
-
-                <button type="submit" class="fecha-filter-btn">
-                    <i class="fas fa-search"></i>
-                    <span>Filtrar</span>
-                </button>
-            </div>
-        </form>
-
-        <div class="row barcos-container mx-5" id="barcosGrid">
+        <!-- Tarjetas de Barcos con efecto revelar en scroll -->
+        <div class="row barcos-container" id="barcosGrid">
             @foreach (var item in Model)
             {
-                <div class="col-lg-6 mb-4 barco-item" data-nombre="@item.IdusuarioNavigation.Nombre.ToLower()">
+                <div class="col-lg-6 mb-4 barco-item" data-nombre="@item.Nombre.ToLower()">
                     <div class="card barco-card">
                         <div class="card-wave"></div>
                         <div class="card-header">
                             <div class="header-icon">
-                                <i class="fas fa-clipboard-list"></i>
+                                <i class="fas fa-gift"></i>
                             </div>
-                            <h5 class="card-title">@item.IdusuarioNavigation.Nombre</h5>
+                            <h5 class="card-title">@item.Nombre</h5>
                         </div>
                         <div class="card-body">
                             <div class="info-row">
-                                <div class="info-label"><i class="fas fa-info-circle"></i> Estado:</div>
-                                <div class="info-value">@item.Estado</div>
+                                <div class="info-label"><i class="fas fa-info-circle"></i> Descripción:</div>
+                                <div class="info-value">@item.Descripcion</div>
                             </div>
                             <div class="info-row">
-                                <div class="info-label"><i class="fas fa-users"></i> Cantidad de pasajeros:</div>
-                                <div class="info-value capacity-badge">@item.CantidadDePasajeros pasajeros</div>
-                            </div>
-                            <div class="info-row">
-                                <div class="info-label"><i class="fas fa-users"></i> Fecha de creacion:</div>
-                                <div class="info-value capacity-badge">
-                                    @(item.FechaCreacion.HasValue
-                                        ? item.FechaCreacion.Value.ToString("dd/MM/yyyy")
-                                        : "N/A")
-                                </div>
-                            </div>
-                            <div class="info-row">
-                                <div class="info-label"><i class="fas fa-ruler-combined"></i> Fecha de pago:</div>
-                                <div class="info-value capacity-badge">
-                                    @(item.FechaPago.HasValue
-                                        ? item.FechaPago.Value.ToString("dd/MM/yyyy")
-                                        : "N/A")
-                                </div>
+                                <div class="info-label"><i class="fas fa-money-bill-wave"></i> Precio:</div>
+                                <div class="info-value capacity-badge">$ @item.Precio</div>
                             </div>
                             <div class="card-actions">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn-card btn-edit">
+                                    <i class="fas fa-edit"></i>
+                                    <span>Editar</span>
+                                </a>
                                 <a asp-action="Details" asp-route-id="@item.Id" class="btn-card btn-details">
                                     <i class="fas fa-eye"></i>
                                     <span>Detalles</span>
                                 </a>
                             </div>
-
-                            @if (item.Estado == "Pendiente")
-                            {
-                                <a asp-action="Tarjeta" asp-route-id="@item.Id" class="btn-card btn-create mt-2">
-                                    <i class="fas fa-credit-card"></i>
-                                    <span>Finalizar Pago</span>
-                                </a>
-                            }
                         </div>
                     </div>
                 </div>
             }
         </div>
-
     </div>
 </div>
 
@@ -520,147 +477,9 @@
             color: var(--white);
         }
 
-    /* Estilo base del formulario */
-    .fecha-filter-form {
-        display: flex;
-        justify-content: center;
-        margin: 2rem 0;
-    }
-
-    /* Contenedor principal */
-    .fecha-filter-container {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        background: white;
-        padding: 10px 20px;
-        border-radius: 50px;
-        box-shadow: 0 5px 25px rgba(0, 52, 107, 0.1);
-        border: 1px solid rgba(0, 98, 204, 0.15);
-        transition: all 0.3s ease;
-    }
-
-        .fecha-filter-container:hover {
-            box-shadow: 0 8px 30px rgba(0, 52, 107, 0.15);
-            border-color: rgba(0, 98, 204, 0.25);
-        }
-
-    /* Etiqueta */
-    .fecha-filter-label {
-        margin-bottom: 0;
-        font-weight: 600;
-        color: #00346b;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 0.95rem;
-    }
-
-        .fecha-filter-label i {
-            color: #ff6b35;
-        }
-
-    /* Contenedor del input */
-    .fecha-input-wrapper {
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-
-    /* Icono del calendario */
-    .fecha-icon {
-        position: absolute;
-        left: 15px;
-        color: #0062cc;
-        font-size: 1rem;
-    }
-
-    /* Input de fecha */
-    .fecha-input {
-        padding: 10px 15px 10px 40px;
-        border: 2px solid #e6f7ff;
-        border-radius: 30px;
-        font-size: 0.95rem;
-        color: #00346b;
-        width: 150px;
-        transition: all 0.3s ease;
-        background-color: #f8fafc;
-    }
-
-        .fecha-input:focus {
-            outline: none;
-            border-color: #0062cc;
-            box-shadow: 0 0 0 3px rgba(0, 98, 204, 0.1);
-            background-color: #fff;
-        }
-
-        .fecha-input::placeholder {
-            color: #a8b6c4;
-        }
-
-    /* Botón de filtrar */
-    .fecha-filter-btn {
-        background: linear-gradient(135deg, #0062cc, #004a99);
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 30px;
-        font-weight: 600;
-        font-size: 0.95rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        box-shadow: 0 3px 10px rgba(0, 98, 204, 0.2);
-    }
-
-        .fecha-filter-btn:hover {
-            background: linear-gradient(135deg, #0052b3, #003d7a);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 98, 204, 0.3);
-        }
-
-        .fecha-filter-btn:active {
-            transform: translateY(0);
-        }
-
-    .ripple-effect {
-        position: absolute;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.4);
-        transform: scale(0);
-        animation: ripple 0.6s linear;
-        pointer-events: none;
-    }
-
 </style>
 
-
 <script>
-
-       document.getElementById('fechaInicio').addEventListener('input', function(e) {
-        // Añadir automáticamente las barras
-        var input = e.target.value.replace(/\D/g, '').substring(0, 8);
-        if(input.length > 4) {
-            input = input.substring(0, 2) + '/' + input.substring(2, 4) + '/' + input.substring(4);
-        } else if(input.length > 2) {
-            input = input.substring(0, 2) + '/' + input.substring(2);
-        }
-        e.target.value = input;
-    });
-
-    // Convertir al formato yyyy-MM-dd antes de enviar
-    document.querySelector('form').addEventListener('submit', function(e) {
-        var dateInput = document.getElementById('fechaInicio');
-        if(dateInput.value) {
-            var parts = dateInput.value.split('/');
-            if(parts.length === 3) {
-                dateInput.value = parts[2] + '-' + parts[1] + '-' + parts[0];
-            }
-        }
-    });
-
     $(document).ready(function() {
         // Trigger animation when scrolling to elements
         $('.barco-item').waypoint(function() {
