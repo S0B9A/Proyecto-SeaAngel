@@ -35,6 +35,11 @@
         .loadingXXXX {
             display: none;
         }
+
+        #paisSelect option {
+            color: #000 !important; 
+            background-color: #fff !important; 
+        }
     </style>
 </head>
 <body>
@@ -126,15 +131,8 @@
                                     <span class="input-group-text">
                                         <i class="bi bi-globe"></i>
                                     </span>
-                                    <select asp-for="Pais" class="form-select" required>
+                                    <select asp-for="Pais" class="form-select" id="paisSelect" required>
                                         <option value="" selected disabled>Selecciona tu país</option>
-                                        <option value="mexico">México</option>
-                                        <option value="espana">España</option>
-                                        <option value="argentina">Argentina</option>
-                                        <option value="colombia">Colombia</option>
-                                        <option value="chile">Chile</option>
-                                        <option value="peru">Perú</option>
-                                        <option value="otros">Otros</option>
                                     </select>
                                     <span asp-validation-for="Pais" class="invalid-feedback"></span>
                                 </div>
@@ -146,7 +144,7 @@
                                     <span class="input-group-text">
                                         <i class="bi bi-telephone"></i>
                                     </span>
-                                    <input asp-for="Telefono" class="form-control" placeholder="+1 (555) 123-4567" required>
+                                    <input asp-for="Telefono" class="form-control" placeholder="+506 0000 0000" required>
                                     <span asp-validation-for="Telefono" class="invalid-feedback"></span>
                                 </div>
                                 <div class="form-text">El teléfono debe tener al menos 8 dígitos</div>
@@ -408,5 +406,39 @@
     </script>
     <script src="~/js/register.js"></script>
     
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const paisSelect = document.getElementById('paisSelect');
+
+            fetch('https://restcountries.com/v3.1/all')
+                .then(response => response.json())
+                .then(countries => {
+                    // Ordenar por nombre
+                    countries.sort((a, b) => a.name.common.localeCompare(b.name.common));
+
+                    countries.forEach(country => {
+                        const name = country.name.common;
+                        const prefix = country.idd?.root + (country.idd?.suffixes ? country.idd.suffixes[0] : '');
+
+                        if (prefix && name) {
+                            const option = document.createElement('option');
+                            option.value = name.toLowerCase();
+                            option.textContent = `${name} (${prefix})`;
+                            paisSelect.appendChild(option);
+                        }
+                    });
+
+                    // Agregar una opción "Otros"
+                    const otrosOption = document.createElement('option');
+                    otrosOption.value = "otros";
+                    otrosOption.textContent = "Otros";
+                    paisSelect.appendChild(otrosOption);
+                })
+                .catch(error => {
+                    console.error('Error al cargar países:', error);
+                });
+        });
+    </script>
+
 </body>
 </html>
