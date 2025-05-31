@@ -13,7 +13,7 @@ Entity Framework Core
 AJAX (para búsquedas dinámicas y recarga de datos)
 JavaScript, jQuery y Bootstrap
 API Externa (consumo para países, verificación de tarjetas o tipo de cambio)
-GitLab (repositorio y control de versiones)
+
 
 🧭 Tipo de Negocio
 La aplicación simula una agencia de cruceros turísticos que ofrece viajes hacia tres destinos internacionales (países o regiones), cada uno con puertos específicos de salida y llegada. La interfaz está orientada al usuario y diseñada con una estructura clara y atractiva relacionada con la temática de viajes en crucero.
