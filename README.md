@@ -43,9 +43,6 @@ Se solicita una aplicación web para gestionar reservas de cruceros. Cada equipo
   - Verificar tipo de tarjeta de crédito
   - Conversión de tipo de cambio (colones/dólares)
 - Uso de AJAX para búsquedas, cálculos y recarga de datos
-- Gestión del proyecto con GitLab (con historial de versiones por estudiante)
-- Comprensión y justificación completa del desarrollo por parte del equipo
-- Proyecto 100% original, sin plagio ni copia (ni uso extensivo de IA)
 
 ---
 
