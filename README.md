@@ -1,37 +1,245 @@
-# Proyecto-SeaAngel
+# Gestión de Cruceros
 
-🚢 Gestión de Cruceros Proyecto desarrollado para el curso ISW-711 Programación en Ambiente Web II, enfocado en la creación de una aplicación web completa para la reserva y gestión de cruceros turísticos, incluyendo itinerarios, barcos, habitaciones, usuarios y pagos.
+> 🔀 El código fuente se encuentra en la rama `sebas`.
 
-🛠 Tecnologías Utilizadas ASP.NET Core MVC (.NET 8) C# SQL Server Entity Framework Core AJAX (para búsquedas dinámicas y recarga de datos) JavaScript, jQuery y Bootstrap API Externa (consumo para países, verificación de tarjetas o tipo de cambio)
+---
 
-🧭 Tipo de Negocio La aplicación simula una agencia de cruceros turísticos que ofrece viajes hacia tres destinos internacionales (países o regiones), cada uno con puertos específicos de salida y llegada. La interfaz está orientada al usuario y diseñada con una estructura clara y atractiva relacionada con la temática de viajes en crucero.
 
-📄 Funcionalidades Principales Página Inicial Accesible sin iniciar sesión. Introducción al negocio de cruceros. Lista de cruceros disponibles (según fecha actual).
+## Tabla de Contenido
 
-🔍 Buscador de Cruceros Permite filtrar por: Destino Puerto de salida Fechas (mes/año; no menores al actual) Ordenar resultados por precio o por fecha más cercana.
+1. [Gestión de Reserva de Cruceros](#gestión-de-reserva-de-cruceros)  
+2. [Requerimientos Técnicos](#requerimientos-técnicos)  
+3. [Tipo de Negocio](#tipo-de-negocio)  
+4. [Buscador de Cruceros](#buscador-de-cruceros)  
+5. [Opciones de Usuario](#opciones-de-usuario)  
+6. [Gestión de Usuarios](#gestión-de-usuarios)  
+7. [Gestión de Destinos y Puertos](#gestión-de-destinos-y-puertos)  
+8. [Gestión de Habitaciones](#gestión-de-habitaciones)  
+9. [Gestión de Barcos](#gestión-de-barcos)  
+10. [Gestión de Cruceros](#gestión-de-cruceros)  
+11. [Itinerario del Crucero](#itinerario-del-crucero)  
+12. [Fechas y Precios de Habitaciones del Crucero](#fechas-y-precios-de-habitaciones-del-crucero)  
+13. [Complementos del Crucero](#complementos-del-crucero)  
+14. [Gestión de Reserva de Crucero](#gestión-de-reserva-de-crucero)  
+15. [Resumen de la Reserva](#resumen-de-la-reserva)  
+16. [Pagar Reserva](#pagar-reserva)  
+17. [Historial de Reservas](#historial-de-reservas)  
 
-👤 Opciones de Usuario Registro como nuevo usuario Inicio de sesión con credenciales
+---
 
-🔐 Gestión de Usuarios Roles: Cliente y Administrador (único) Datos: nombre, teléfono, correo, fecha de nacimiento, país, contraseña. Registro de usuario automático con rol de Cliente.
+## Gestión de Reserva de Cruceros
 
-🌍 Gestión de Destinos y Puertos Precargados 3 destinos turísticos. Puertos asociados a cada destino (ej. Barcelona, España).
+Se solicita una aplicación web para gestionar reservas de cruceros. Cada equipo debe analizar, diseñar y proponer su solución.
 
-🛏️ Gestión de Habitaciones Datos por habitación: nombre, descripción, cantidad de huéspedes, tamaño. Funciones de registro y edición disponibles para el administrador.
+---
 
-🚢 Gestión de Barcos Datos del barco: nombre, descripción, capacidad total. Asociación de habitaciones por barco, incluyendo cantidad disponible.
+## Requerimientos Técnicos
 
-🧭 Gestión de Cruceros Datos: nombre, imagen, duración, barco, itinerario, fechas y precios. Listado disponible para todos los usuarios.
+- ASP.NET Core MVC (.NET 8)
+- Base de datos: SQL Server
+- Arquitectura basada en buenas prácticas (vista en clase)
+- Uso de API externa para:
+  - Listar países
+  - Verificar tipo de tarjeta de crédito
+  - Conversión de tipo de cambio (colones/dólares)
+- Uso de AJAX para búsquedas, cálculos y recarga de datos
+- Gestión del proyecto con GitLab (con historial de versiones por estudiante)
+- Comprensión y justificación completa del desarrollo por parte del equipo
+- Proyecto 100% original, sin plagio ni copia (ni uso extensivo de IA)
 
-📅 Itinerario del Crucero Asignación de puertos por día. Mínimo 2 puertos por crucero. Información detallada por día (salida/llegada).
+---
 
-🗓 Fechas y Precios Múltiples fechas por crucero. Fecha de inicio y fecha límite de pago. Precios de habitaciones por tipo (precio por habitación, no por huésped).
+## Tipo de Negocio
 
-➕ Complementos del Crucero Servicios adicionales como propinas, tours, etc. Precio aplicable por camarote o por huésped. Funciones de registro y edición para el administrador.
+- Aplicación enfocada en la gestión de cruceros turísticos.
+- Deben escogerse 3 destinos: países o regiones.
+- Toda la información debe estar relacionada con los destinos seleccionados.
+- Diseño debe ser temático, lógico y amigable.
 
-📝 Gestión de Reserva de Cruceros Selección de crucero, tipo de habitación y cantidad de huéspedes. Ingreso de datos de cada huésped. Selección de complementos opcionales. Visualización de un resumen completo con: Nombre del crucero Puertos de salida y regreso Fechas Camarotes, huéspedes y precios detallados Subtotales, impuestos y precio total
+---
 
-💳 Pago de Reservas Opciones: Pago total Depósito mínimo por huésped (ej. $250) Datos requeridos para tarjeta de crédito: Número, fecha de expiración, CVV, titular Envío de resumen de reserva por correo electrónico tras el pago
+## Buscador de Cruceros
 
-📂 Historial de Reservas Clientes: Ver historial completo Completar pagos pendientes Ver detalles de cada reserva
+Filtros disponibles:
 
-Administrador: Ver todas las reservas Filtro por crucero y fecha
+- Destino
+- Puerto de salida
+- Fecha (mes y año, no menor al actual)
+
+Ordenar resultados por:
+
+- Precio (ascendente/descendente)
+- Fecha más cercana
+
+---
+
+## Opciones de Usuario
+
+- **Inscribirse**: registrarse como nuevo usuario
+- **Ingresar**: autenticarse con credenciales
+
+---
+
+## Gestión de Usuarios
+
+Roles:
+
+- Cliente
+- Administrador (solo uno)
+
+Información mínima del usuario:
+
+- Nombre
+- Teléfono
+- Correo electrónico
+- Fecha de nacimiento
+- País
+- Contraseña
+
+---
+
+## Gestión de Destinos y Puertos
+
+- 3 destinos precargados
+- Puertos asociados a cada destino
+- Ejemplo: Barcelona, España
+
+---
+
+## Gestión de Habitaciones
+
+Cada habitación debe incluir:
+
+- Nombre
+- Descripción
+- Capacidad mínima y máxima
+- Tamaño aproximado
+
+Administrador puede: registrar/modificar habitaciones
+
+---
+
+## Gestión de Barcos
+
+Datos del barco:
+
+- Nombre
+- Descripción
+- Capacidad de huéspedes
+- Habitaciones asociadas (con cantidad disponible)
+
+---
+
+## Gestión de Cruceros
+
+Información obligatoria:
+
+- Nombre
+- Imagen representativa
+- Cantidad de días
+- Barco asignado
+- Itinerario
+- Fechas y precios de habitaciones
+
+---
+
+## Itinerario del Crucero
+
+Por cada día se debe registrar:
+
+- Puerto
+- Descripción (horarios de llegada/salida)
+
+Mínimo 2 puertos por crucero.
+
+---
+
+## Fechas y Precios de Habitaciones del Crucero
+
+- Múltiples fechas de salida por crucero
+- Fecha de inicio
+- Fecha límite para pagos
+- Precios por tipo de habitación (por habitación, no por huésped)
+
+---
+
+## Complementos del Crucero
+
+Información requerida:
+
+- Nombre
+- Descripción
+- Precio
+- Forma de aplicación (por camarote o por huésped)
+
+Administrador puede: registrar/modificar complementos
+
+---
+
+## Gestión de Reserva de Crucero
+
+Registrar:
+
+- Cantidad de habitaciones/camarotes
+- Cantidad de huéspedes por habitación
+- Tipo de habitación
+- Datos de cada huésped (mínimo 5 campos)
+- Complementos seleccionados (reflejados en resumen)
+
+---
+
+## Resumen de la Reserva
+
+Debe incluir:
+
+- Nombre del crucero
+- Puerto de salida y regreso (según itinerario)
+- Fechas (inicio y fin calculada)
+- Camarotes y cantidad de huéspedes
+- Total por camarotes
+- Complementos agregados
+- Subtotal
+- Impuestos
+- Precio total
+
+---
+
+## Pagar Reserva
+
+Condiciones:
+
+- Solo usuarios autenticados
+- El usuario queda registrado en la reserva
+
+Opciones de pago:
+
+1. Pago total
+2. Pago parcial por depósito ($250 por huésped)
+   - Mostrar fecha límite para completar pago
+
+Solicitar datos de tarjeta de crédito:
+
+- Número (16 dígitos)
+- Fecha de vencimiento
+- CVV
+- Titular
+
+Enviar correo con resumen al cliente después del pago
+
+---
+
+## Historial de Reservas
+
+**Cliente puede:**
+
+- Ver todas sus reservas
+- Pagar montos pendientes
+- Ver detalle completo de cada reserva
+
+**Administrador puede:**
+
+- Ver todas las reservas
+- Filtrar por crucero y fecha
+
+---
+
