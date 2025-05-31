@@ -2,7 +2,7 @@
 
 🚢 Gestión de Cruceros Proyecto desarrollado para el curso ISW-711 Programación en Ambiente Web II, enfocado en la creación de una aplicación web completa para la reserva y gestión de cruceros turísticos, incluyendo itinerarios, barcos, habitaciones, usuarios y pagos.
 
-🛠 Tecnologías Utilizadas ASP.NET Core MVC (.NET 8) C# SQL Server Entity Framework Core AJAX (para búsquedas dinámicas y recarga de datos) JavaScript, jQuery y Bootstrap API Externa (consumo para países, verificación de tarjetas o tipo de cambio) GitLab (repositorio y control de versiones)
+🛠 Tecnologías Utilizadas ASP.NET Core MVC (.NET 8) C# SQL Server Entity Framework Core AJAX (para búsquedas dinámicas y recarga de datos) JavaScript, jQuery y Bootstrap API Externa (consumo para países, verificación de tarjetas o tipo de cambio)
 
 🧭 Tipo de Negocio La aplicación simula una agencia de cruceros turísticos que ofrece viajes hacia tres destinos internacionales (países o regiones), cada uno con puertos específicos de salida y llegada. La interfaz está orientada al usuario y diseñada con una estructura clara y atractiva relacionada con la temática de viajes en crucero.
 
